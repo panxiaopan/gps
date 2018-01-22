@@ -127,7 +127,7 @@
 						        <div class="block">
 								    <el-date-picker
 								          value-format="yyyy-MM-dd"
-								           v-model="valueTime"
+								           v-model="valueTimeSub"
 								          @change="SuberUserInquireval"
 									      type="daterange"
 									      range-separator="至"
@@ -347,7 +347,7 @@
 </template>
 <script>
 import qs from 'qs';
- import{ GetPersonalCenter,GetUserManageComboBoxData,GetUserLogSelect,UpdateUser,UpdateUserPass,InsertUser,DeleteUserManage,GetUserSelect,GetUserManageTop1,GetGroupData}from '@/api/api';
+ import{ GetPersonalCenter,GetUserManageComboBoxData,GetUserLogSelect,UpdateUser,LoginUpdateUser,UpdateUserPass,InsertUser,DeleteUserManage,GetUserSelect,GetUserManageTop1,GetGroupData}from '@/api/api';
 export default {
       data(){
                //  表单验证规则---自定义的
@@ -547,6 +547,7 @@ export default {
       	   	 tableDataList:[],
       	   	 SubUserDataList:[],//子用户
       	     valueTime:'',
+      	     valueTimeSub:'',
       	     options:[], 
 	           formInline: {
 		           selectvalue:'' 
@@ -599,6 +600,8 @@ export default {
                    	   	    logTime:item.UserLoginTime
                    	   })
                    }
+                
+                if(res.Data[0].UserLevel==1){//判断是管理员登录的时候显示
                   for(let item of res.Data[0].ListUser){//子用户
                      this.SubUserDataList.push({
                             Username:item.UserName,
@@ -610,6 +613,9 @@ export default {
                             Id:item.Id
                          }) 
                     }
+
+                  }
+
           	  }) 
           },
           SelectTable(){
@@ -643,7 +649,7 @@ export default {
 	                 this.weixinshow=false;
 	                 this.EditSureshow=false; 
 	       },
-	      EditSubmission(){//编辑提交
+	      EditSubmission(){//编辑提交登录时候用户的编辑
 	      	let user={};
 	      	    user={
 	                Id:this.Id,
@@ -653,7 +659,7 @@ export default {
 	      	    }
 		      this.$refs['personnalRule'].validate((valid) => {
 		        if(valid){
-		          UpdateUser(user).then(res=>{
+		          LoginUpdateUser(user).then(res=>{
 		                   if(res.State==1){
 		                        this.$message({
 		                           type:'success',
@@ -664,7 +670,7 @@ export default {
 				                 this.alarmshow=true;
 				                 this.weixinshow=false;
 				                 this.EditSureshow=false;  
-				                 this.$refs[personnalRule].resetFields()
+				                 
 		                        }else{
 		                        this.$message({
 		                           type:'error',

@@ -54,20 +54,28 @@ export const userLogin = (params) => {
       .post('/User/GetUserSelect',params)
       .then(res=>res.data)
     }
-  //用户编辑,分区
+  //用户,分区
   export const  GetUserManageTop1 =(params)=>{
       return axios
       .post('/User/GetUserManageTop1',params)
       .then(res=>res.data)
     }
- //编辑的时候分区的接口
+ //分区的接口.总分区显示
     export const GetGroupData = () => {
         return axios
            .get("/SystemManage/GetGroupData")
            .then(res => res.data);
    };
+  //页面登录编辑时候的接口
+     export const LoginUpdateUser = (params) => { 
+    return axios
+        .post('User/UpdateUser', params)
+        .then(res => res.data)
+    };
 
-    //编辑用户接口
+
+
+    //分区编辑用户接口
    export const UpdateUser = (params) => { 
     return axios
         .post('User/UpdateUserManage', params)
