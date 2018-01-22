@@ -60,7 +60,7 @@ module.exports = {
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       },
-      {
+     {
         test: /\.scss$/,
         loaders: ['style', 'css', 'sass']
       },
