@@ -11,41 +11,47 @@
 	                  <div class="Icon_height">
 			       		  <i  class="huatoIcon"></i> 
 	                  </div>
-                     <el-form :label-position="labelPosition" status-icon label-width="80px" :rules='PersonnalRules' ref='personnalRule' :model="PersonalMessagelable" class="PersonalMessagelable">
-						  <el-form-item label="公司:">
-						       <el-input  v-model="PersonalMessagelable.CompanyName" class="borderNone" :readonly="true"></el-input>
-						  </el-form-item>
-						  <el-form-item label="用户名:">
-						     <el-input  v-model="PersonalMessagelable.UserName" class="borderNone" :readonly="true"></el-input>
-						  </el-form-item>
-						  <el-form-item label="真实姓名:" prop="RealName">
-						       <el-input v-model="PersonalMessagelable.RealName" :readonly="readtrue"></el-input>
-						  </el-form-item>
- 						  <el-form-item label="手机:" prop="CellPhone">
-						       <el-input v-model="PersonalMessagelable.CellPhone" :readonly="readtrue"></el-input>
-						  </el-form-item>
-                            <el-form-item label="邮箱:" prop="Mailbox">
-						       <el-input v-model="PersonalMessagelable.Mailbox" :readonly="readtrue"></el-input>
-						  </el-form-item>
-                          <el-form-item label="微信:" v-show="weixinshow">
-						       <el-input v-model="PersonalMessagelable.Mailbox" :disabled="true"><i class="fa fa-check-circle-o" ></i></el-input>
-						  </el-form-item>
-						  <el-form-item label="报警类型:" v-show="alarmshow" class="AlarmI">
-                                    <el-tooltip class='item' effect='light' content="暂无报警类型" v-show="DeviceSafety">
-						        	    <i class="fa-chevron-down"></i>
-                                    </el-tooltip>
-						        	<el-tooltip class='item' effect='light' content="超限" v-show='Ultralimit'>
-						        		<i class="Ultralimit"></i>
-						        	</el-tooltip>
-                                    <el-tooltip class='item' effect='light' content="掉线" v-show="LostConnection">
-						        	    <i class="LostConnection"></i>
-                                    </el-tooltip>
-						  </el-form-item>
-						  <el-form-item  v-show="EditSureshow">
-						       <el-button type="primary" size="mini" @click="EditSubmission">确定</el-button><el-button  size="mini" @click="AbolishEdit">取消</el-button>
-						  </el-form-item>
-
-                    </el-form>
+	                  <el-row >
+		                  <el-col :span="16">
+		                     <el-form :label-position="labelPosition" status-icon label-width="80px" :rules='PersonnalRules' ref='personnalRule' :model="PersonalMessagelable" class="PersonalMessagelable">
+								  <el-form-item label="公司:">
+								       <el-input  v-model="PersonalMessagelable.CompanyName" class="borderNone" :readonly="true"></el-input>
+								  </el-form-item>
+								  <el-form-item label="用户名:">
+								     <el-input  v-model="PersonalMessagelable.UserName" class="borderNone" :readonly="true"></el-input>
+								  </el-form-item>
+								  <el-form-item label="真实姓名:" prop="RealName">
+								       <el-input v-model="PersonalMessagelable.RealName" :readonly="readtrue"></el-input>
+								  </el-form-item>
+		 						  <el-form-item label="手机:" prop="CellPhone">
+								       <el-input v-model="PersonalMessagelable.CellPhone" :readonly="readtrue"></el-input>
+								  </el-form-item>
+		                            <el-form-item label="邮箱:" prop="Mailbox">
+								       <el-input v-model="PersonalMessagelable.Mailbox" :readonly="readtrue"></el-input>
+								  </el-form-item>
+		                          <el-form-item label="微信:" v-show="weixinshow">
+								       <el-input v-model="UserWx" :disabled="true"><i class="fa fa-check-circle-o" ></i></el-input>
+								  </el-form-item>
+								  <el-form-item label="报警类型:" v-show="alarmshow" class="AlarmI">
+		                                    <el-tooltip class='item' effect='light' content="暂无报警类型" v-show="DeviceSafety">
+								        	    <i class="fa-chevron-down"></i>
+		                                    </el-tooltip>
+								        	<el-tooltip class='item' effect='light' content="超限" v-show='Ultralimit'>
+								        		<i class="Ultralimit"></i>
+								        	</el-tooltip>
+		                                    <el-tooltip class='item' effect='light' content="掉线" v-show="LostConnection">
+								        	    <i class="LostConnection"></i>
+		                                    </el-tooltip>
+								  </el-form-item>
+								  <el-form-item  v-show="EditSureshow">
+								       <el-button type="primary" size="mini" @click="EditSubmission">确定</el-button><el-button  size="mini" @click="AbolishEdit">取消</el-button>
+								  </el-form-item>
+		                    </el-form>
+		                </el-col>
+		                <el-col :span="8" class="Gainlayout">
+		                	 <el-button type="primary" size="small" class="Gainweixin" @click="GainWechat">获取微信</el-button>
+		                </el-col>
+                    </el-row>
 	                    <div class="Edit" v-show="EditHideshow">
 	                    	<el-button type="primary" size="mini" @click="editMessage">编辑</el-button>
 	                    	<el-button type="primary" size="mini" @click="PassDialogVisible = true">修改密码</el-button>
@@ -347,7 +353,7 @@
 </template>
 <script>
 import qs from 'qs';
- import{ GetPersonalCenter,GetUserManageComboBoxData,GetUserLogSelect,UpdateUser,LoginUpdateUser,UpdateUserPass,InsertUser,DeleteUserManage,GetUserSelect,GetUserManageTop1,GetGroupData}from '@/api/api';
+ import{ GetPersonalCenter,GetUserManageComboBoxData,GetUserLogSelect,UpdateUser,LoginUpdateUser,UpdateUserPass,InsertUser,DeleteUserManage,GetUserSelect,GetUserManageTop1,GetGroupData,GetUserWechatData}from '@/api/api';
 export default {
       data(){
                //  表单验证规则---自定义的
@@ -534,6 +540,7 @@ export default {
 			        ],
 			      }, 
       	   	Id:'',
+      	   	UserWx:'',//微信的获取值
       	   	UgroupGuid:'',//管理员用户UserGuid
       	   	Checkedarml:[],
       	   	DeviceSafety:false,
@@ -563,9 +570,11 @@ export default {
       	   }
       },
       methods:{
+
+
           Gutuser(){
           	 GetPersonalCenter().then(res=>{
-                   console.log(res)
+                   this.UserWx=res.Data[0].UserWx
                    this.Id=res.Data[0].Id//编辑的时候要穿ID
                    this.UgroupGuid=res.Data[0].UserGuid//创建用的时候要传
                   this.tableDataList=[]//调用前清空.
@@ -617,6 +626,19 @@ export default {
                   }
 
           	  }) 
+          },
+          GainWechat(){//获取微信
+               
+            var params={
+            	userCode:this.Id.toString(),//数字类型,转化字符串
+            	userPhone:this.PersonalMessagelable.CellPhone
+            } 
+            console.log(params)
+ 
+     GetUserWechatData(qs.stringify(params)).then(res=>{
+               
+             	console.log(res)
+             }) 
           },
           SelectTable(){
           	   GetUserManageComboBoxData().then(res=>{
@@ -1008,8 +1030,8 @@ export default {
          	background: url(../assets/img/icon.png)  no-repeat -20px -974px ;
          }
 	     .PersonalMessagelable{
-	     	width: 60%;
-	     	margin-left: 10%;
+	     	width:82%;
+	     	
 	     	height: 365px;
 	     }
 
@@ -1069,6 +1091,14 @@ export default {
 		   	   	margin-left: 0px;
 		   	    }
 		     }
+
+		 .Gainweixin{
+
+               margin-top:95%;
+		 }
+		 .Gainlayout{
+		 	height: 365px;
+		 }
   }
 
 </style>

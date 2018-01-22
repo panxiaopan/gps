@@ -72,12 +72,15 @@ export const userLogin = (params) => {
         .post('User/UpdateUser', params)
         .then(res => res.data)
     };
-
-
-
     //分区编辑用户接口
    export const UpdateUser = (params) => { 
     return axios
         .post('User/UpdateUserManage', params)
+        .then(res => res.data)
+    };
+        //拉取微信信息接口
+   export const GetUserWechatData= (params) => { 
+    return axios
+        .get('/User/GetUserWechatData')
         .then(res => res.data)
     };
