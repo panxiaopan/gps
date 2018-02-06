@@ -35,7 +35,9 @@ export default {
         
       console.log(this.LoginForm)
        userLogin(qs.stringify(this.LoginForm)).then(res=>{
-             console.log(res)
+        console.log("登录")
+             console.log(this.LoginForm)
+             console.log(qs.stringify(this.LoginForm))
            if(res.State==1){
              sessionStorage.setItem('user', JSON.stringify(user));
               this.$router.push('/')

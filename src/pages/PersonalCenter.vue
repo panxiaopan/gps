@@ -49,7 +49,7 @@
 		                    </el-form>
 		                </el-col>
 		                <el-col :span="8" class="Gainlayout">
-		                	 <el-button type="primary" size="small" class="Gainweixin" @click="GainWechat">获取微信</el-button>
+		                	 <el-button type="primary" size="small" class="Gainweixin" @click="GainWechat" v-if="WexinButton">获取微信</el-button>
 		                </el-col>
                     </el-row>
 	                    <div class="Edit" v-show="EditHideshow">
@@ -540,6 +540,7 @@ export default {
 			        ],
 			      }, 
       	   	Id:'',
+      	   	WexinButton:false,
       	   	UserWx:'',//微信的获取值
       	   	UgroupGuid:'',//管理员用户UserGuid
       	   	Checkedarml:[],
@@ -574,6 +575,7 @@ export default {
 
           Gutuser(){
           	 GetPersonalCenter().then(res=>{
+          	 	   console.log(res)
                    this.UserWx=res.Data[0].UserWx
                    this.Id=res.Data[0].Id//编辑的时候要穿ID
                    this.UgroupGuid=res.Data[0].UserGuid//创建用的时候要传
@@ -633,10 +635,8 @@ export default {
             	userCode:this.Id.toString(),//数字类型,转化字符串
             	userPhone:this.PersonalMessagelable.CellPhone
             } 
-            console.log(params)
- 
      GetUserWechatData(qs.stringify(params)).then(res=>{
-               
+                 
              	console.log(res)
              }) 
           },
@@ -662,6 +662,7 @@ export default {
 	                 this.alarmshow=false;
 	                 this.weixinshow=true;
 	                 this.EditSureshow=true;
+	                 this.WexinButton=true;
 	         	     console.log("编辑")
 	         },
 	       AbolishEdit(){//编辑取消
@@ -670,6 +671,7 @@ export default {
 	                 this.alarmshow=true;
 	                 this.weixinshow=false;
 	                 this.EditSureshow=false; 
+	                 this.WexinButton=false;
 	       },
 	      EditSubmission(){//编辑提交登录时候用户的编辑
 	      	let user={};
@@ -935,7 +937,7 @@ export default {
 	             })
             },
          checkPositionval(val){//分区选中的值.
-            	 this.EditZone=val;
+            	  this.EditZone=val;
             	  this.ListGroup=[];
             	for(var i=0; i<this.EditZone.length;i++){
             		  this.ListGroup.push({
@@ -1031,10 +1033,8 @@ export default {
          }
 	     .PersonalMessagelable{
 	     	width:82%;
-	     	
 	     	height: 365px;
 	     }
-
 		  .Ultralimit{
 	       	  cursor: pointer;
 		  	  display: inline-block;
