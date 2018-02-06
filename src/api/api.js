@@ -61,9 +61,9 @@ export const userLogin = (params) => {
       .then(res=>res.data)
     }
  //分区的接口.总分区显示
-    export const GetGroupData = () => {
+    export const GetGroupData = (params) => {
         return axios
-           .get("/SystemManage/GetGroupData")
+           .get("/SystemManage/GetGroupData",{params:params})
            .then(res => res.data);
    };
   //页面登录编辑时候的接口
@@ -81,6 +81,80 @@ export const userLogin = (params) => {
         //拉取微信信息接口
    export const GetUserWechatData= (params) => { 
     return axios
-        .get('/User/GetUserWechatData')
+        .post('/User/GetUserWechatData',params)
+        .then(res => res.data)
+    };
+    //系统管理分区编辑
+   export const UpdateGroupManage= (params) => { 
+    return axios
+        .post('/SystemManage/UpdateGroupManage',params)
+        .then(res => res.data)
+    };
+    //系统管理分区新增
+  export const InsertGroupManage= (params) => { 
+    return axios
+        .post('/SystemManage/InsertGroupManage',params)
+        .then(res => res.data)
+    };
+  //系统管理分区删除
+  export const DeleteGroupManage= (params) => { 
+    return axios
+        .post('/SystemManage/DeleteGroupManage',params)
+        .then(res => res.data)
+    };
+  //系统管理仪器数据
+     export const GetInstrumentData = (params) => {
+        return axios
+           .get("/SystemManage/GetInstrumentData",{params:params})
+           .then(res => res.data);
+       };
+  //删除仪器
+  export const DeleteLoggerInfo= (params) => { 
+    return axios
+        .post('/SystemManage/DeleteLoggerInfo',params)
+        .then(res => res.data)
+    };
+    //仪器类型数据接口
+        export const GetLoggerInfoType = () => {
+        return axios
+           .get("/SystemManage/GetLoggerInfoType")
+           .then(res => res.data);
+   };
+   //设备类型数据接口
+      export const GetLoggerInfoWarehouseType = () => {
+        return axios
+           .get("/SystemManage/GetLoggerInfoWarehouseType")
+           .then(res => res.data);
+   };
+   //仪器开关接口
+ export const UpdateLoggerInfoState= (params) => { 
+    return axios
+        .get('/SystemManage/UpdateLoggerInfoState',{params:params})
+        .then(res => res.data)
+    };
+
+
+   //新增仪器接口
+    export const InsertLoggerInfo= (params) => { 
+    return axios
+        .post('/SystemManage/InsertLoggerInfo',params)
+        .then(res => res.data)
+    };
+    //点击编辑的按钮发送设备ID,拿到对应的数据
+ export const GetInstrumentDataTop1= (params) => { 
+    return axios
+        .get('/SystemManage/GetInstrumentDataTop1',{params:params})
+        .then(res => res.data)
+    };
+    //仪器编辑修改参数
+    export const UpdateLoggerInfo= (params) => { 
+    return axios
+        .post('/SystemManage/UpdateLoggerInfo',params)
+        .then(res => res.data)
+    };
+    //实时地图展示左侧菜单数据请求接口
+   export const GetMapShowsGroupLoggerInfoData= (params) => { 
+    return axios
+        .get('/RealTimeMonitoringManage/GetMapShowsGroupLoggerInfoData',{params:params})
         .then(res => res.data)
     };
