@@ -158,3 +158,4 @@ export const userLogin = (params) => {
         .get('/RealTimeMonitoringManage/GetMapShowsGroupLoggerInfoData',{params:params})
         .then(res => res.data)
     };
+    

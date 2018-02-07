@@ -17,6 +17,7 @@
 						    placeholder="设备编号或名称"
 						    suffix-icon="el-icon-search"
 						    v-model='SeachPartation'
+                 @keyup.enter.native='GetEquipmentList()'
 						     >
 						  </el-input> 
 					  </div>　
@@ -25,9 +26,9 @@
 		                         <el-radio :label="item.Id" @change="DeletePartition"> 	
 		                           {{item.GroupName}}
 		                          </el-radio>
-		                  </el-radio-group>
+		                        </el-radio-group>
+                       <hr  class="hr"/>    
                     </div> 
-
 			  	</div>
 		  </el-col>  
           <el-col :span="20" class="InstrumentsDisplay">
@@ -40,14 +41,23 @@
               		 </div>
               		<div class="EquipmentState">
               			<div class="EquipmentElectric">
-              				<span class="battry"></span>
-              				<span class="ExternalElectric"></span>
+              				<span :class='{
+                                 "battry Batterythree":item.BatteryStatus==3||item.BatteryStatus==17||item.BatteryStatus==11||item.BatteryStatus==7||item.BatteryStatus==1,
+                                 "battry Nopower":item.BatteryStatus==8||item.BatteryStatus==4,
+                                  "battry Batteryone":item.BatteryStatus==5||item.BatteryStatus==9,
+                                  "battry Batterytwo":item.BatteryStatus==6||item.BatteryStatus==10,
+                                  "battry":item.BatteryStatus==0,
+                                    }' ></span>
+              				<span :class='{
+                      "ExternalElectric plugIn":item.BatteryStatus==3||item.BatteryStatus==2||item.BatteryStatus==8||item.BatteryStatus==9||item.BatteryStatus==10||item.BatteryStatus==11
+                    }'></span>
               				<div class="Updatatime">{{item.LogsTime}}</div>
               			</div>
               		</div> 
                     <hr noshade="noshade" class="hr" />
-                  <div class="ChannelOne" v-show="ChannelOne">
-                    	<span class="ChannelOnevalue">{{item.LogsChone}}</span>
+                  <div class="ChannelOne" v-if='item.LoggerChnum==1'>
+                    	<span class="ChannelOnevalue" v-if='item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)' style='color: red'>{{item.LogsChone}}</span>
+                         <span class="ChannelOnevalue" v-else style='color: #000'>{{item.LogsChone}}</span>
                           <span class="ChannelOneright ">
 	                          <div class="units fromline"></div>
 	                          <hr noshade="noshade" class="hr" />
@@ -56,9 +66,10 @@
 	                          <div class="Downline fromline">{{item.ChoneLow}}</div> 
                           </span>
                     </div> 
-                         <div class="ChannelTwo" v-show="ChannelTwo">
+                      <div class="ChannelTwo" v-if='item.LoggerChnum==2'>
                     	  <div class="ChannewTwo ChannelTwoup">
-                   	        <span class="ChannewTwovalue">{{item.LogsChone}}</span>
+                   	        <span class="ChannewTwovalue" v-if='item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)' style="color: red">{{item.LogsChone}}</span>
+                            <span class="ChannewTwovalue" v-else style="color: #000">{{item.LogsChone}}</span>
                                <div class="ChannewTworight">
 		                   	        <div class="Twofromline"></div>
 		                   	         <hr noshade="noshade" class="hr" />
@@ -68,7 +79,8 @@
                               </div>
                           </div>
                           <div  class="ChannewTwo">
-                          	   <span class="ChannewTwovalue">{{item.LogsChtwo}}</span>
+                               <span class="ChannewTwovalue" v-if='item.LogsChtwo>Number(item.ChtwoHigh)||item.LogsChtwo<Number(item.ChtwoLow)' style="color: red" >{{item.LogsChtwo}}</span>
+                          	   <span class="ChannewTwovalue" v-else style="color: #000">{{item.LogsChtwo}}</span>
                                <div class="ChannewTworight">
 		                   	        <div class="Twofromline"></div>
 		                   	         <hr noshade="noshade" class="hr" />
@@ -78,47 +90,53 @@
                               </div>  
                           </div>
                    </div> 
-                    <div class="ChannewThree" v-show="ChannewThree">
+                    <div class="ChannewThree" v-if='item.LoggerChnum==3'>
                     	 <div class="ChannewThreevalue">
-                    	 	<span class="Threevalue">{{item.LogsChone}}</span>
+                        <span class="Threevalue" v-if="item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)">{{item.LogsChone}}</span>
+                    	 	<span class="Threevalue" v-else style="color: #000">{{item.LogsChone}}</span>
+
                     	 	<span class="Threevalue ">C</span>
                     	 </div>
                     	 <div class="Threebuttom">
                     	 	<div class="buttomline ThreebuttomlineRight ">
-	                    	 	<span class="buttomvalue">{{item.LogsChtwo}}</span>
+                           <span class="buttomvalue" v-if="item.LogsChtwo>Number(item.ChtwoHigh)||item.LogsChtwo<Number(item.ChtwoLow)">{{item.LogsChtwo}}</span>
+	                    	 	<span class="buttomvalue" v-else style="color: #000">{{item.LogsChtwo}}</span>
 	                    	 	<span class="buttomvalue">C</span>
                     	 	</div>
                            <div class="buttomline">
-                    	 	<span class="buttomvalue">{{item.LogsChthree}}</span>
-                    	 	<span class="buttomvalue"></span>
+                              <span class="buttomvalue" v-if="item.LogsChthree>Number(item.ChthrHigh)||item.LogsChthree<Number(item.ChthrLow)">{{item.LogsChthree}}</span>
+                          	 	<span class="buttomvalue" v-else style="color: #000">{{item.LogsChthree}}</span>
+                          	 	<span class="buttomvalue"></span>
                           </div>
                     	 </div>
                     </div> 
-                    <div class="ChannewFour" v-show="ChannewFour">
+                    <div class="ChannewFour"  v-if='item.LoggerChnum==4'>
                     	<div class="ChannewFourvalue">
-                    		<span class="Channewvalue">{{item.LogsChone}}</span>
-                    		<span class="Channewvalue"></span>
+                        <span class="Channewvalue" v-if="item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)" >{{item.LogsChone}}</span>
+                    		<span class="Channewvalue " v-else style="color: #000">{{item.LogsChone}}</span>
+                    		<span class="Channewvalue buttomlineLight"></span>
 
                     	</div>
                     	 <hr noshade="noshade" class="hr" />
                     	 <div class="ChannewFourvalue">
-                    	 	<span class="Channewvalue">{{item.LogsChtwo}}</span>
-                    	 	<span class="Channewvalue"></span>
+                          <span class="Channewvalue" v-if="item.LogsChtwo>Number(item.ChtwoHigh)||item.LogsChtwo<Number(item.ChtwoLow)">{{item.LogsChtwo}}</span>
+                    	 	<span class="Channewvalue" v-else style="color: #000">{{item.LogsChtwo}}</span>
+                    	 	<span class="Channewvalue buttomlineLight"></span>
                     	 </div>
                     	  <hr noshade="noshade" class="hr" />
                       <div class="ChannewFourvalue">
-                    	 	<div class="fourbuttomline ThreebuttomlineRight ">
-	                    	 	<span class="buttomvalue">{{item.LogsChthree}}</span>
+                    	 	<div class="fourbuttomline  ">
+                          <span class="buttomvalue"  v-if="item.LogsChthree>Number(item.ChthrHigh)||item.LogsChthree<Number(item.ChthrLow)" >{{item.LogsChthree}}</span>
+	                    	 	<span class="buttomvalue" v-else style="color: #000">{{item.LogsChthree}}</span>
 	                    	 	<span class="buttomvalue"></span>
                     	 	</div>
-                           <div class="fourbuttomline">
-                    	 	<span class="buttomvalue">{{item.LogsChfour}}</span>
+                           <div class="fourbuttomline buttomlineLight">
+                    	 	<span class="buttomvalue" v-if="item.LogsChfour>Number(item.ChforHigh)||item.LogsChfour<Number(item.ChforLow)">{{item.LogsChfour}}</span>
+                        <span class="buttomvalue" v-else  style="color: #000">{{item.LogsChfour}}</span>
                     	 	<span class="buttomvalue"></span>
                           </div>
                     	 </div>
                     </div>
-                       
-
               	</div>
               </div>
           </el-col>
@@ -164,30 +182,30 @@ export default {
 	        	})         
               },      
            DeletePartition(val){//左侧选中
-               this.groupId=val
                this.GetEquipmentList()//点击请求一次
              },
         GetEquipmentList(){//设备列表请求
-             	  this.EquipmentList=[]//调用前清空
                   var params={
                   	 condition:this.SeachPartation,
                   	 groupId:this.SelectDelete,
                   	 pageIndex:this.pageIndex,
                   	 pageSize:this.pageSize,
                   }
+               this.EquipmentList=[]//调用前清空
+                this.totalNumber=null
                GetInstrumentData(params).then(res=>{
 	               	console.log("liebiao")
 	               	console.log(params)
 	               	console.log(res)
 	                for(let item of res.Data){
-	                    this.totalNumber=res.Data.length;//总条数.
-                        this.EquipmentList.push(item) 
-                      switch(String(item.LoggerChnum)){
+	                     this.totalNumber=res.Data.length;//总条数.
+                       this.EquipmentList.push(item) 
+ /*                    switch(String(item.LoggerChnum)){
                        case '1':
                            this.ChannelOne=true; 
                            break;
                        case '2':
-                         this.ChannelTwo=true
+                          this.ChannelTwo=true
                          break;
                        case '3':
                          this.ChannewThree=true
@@ -195,12 +213,10 @@ export default {
                        case '4':
                          this.ChannewFour=true
                          break;                         
-                        }
-
-
+                        }*/
 	                 } 
-                  }) 
-             },           
+                }) 
+             },          
          pageIndexChange(pageIndex){//翻页监控当前页面发生变化没有! 重新获取列表的页面!~
 	             this.pageIndex = pageIndex;//传当前页面   
 	             this.GetEquipmentList()// 列表刷新.
@@ -216,7 +232,7 @@ export default {
 </script>
 <style lang="scss" scoped>
     .GraphPresentation{
-    	*{margin:0;padding:0}
+    	
 		   height: calc(100% - 20px);
 		         background: #fefefe;
 		         border: 1px solid red;
@@ -231,15 +247,18 @@ export default {
             .GraphPresentationCoent{
             	  height:calc(100% - 120px);
             	  border: 1px solid blue;
+                padding: 20px;
+                background: #eaedf1;
             	  .lightZone {
 		        	border:1px solid ;
+
 				    height: calc(100% - 20px);
 				    overflow-y: scroll;
 				    .AreaSearch{
 				    	padding: 20px;
 				    }
 				    .PartitionList{
-				    	margin-left: 30%;
+				    	margin-left: 11%;
 				    	padding: 10px;
 				    }
 				  }
@@ -247,10 +266,11 @@ export default {
 				    border:1px solid ;
 				    height: calc(100% - 20px); 
 				    padding-left: 20px;
+            background: #fff;
 				      }
 
                 }
-             .myPagination{
+           .myPagination{
 				  	text-align: center;
 				  }
             .Apparatus{
@@ -262,7 +282,6 @@ export default {
             }
 	           .Apparatustop{
 	           	   height: 48px;
-	           	   border:1px solid blue;
 	           }
 	          .EquipmentIcon{
 	          	display: inline-block;
@@ -271,8 +290,8 @@ export default {
 	          	background: url(../assets/img/icon.png) no-repeat -20px -320px ;
 	          }
 	         .Equipmentmodel{
-	         	display: inline-block;
-	         	width: 40%;
+	          	display: inline-block;
+	          	width: 40%;
 	            height: 100%;
 	            vertical-align: top;
 	         }
@@ -288,14 +307,13 @@ export default {
 	         }
 	         .EquipmentState{
 	         	display: inline-block;
-	            border: 1px solid red;
 	            height: 100%;
 	            width: 40%;
 	            vertical-align: top;
 	         }
 	         .EquipmentElectric{
-                text-align: right;
-	         	height: 100%;
+              text-align: right;
+	           	height: 100%;
 	         }
 	         .Updatatime{
 	         	display: inline-block;
@@ -303,15 +321,13 @@ export default {
 
 	         }
 	         .battry{
-                display: inline-block;
-                width: 30%;
-                border: 1px solid red;
-                height: 22px;
+             display: inline-block;
+              width: 30%;
+              height: 22px;
 	         }
 	        .ExternalElectric{
 	        	display: inline-block;
 	        	width: 28%;
-	        	border: 1px solid red;
 	        	height: 22px;
 	        }
 	        .hr{
@@ -327,7 +343,7 @@ export default {
 	      	border-right: 1px solid #999999;
 	      	width: 70%;
 	      	font-size: 20px;
-	      	color: red;
+
 	      	text-align: center;
 	      	line-height: 136px;
 	      }   
@@ -353,23 +369,28 @@ export default {
         	width: 70%;
         	border-right: 1px solid #999999;
         	vertical-align: top;
+          text-align: center;
+          line-height: 68px;
         }
         .ChannelTwoup{
         	border-bottom: 1px solid #999999;
         }
         .Twofromline{
         	 display: inline-block;
-        	 height: 20px;
+        	 height: 22px;
         	 vertical-align: top;
         	 width: 100%;
         	 font-size: 12px;
         	 color: #333333;
+           line-height: 24px;
+           text-align: center;
 
         }
         .ChannewTworight{
         	width: 27%;
         	display: inline-block;
         	vertical-align: top;
+
         }
         .ChannewThreevalue{
         	border-bottom: 1px solid #999999;
@@ -379,7 +400,6 @@ export default {
         	display: inline-block;
         	color: red;
         	width: 48%;
-        	height: 42px;
         	font-size: 20px;
         	text-align: center;
         	line-height: 100px;
@@ -389,24 +409,23 @@ export default {
         	color: red;
         	width: 48%;
         	font-size: 20px;
+          height: 46px;
         	text-align: center;
-        	line-height: 100px;
-        	border:1px solid blue;
-        	height: 100%;
-        	text-align: center;
+          vertical-align: top;
+          line-height: 46px;
         }
         .buttomline{
         	display: inline-block;
         	width: 48%;
         	height: 35px;
         	text-align: center;
+          vertical-align: top;
         }
         .fourbuttomline{
            display: inline-block;
         	width: 48%;
         	text-align: center;
-        	border:1px solid blue;
-        	height: 100%;
+          height:44px;
         	vertical-align: top; 
         }
         .ThreebuttomlineRight{
@@ -416,20 +435,46 @@ export default {
         	display: inline-block;
         	width: 20%;
         	height: 100%;
+          vertical-align: top;
+          line-height: 35px;
         }
         .ChannewFourvalue{
-        	height: 41px;
-        	border:1px solid red;
+        	
         }
         .Nopower{
-        	background: url(../assets/img/icon.png) no-repeat 10px 10px ;
+
+        	background: url(../assets/img/icon.png) no-repeat  -268px -52px ;
         }
-        
-
+       .Batteryone{
+            background: url(../assets/img/icon.png) no-repeat  -268px -33px ;
+       } 
+       .Batterytwo{
+           background: url(../assets/img/icon.png) no-repeat  -268px -15px ;
+       }
+       .Batterythree{
+               background: url(../assets/img/icon.png) no-repeat -13px -361px ;
+       }
+       .plugIn{
+            background: url(../assets/img/icon.png) no-repeat  -268px -68px ;
+       }
+     .hr{
+        height:1px;
+        border:none;
+        border-top:1px solid #d7d7d7;
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
+      .unusual{
+        color:red;
+      }
+      .buttomlineLight{
+            border-left: 1px solid #999999;
+      }
     }
- 
-
-
 </style>
-
+<style type="text/css">
+        .el-input--suffix  .el-input__inner{
+          border-radius: 20px;  
+        }
+</style>
 

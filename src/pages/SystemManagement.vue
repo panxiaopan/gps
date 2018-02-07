@@ -14,7 +14,7 @@
 			  	<div class="grid-content bg-purple-light">
 			  		 <div class="AreaSearch">
 				  		   <el-input
-				  		   class="Seach"
+				  		    class="Seach"
 						    placeholder="请输入分区名称"
 						    suffix-icon="el-icon-search"
 						    v-model="groupNameSeach"
@@ -427,10 +427,10 @@ export default {
              	}]
              },
               Gps:0,
-      	      ChoneUs:' ',//为8的时候用户自定义1
-      	      ChtwoUs:' ',//用户自定义2
-      	      ChthrUs:' ',//用户自定义3
-      	      ChforUs:' ',//用户自定义4
+      	      ChoneUs:'',//为8的时候用户自定义1
+      	      ChtwoUs:'',//用户自定义2
+      	      ChthrUs:'',//用户自定义3
+      	      ChforUs:'',//用户自定义4
               LostConnectionSendTheNumber:0,//掉线报警次数
               OverrunSendTheNumber:0,//超限报警次数
               DisAlarmOffDelay:0,//掉线下班报警时间
@@ -518,7 +518,6 @@ export default {
                    	value:'13',
                    	label:'UV(uw/m²)'
                    },
-
                ],
       	        formInline: {
                     LoggerSn:'',//设备Id
@@ -565,11 +564,7 @@ export default {
 	          	 	groupName:this.groupNameSeach
 	          	 }
 	        	GetGroupData(params).then(res=>{
-	        		console.log("左面显示")
-	        		 console.log(params)
-	        		 console.log(res)
 	        		 if(res.State==1){
-		        		
                           for(let item of res.Data){
                           	 this.PositionList.push(item)
                           	  item.EditIcon=true;
@@ -581,10 +576,7 @@ export default {
               EditPartion(index){//编辑修改分区名称,
                   this.PositionList[index].readtrue=false;//可以编辑
                   this.PositionList[index].EditSend=true;//编辑时候的按钮显示*/
-                   console.log(this.PositionList[index])
                    this.PositionList[index].EditIcon=false;//编辑的图标隐藏*/
-                   console.log("编辑分区")
-                    console.log(index)
               },
            
              Addsend(){
@@ -602,7 +594,7 @@ export default {
                              	message:'添加成功'
                              })
                               this.$refs["Rulespartition"].resetFields()//清除验证格式
-
+                              this.GetEquipmentList()//刷新列表.
                          }else{
                          	this.$message({
                          		type:'error',
@@ -651,9 +643,6 @@ export default {
                   	 pageSize:this.pageSize,
                   }
                GetInstrumentData(params).then(res=>{
-	               	console.log("liebiao")
-	               	console.log(params)
-	               	console.log(res)
 	                for(let item of res.Data){
 	                    this.totalNumber=res.Data.length;//总条数.
 	                    /*item.LoggerState = item.LoggerState == 1 ? true : false;*/
@@ -687,9 +676,6 @@ export default {
                 })   
              },
              swicthFacility(index,val){//设置仪器开关按钮
-             	console.log("开关")
-             	 console.log(val)
-             	 console.log(index)
              	 if (val==false) {
              	        this.loggerInfoState=2
              	 }else{
@@ -716,6 +702,8 @@ export default {
                 })
              },
              pageIndexChange(pageIndex){//翻页监控当前页面发生变化没有! 重新获取列表的页面!~
+             	console.log("页码")
+             	console.log(pageIndex)
 	             this.pageIndex = pageIndex;//传当前页面   
 	             this.GetEquipmentList()// 列表刷新.
 	           },
@@ -864,10 +852,10 @@ export default {
                     LoggerChnum:'2',//通道数.
 					        }
               this.Gps=0,
-      	      this.ChoneUs=' ',//为8的时候用户自定义1
-      	      this.ChtwoUs=' ',//用户自定义2
-      	      this.ChthrUs=' ',//用户自定义3
-      	      this.ChforUs=' ',//用户自定义4
+      	      this.ChoneUs='',//为8的时候用户自定义1
+      	      this.ChtwoUs='',//用户自定义2
+      	      this.ChthrUs='',//用户自定义3
+      	      this.ChforUs='',//用户自定义4
               this.LostConnectionSendTheNumber=0,//掉线报警次数
               this.OverrunSendTheNumber=0,//超限报警次数
               this.DisAlarmOffDelay=0,//掉线下班报警时间
@@ -900,10 +888,12 @@ export default {
 	     	          this.AddEquipmentDialog=true;
 	     	          this.isAdd=false;
 	     	          console.log(this.isAdd)
+	     	          console.log("bianji")
                      var params={
                      	  loggerSn:this.EquipmentList[index].LoggerSn
                      }
                GetInstrumentDataTop1(params).then(res=>{
+               	           console.log(res)
                       switch(res.Data[0].LoggerChnum.toString()){
 		                    case '1':
 		                        this.twoaisle=true,
