@@ -158,4 +158,44 @@ export const userLogin = (params) => {
         .get('/RealTimeMonitoringManage/GetMapShowsGroupLoggerInfoData',{params:params})
         .then(res => res.data)
     };
-    
+    //地图展示右侧数据请求接口
+   export const GetMapShowsLoggerInfoData= (params) => { 
+    return axios
+        .get('/RealTimeMonitoringManage/GetMapShowsLoggerInfoData',{params:params})
+        .then(res => res.data)
+    };
+    //报警记录分区联动查找
+     export const GetGroupAndLogger = () => {
+        return axios
+           .get("/SystemManage/GetGroupAndLogger")
+           .then(res => res.data);
+       };
+
+    //报警历史记录查询接口
+   export const GetAlarmRecordData= (params) => { 
+    return axios
+        .get('/DataCentreManage/GetAlarmRecordData',{params:params})
+        .then(res => res.data)
+    };
+
+    //报警处理数据接口
+  export const UpdateAlarmState= (params) => { 
+    return axios
+        .post('/DataCentreManage/UpdateAlarmState',params)
+        .then(res => res.data)
+    }; 
+
+    //地图轨迹数据接口
+  export const GetMapTrackData= (params) => { 
+    return axios
+        .get('/DataCentreManage/GetMapTrackData',{params:params})
+        .then(res => res.data)
+    };
+   
+  //历史数据接口
+    export const GetHistoryData= (params) => { 
+    return axios
+        .get('/DataCentreManage/GetHistoryData',{params:params})
+        .then(res => res.data)
+    };
+  

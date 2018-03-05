@@ -15,7 +15,8 @@
                     text-color='#333'
                     router>
                  <el-menu-item index='/Homepage'>
-                        首页
+                      <!--   <i class=""></i> -->
+                        <span>首页</span>
                     </el-menu-item>
                     <el-submenu index='1'>
                         <template slot='title'>

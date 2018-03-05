@@ -575,7 +575,6 @@ export default {
 
           Gutuser(){
           	 GetPersonalCenter().then(res=>{
-          	 	   console.log(res)
                    this.UserWx=res.Data[0].UserWx
                    this.Id=res.Data[0].Id//编辑的时候要穿ID
                    this.UgroupGuid=res.Data[0].UserGuid//创建用的时候要传

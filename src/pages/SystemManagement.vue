@@ -94,6 +94,13 @@
 					    <el-table-column
 					      label="实时数据"
 					      >
+
+					      <template slot-scope='scope' >
+					      	<span >{{EquipmentList[scope.$index].LogsChone}}</span>
+					      	<span>{{EquipmentList[scope.$index].LogsChtwo}}</span>
+					      	<span>{{EquipmentList[scope.$index].LogsChthree}}</span>
+					      	<span>{{EquipmentList[scope.$index].LogsChone}}</span>
+					      </template>
 					    </el-table-column>
                          <el-table-column
 					      label="更新时间"
@@ -464,35 +471,35 @@ export default {
                SensorOptions:[
                    {
                    	value:'0',
-                   	label:'温度(°C)'
+                   	label:'°C'
                    },
                    {
                    	value:'1',
-                   	label:'湿度(%RH)'
+                   	label:'%RH'
                    },
                     {
                    	value:'2',
-                   	label:'CO2(PPM)'
+                   	label:'PPM'
                    },
                    {
                    	value:'3',
-                   	label:'大气压力(MPa)'
+                   	label:'MPa'
                    },
                    {
                    	value:'4',
-                   	label:'光照强度单位(Lux)'
+                   	label:'Lux'
                    },
                    {
                    	value:'5',
-                   	label:'华氏温度(°F)'
+                   	label:'°F'
                    },
                    {
                    	value:'6',
-                   	label:'开关量(I/O)'
+                   	label:'I/O'
                    },
                    {
                    	value:'7',
-                   	label:'差压(Pa)'
+                   	label:'Pa'
                    },
                    {
                    	value:'8',
@@ -500,11 +507,11 @@ export default {
                    },
                    {
                    	value:'9',
-                   	label:'VOC(mg/m³)'
+                   	label:'mg/m³'
                    },
                    {
                    	value:'10',
-                   	label:'甲醛(mg/m³)'
+                   	label:'mg/m³'
                    },
                    {
                    	value:'11',
@@ -516,7 +523,7 @@ export default {
                    },
                    {
                    	value:'13',
-                   	label:'UV(uw/m²)'
+                   	label:'uw/m²'
                    },
                ],
       	        formInline: {
@@ -643,6 +650,9 @@ export default {
                   	 pageSize:this.pageSize,
                   }
                GetInstrumentData(params).then(res=>{
+                       console.log("liebiao")
+                       console.log(res)
+
 	                for(let item of res.Data){
 	                    this.totalNumber=res.Data.length;//总条数.
 	                    /*item.LoggerState = item.LoggerState == 1 ? true : false;*/

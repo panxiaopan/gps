@@ -9,11 +9,16 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/reset.css'
 import 'font-awesome/css/font-awesome.css'
 /*import './assets/css/index.scss' //公用css样式*/
-
+import BaiduMap from 'vue-baidu-map'
+import VCharts from 'v-charts'//折线图
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+Vue.use(VCharts)//折线图
 /* eslint-disable no-new */
-
+Vue.use(BaiduMap, {//百度密钥
+  /* Visit http://lbsyun.baidu.com/apiconsole/key for details about app key. */
+  ak: 'UiGHNfWON4wXTdWrou8Ada28mNnEPFcB&callback=initialize'
+})
 router.beforeEach((to, from, next ) => {
   console.log(to)
   if(to.path == '/Login') {
