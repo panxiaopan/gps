@@ -1,53 +1,66 @@
 <template>
   
-    <el-container>
-        <el-header >
+    <el-container class="huatocontainer">
+        <el-header class="huatologoheader">
             <i class="logocion"></i> 
-            <span class="">云平台</span>
-            <i></i>
-            <span class="userName">{{userName}}</span>
+            <span class="PPCloud">云平台</span>
+
+            <span class="loginusername">
+                <i class="smallbell"></i>
+                <span class="userName">{{userName}}</span>
+                <el-button type="primary" size="mini"  style="font-size: 16px" @click='userLayout'>退出</el-button>
+                <el-button type="primary" size="mini" style="border:1px solid #fff;border-radius: 4px;font-size: 16px;">En</el-button>
+           </span>
+               
+
         </el-header>
         <el-container>
             <el-aside width="200px">
                 <el-menu
-                    background-color='#D3DCE6'
-                    :default-active='$router.path'
-                    text-color='#333'
+                    background-color='#f7f7f7'
+                    text-color="#666666"
+                    active-text-color="#fff"
+                    :default-active='activeIndex'
+                    :unique-opened="true"
                     router>
                  <el-menu-item index='/Homepage'>
-                      <!--   <i class=""></i> -->
+                   <i class="icon-el iconhome"></i>
                         <span>首页</span>
                     </el-menu-item>
                     <el-submenu index='1'>
                         <template slot='title'>
+                             <i class="icon-el  RealTime"></i>
                             <span>实时监测</span>
                         </template>
                         <el-menu-item index='/GraphPresentation' >
-                            图形展示
+                           <span class="fontpadding"> 图形展示</span>
                         </el-menu-item>
-                        <el-menu-item index='/MapShow' >
-                            地图展示
+                        <el-menu-item index='/MapShow'>
+                          <span class="fontpadding"> 地图展示</span> 
                         </el-menu-item>
                     </el-submenu>
                     <el-submenu index='2'>
                         <template slot='title'>
+                            <i class="icon-el  recordscenter"></i>
                             <span>数据中心</span>
                         </template>
-                        <el-menu-item index='/HistoricalData' >
-                            历史记录
+                        <el-menu-item index='/HistoricalData'>
+                           <span class="fontpadding"> 历史记录</span>
                         </el-menu-item>
-                        <el-menu-item index='/AlarmRecord' >
-                            报警记录
+                        <el-menu-item index='/AlarmRecord'>
+                           <span class="fontpadding"> 报警记录</span>
                         </el-menu-item>
                        <el-menu-item index='/MapTrajectory' >
-                            地图轨迹
+                           <span class="fontpadding">地图轨迹</span>
                         </el-menu-item>
                     </el-submenu>
                    <el-menu-item index='/SystemManagement'>
-                        系统管理
+                       <i class="icon-el systemmanagement"></i>
+                        <span>系统管理</span>
                     </el-menu-item>
                      <el-menu-item index='/PersonalCenter'>
-                        个人中心
+                        <i class="icon-el personalcenter"></i>
+                        <span>个人中心</span>
                     </el-menu-item>
                 </el-menu>
             </el-aside>
@@ -64,42 +77,130 @@
 export default {
     data () {
         return {
+             activeIndex:'0',
               userName:'',//登录时候显示的用户名称
-          }
-    },
+           }
+       },
     methods:{
-         
+              userLayout() {     // 退出登录
+                  this.$confirm('确定退出吗？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                  }).then(() => {
+                    sessionStorage.removeItem('user');
+                    this.$router.push('/Login');
+                  }).catch(() => {
+                    return false;
+                   }) 
+                },
     },
     mounted(){
           let user = JSON.parse(sessionStorage.getItem('user'));
           this.userName = user.name;
-          console.log( this.userName)
-    }
-  
+    } 
 }
 </script>
 <style lang="scss" scoped>
-.el-container {
+.huatocontainer {
     height: 100%;
-
+    background-color:rgb(247,247,247);
+     .huatologoheader{
+       height: 66px !important;
+          .PPCloud{
+              font-size: 22px;
+              color: #fff;
+              font-family: "Microsoft YaHei" !important;
+              font-weight:800;
+          }
+         .loginusername{
+            display: inline-block; 
+            height: 64px;
+            width:280px;
+            float:  right;
+            .userName{
+              display: inline-block;
+               width: 100px;
+               height: 24px;
+               line-height: 24px;
+               text-align: center;
+               border-right:  1px solid #fff;
+               font-size: 16px;
+               font-family: "Microsoft YaHei" !important;
+               color: #fff;
+               overflow: hidden;
+               vertical-align: middle;
+            }
+           .smallbell{
+               display: inline-block;
+               width:31px;
+               height: 40px;
+               vertical-align: middle;
+               background: url(../assets/img/icon.png) no-repeat -10px -46px;
+               }
+         }
+       }
     .el-main{
         padding: 0px;
-       background: #eaedf1;
+        background: #eaedf1;
     }
     .el-header, .el-footer {
         background-color: #549cec;
         color: #333;
-        text-align: center;
-        line-height: 80px;
+        line-height: 66px;
+        height: 66px;
     }
     .el-aside {
         height: 100%;
         .el-menu {
             height: 100%;
-
         }
     }
+   .icon-el{
+       display: inline-block;
+        width: 48px;
+        height: 30px;
+    }
+   .logocion{
+      display: inline-block;
+      width: 144px;
+      height:40px;
+      vertical-align: middle;
+      background: url(../assets/img/icon.png) no-repeat -12px -15px ;
+   }
+    .iconhome{
+         background: url(../assets/img/icon.png) no-repeat -5px -108px ;
+    }
+    .RealTime{
+         background: url(../assets/img/icon.png) no-repeat -5px -139px ;
+    }
+    .recordscenter{
+        background: url(../assets/img/icon.png) no-repeat -5px -171px ;
+    }
+    .systemmanagement{
+        background: url(../assets/img/icon.png) no-repeat -5px -202px ;
+    }
+    .personalcenter{
+        background: url(../assets/img/icon.png) no-repeat -5px -237px ;
+    }
+     .is-active{
+          background-color: #549cec  ! important;
+       }
+  .el-menu{
+    .el-menu{
+             .el-menu-item{
+                    padding-left: 55px;
+                 }
+         }
+      }
+      .fontpadding{
+        margin-left: 30px;
+      }
+
+      .el-aside{
+        height: calc(100% - 60px);
+        padding-top: 60px;
+      }
 }
 </style>
-
 

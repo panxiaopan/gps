@@ -3,7 +3,7 @@
    	 <el-row>
              <el-col :span='24'>
 		   	 	   <el-col :span='24' class="CurrentPosition">
-				        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right">地图展示</i></div> 
+				        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right"> <span class="currentcolor">地图展示</span></i></div> 
 				    </el-col>
              </el-col>
    	 </el-row>  
@@ -11,17 +11,21 @@
      	  <el-col :span='4' class="lightZone">
      	    <div class="grid-content bg-purple-light">
                		 <div class="AreaSearch">
-				  		   <el-input
-				  		    class="Seach"
-						    placeholder="请输入设备名称或型号"
-						    suffix-icon="el-icon-search"
-						    v-model="SeachEquipment"
-						     @keyup.enter.native="GetEquipmentList"
-						     >
-						  </el-input> 
+    				  		   <el-input
+    				  		   class="Seach"
+    						    placeholder="请输入设备名称或型号"
+    						    suffix-icon="el-icon-search"
+    						    v-model="SeachEquipment"
+    						     @keyup.enter.native="GetEquipmentList"
+    						     >
+    						  </el-input> 
 					  </div>
 					  <div class="DevicesDisplay" v-for="item in EquipmentList" :key="item.LoggerInfoSn">
-                  <div class="EquipmentName" >
+                 
+                  <div class="EquipmentName" 
+                    :class='{"active":activeName == item.LoggerInfoSn}'
+
+                  @click="exactsearch(item.LoggerInfoSn)">
     					      <span class="EquipmentState">	
                       <i :class='{"Status StatusClose":item.LoggerInfoState==2,"Status StatusOpen":item.LoggerInfoState==1}'></i>
                     </span>
@@ -30,6 +34,7 @@
                           	 <div class="Name typefont">{{item.LoggerInfoSn}}</div>
                           </span>
                    </div>
+
 					  </div>
      	     </div>
      	  </el-col>
@@ -151,6 +156,7 @@
 export default {
       data(){
       	  return{
+              activeName: '',
               labelPosition:'left',//左边靠齐
               SeachEquipment:'',
               EquipmentList:[],
@@ -299,6 +305,9 @@ export default {
                         } 
                   })          
          },
+         exactsearch(gameName){
+                this.activeName = gameName
+         },
       },
       mounted(){
             var _this =this;
@@ -364,8 +373,8 @@ export default {
           cursor: pointer;
         } 
         .Name{
-        	height: 25px;
-        	line-height: 23px;
+        	height:18px;
+        	line-height: 18px;
         }
         .StatusOpen{
         	background:url(../assets/img/icon.png) no-repeat -20px -483px;
@@ -374,6 +383,7 @@ export default {
         	background:url(../assets/img/icon.png) no-repeat -20px -518px;
         }
         .namefont{
+          margin-top: 10px;
         	font-size: 14px;
         	color: #333333;
         	font-family:"Microsoft YaHei" ! important;
@@ -400,7 +410,7 @@ export default {
        }
        .EquipmentState{
             display: inline-block;
-            width: 40px;
+            width: 34px;
             padding-left: 20px;
        }
        .ChannelDisplay{
@@ -564,10 +574,16 @@ export default {
         .Equipmentskip{
           margin-left: 40px;
         }
+        .EquipmentName{
+           border-bottom: 1px solid #999999;
+        }
+        .active{
+           background: #fff;
+        }
       } 
 </style>
 <style type="text/css">
-	    .Seach .el-input__inner{
+	    .AreaSearch .el-input__inner{
     		border-radius: 20px;
     		}
        .formessage .el-form-item{

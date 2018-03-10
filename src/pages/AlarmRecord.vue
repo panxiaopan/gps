@@ -8,7 +8,7 @@
 			        	<i class="el-icon-location"></i>
 			        	<span>当前位置:</span>
 			        	<i class="el-icon-arrow-right">实时监控</i>
-			        	<i class="el-icon-arrow-right">报警记录</i>
+			        	<i class="el-icon-arrow-right"> <span class="currentcolor">报警记录</span></i>
 			        </div> 
 			      </el-col>
 			   </el-row>
@@ -63,7 +63,7 @@
 						    <el-button type="primary" size="small" @click="queryData" >查询</el-button>
     					</el-form-item>
               <el-form-item>
-    						    <el-button type="primary" size="small" class="ExportData" >导出数据</el-button>
+    						    <el-button type="primary" size="small" class="ExportData" @click="ExportDataAlarm">导出数据</el-button>
     					</el-form-item>
     					</el-form>
        	    	</div>
@@ -160,7 +160,7 @@
   </el-row>
 </template>
 <script>
-     import{GetGroupAndLogger,GetAlarmRecordData,UpdateAlarmState}from'@/api/api'
+     import{GetGroupAndLogger,GetAlarmRecordData,UpdateAlarmState,ExportAlarmRecordDataPdf}from'@/api/api'
      import qs from 'qs';
 export default {
         data(){
@@ -267,7 +267,6 @@ export default {
                   this.ProcessedDialogVisible=true;//弹框显示
                   this.alarmCode=this.AlarmtableData[index].AlarmId;
                 },
-
             pageIndexChange(pageIndex){//翻页监控当前页面发生变化没有! 重新获取列表的页面!~
                this.pageIndex = pageIndex;//传当前页面   
                this.GetAlarmRecordDataList()//刷新列表
@@ -283,6 +282,30 @@ export default {
                this.AlarmTime=val;
                }
           },
+          ExportDataAlarm(){//导出报警数据
+               var params={
+                     staDate:this.AlarmTime[0],
+                     endDate:this.AlarmTime[1],
+                     loggerInfoSn:this.AllEquipmentName
+               }
+
+             ExportAlarmRecordDataPdf(params).then(res => {
+                      if(res.State==1){
+                         console.log(res)
+                        /* window.open(res.State)*/
+                      }else{
+                         this.$message({
+                             type:'error',
+                             message:'导出数据失败'
+                         })
+                      }
+                         
+              })
+
+          },
+
+
+
         },
         mounted(){
               this.PartitionDisplay()//分区联动请求显示,

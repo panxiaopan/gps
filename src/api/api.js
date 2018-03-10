@@ -184,6 +184,20 @@ export const userLogin = (params) => {
         .post('/DataCentreManage/UpdateAlarmState',params)
         .then(res => res.data)
     }; 
+  ///报警记录数据导出PDF
+    export const ExportAlarmRecordDataPdf= (params) => { 
+    return axios
+        .post('/DataCentreManage/ExportAlarmRecordDataPdf',params)
+        .then(res => res.data)
+    }; 
+
+
+ //地图轨迹数据导出
+    export const ExportMapTrackDataPdf= (params) => { 
+    return axios
+        .post('/DataCentreManage/ExportMapTrackDataPdf',params)
+        .then(res => res.data)
+    }; 
 
     //地图轨迹数据接口
   export const GetMapTrackData= (params) => { 
@@ -198,4 +212,23 @@ export const userLogin = (params) => {
         .get('/DataCentreManage/GetHistoryData',{params:params})
         .then(res => res.data)
     };
-  
+  //历史记录数据导出
+  export const ExportHistoryDataPdf= (params) => { 
+    return axios
+        .post('/DataCentreManage/ExportHistoryDataPdf',params)
+        .then(res => res.data)
+    };
+
+
+  //首页分区统计图
+       export const GetGroupStatisticsData = () => {
+        return axios
+           .get("/HomePage/GetGroupStatisticsData")
+           .then(res => res.data);
+       };
+ //首页分类数据统计图接口
+       export const GetloggerInfoTypeStatisticsData = () => {
+        return axios
+           .get("/HomePage/GetloggerInfoTypeStatisticsData")
+           .then(res => res.data);
+       };

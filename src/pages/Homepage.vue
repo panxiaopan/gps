@@ -1,12 +1,11 @@
 <template>
     <el-row class="Homepage">
-        <el-row class="HomepageTOP">
+      <el-row class="HomepageTOP">
 	    	<el-col :span="20" class="HomepageTOPleft">
-               <el-col :span="24">
+           <el-col :span="24">
 	    	   <div class="HomepageTOPback">云平台使用方式</div>
-               </el-col>
+            </el-col>
                <el-col :span="24" class="HomepageTOPIcon">
-                    
                     	<div class="HomepageTOPPicture">
                     		 <div class="NetworkEquipment">
                     		 	   <i class="NetworkEquipmentIcon  NetworkEquipmentIconWIFI"></i>
@@ -72,34 +71,239 @@
 
 	    	 </el-col>
         </el-row>
+        <el-row  class="Homepagebuttom">
+                    <el-col :span='24'>
+                       <el-col :span="20"  class="Homepagebuttomleft">
+                         <el-col :span="24" class="DivisonalStatistics">
+                           <div class="HomepageTOPback">设备分区监测统计</div>
+                              <div class="Partitiontable">
+                                <el-table
+                                    :data="PartitiontableData"
+                                    border
+                                    stripe
+                                    height='300'
+                                    >
+                                    <el-table-column
+                                      prop="Name"
+                                      label="区域"
+                                      width="177">
+                                    </el-table-column>
+                                    <el-table-column
+                                      prop="NormalNumber"
+                                      label="正常"
+                                      width="100">
+                                    </el-table-column>
+                                    <el-table-column
+                                      label="离线"
+                                      width="100">
+                                   <template slot-scope="scope">
+                                      <span :class='{"off-line":PartitiontableData[scope.$index].OfflineNumber>0}'>{{PartitiontableData[scope.$index].OfflineNumber}}</span>
+                                   </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                      label="超标"
+                                       width="100">
+                                     <template slot-scope="scope">
+                                      <span :class='{"overproof":PartitiontableData[scope.$index].ExcessNumber>0}'>{{PartitiontableData[scope.$index].ExcessNumber}}</span>
+                                     </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                      label="维护"
+                                       width="100">
+                                     <template slot-scope="scope">
+                                      <span :class='{"vindicate":PartitiontableData[scope.$index].MaintenanceNumber>0}'>{{PartitiontableData[scope.$index].MaintenanceNumber}}</span>
+                                     </template>
 
+                                    </el-table-column>
+                                     <el-table-column
+                                      label="预警未处理"
+                                       width="100">
+                                     <template slot-scope="scope">
+                                      <span :class='{"earlywarning":PartitiontableData[scope.$index].EarlyWarningNumber>0}'>{{PartitiontableData[scope.$index].EarlyWarningNumber}}</span>
+                                     </template>
+
+
+
+                                    </el-table-column>
+                                </el-table>
+                              </div>
+                              <div class="histogramchart">
+                                    <ve-histogram
+                                       height="300px"
+                                      :data="chartDataPartition"
+                                      :settings="chartSettingsPartition"
+                                      :yAxis='yAxisOption'
+                                      :legend-visible="false"
+                                      :tooltip-visible="false"
+                                      :extend="chartExtend"
+                                      > 
+                                      </ve-histogram>
+                              </div>
+                         </el-col>
+                      <el-col :span="24" class="DivisonalStatistics">
+                           <div class="HomepageTOPback">设备分区监测统计</div>
+                              <div class="Partitiontable">
+                                <el-table
+                                    :data="classifydata"
+                                    border
+                                    stripe
+                                    height='300'
+                                    >
+                                    <el-table-column
+                                      prop="Name"
+                                      label="区域"
+                                      width="177">
+                                    </el-table-column>
+                                    <el-table-column
+                                      prop="NormalNumber"
+                                      label="正常"
+                                      width="100">
+                                    </el-table-column>
+                                    <el-table-column
+                                      label="离线"
+                                      width="100">
+                                   <template slot-scope="scope">
+                                      <span :class='{"off-line":classifydata[scope.$index].OfflineNumber>0}'>{{classifydata[scope.$index].OfflineNumber}}</span>
+                                   </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                      label="超标"
+                                       width="100">
+                                     <template slot-scope="scope">
+                                      <span :class='{"overproof":classifydata[scope.$index].ExcessNumber>0}'>{{classifydata[scope.$index].ExcessNumber}}</span>
+                                     </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                      label="维护"
+                                       width="100">
+                                      <template slot-scope="scope">
+                                      <span :class='{"vindicate":classifydata[scope.$index].MaintenanceNumber>0}'>{{classifydata[scope.$index].MaintenanceNumber}}</span>
+                                     </template>
+                                    </el-table-column>
+                                     <el-table-column
+                                      label="预警未处理"
+                                       width="100">
+                                     <template slot-scope="scope">
+                                      <span :class='{"earlywarning":classifydata[scope.$index].EarlyWarningNumber>0}'>{{classifydata[scope.$index].EarlyWarningNumber}}</span>
+                                     </template>  
+                                    </el-table-column>
+                                </el-table>
+                              </div>
+                              <div class="histogramchart">
+                                    <ve-histogram
+                                       height="300px"
+                                      :data="chartDataPartition"
+                                      :settings="chartSettingsPartition"
+                                      :legend-visible="false"
+                                      :yAxis='yAxisOption'
+                                      :tooltip-visible="false"
+                                      :extend="chartExtend"
+                                      > 
+                                    </ve-histogram>
+                              </div>
+                         </el-col>
+                       </el-col>
+                        <el-col :span="4"  class="Homepagebuttomright">
+                               <el-col  :span="24" class="Homepagebuttomrightlayout">
+                                 
+                               </el-col>
+                        </el-col>
+                      </el-col>
+        </el-row>
     </el-row>
 </template>
 <script>
+   import{GetGroupStatisticsData,GetloggerInfoTypeStatisticsData}from'@/api/api'
 export default {
-     
+          data(){
+            return{
+                   PartitiontableData:[],//分区数据
+                   classifydata:[],
+                   chartDataPartition :{ 
+                        rows: [],
+                        columns:['nameshow'],     
+                  },
+                  RRRows:[],
+                  chartSettingsPartition :{
+                       metrics:['CountNumber'],
+                       label: {
+                          normal: { show: true, position: "top" }
+                        },
+                     itemStyle:{
+                        normal:{
+                          color:function(item){
+                            var colorList = ['#7cb9f0','#51b56b','#ffb400','#ff6c00','#07acd0','#e50005'];
+                            return colorList[item.dataIndex];
+                          }
+                        }
+                      },
+                  },
+
+                chartExtend:{
+                      barWidth: '35px'
+                },    
+                yAxisOption:{
+                    axisLine: {
+                      show: true,
+                      lineStyle:{color:'#b1b1b1'},//y轴坐标的显示颜色
+                    },
+                    name:'数量(台)',
+                },
+              }
+          },
+          methods:{
+               GetDivisional(){//分区同级数据显示表格
+                  GetGroupStatisticsData().then(res => {
+                    console.log("分区列表显示")
+                      console.log(res)
+                      console.log(res.Data.CountNumber)
+                      for(let item of res.Data.ListTable){
+                           this.PartitiontableData.push(item);
+                      }
+                      var RRRows = [
+                          {CountNumber:res.Data.CountNumber,nameshow:'总数'},//总台数
+                          {CountNumber:res.Data.NormalNumber,nameshow:'正常数'},//正常数
+                          {CountNumber:res.Data.OfflineNumber,nameshow:'离线'},//离线数
+                          {CountNumber:res.Data.ExcessNumber,nameshow:'超标'},//超标数
+                          {CountNumber:res.Data.MaintenanceNumber,nameshow:'维护'},//维护数
+                          {CountNumber:res.Data.EarlyWarningNumber,nameshow:'预警未处理'}//报警未处理
+                      ]
+                        this.RRRows = RRRows;
+                        this.chartDataPartition.rows= this.RRRows
+                       console.log(this.chartDataPartition.rows)
+                    }) 
+               },
+              Getclassify(){//分区分类数据显示接口
+                    GetloggerInfoTypeStatisticsData().then(res=>{
+                         console.log("分类数据")
+                          console.log(res)
+                          for(let item of res.Data.ListTable){
+                              this.classifydata.push(item)
+                          }
+
+                    })
+              },
+          },
+          mounted(){
+               this.GetDivisional()//分区
+               this.Getclassify()//分类数据
+          },
 }
 </script>
 <style lang="scss" scoped>
      .Homepage{
            background: #eaedf1;
            margin: 20px;
+           height: 100%;
          .HomepageTOP{
          	 height: 574px;
-         	 min-width: 1665px;
+         	 min-width: 1680px;
              .HomepageTOPleft{
              	 border: 1px solid #d7d7d7;
              	 background: #ffffff;
              	 height: 574px;
              	 width: 1300px;
-             	 .HomepageTOPback{
-             	 	height: 45px;
-             	 	background: #f4f4f4;
-             	 	padding-left: 20px;
-             	 	font-size: 16px;
-             	 	font-family: "Microsoft YaHei" !important;
-             	 	line-height: 45px;
-             	 }
+
              	 .HomepageTOPIcon{
              	 	padding: 30px 20px;
              	 	.HomepageTOPPicture{
@@ -143,7 +347,7 @@ export default {
                 }
              }
              .HomepageTOPright{
-             	padding-left: 30px;
+             	padding-left: 25px;
              	height: 574px;
                 width: 373px;
              	.HomepageTOPrightTop{
@@ -178,7 +382,6 @@ export default {
                   }
                   .Description{
                   	display: inline-block;
-
                   }
                   .Wechatfontsize{
                   	 font-family: "Microsoft YaHei" !important;
@@ -187,7 +390,6 @@ export default {
                      height: 20px;
                      padding-left: 10px;
                   }
-
                }
                  .HomepageTOPrightbottom{
                   margin-top: 20px;
@@ -224,12 +426,8 @@ export default {
                       font-size: 14px;
                       color: #888888;
                     }
-
                  }
-
-
-             }
-           
+             }  
          }
           .FocusPlatform{
           	 height: 45px;
@@ -239,10 +437,83 @@ export default {
           	 padding-left: 20px;
           	 border-bottom: 1px solid #d7d7d7;
           }
+         .Homepagebuttom{
+              margin: 20px 0px 20px 0px;
+                 min-width: 1680px;
+              .DivisonalStatistics{
+                 height: 385px;
+                 border: 1px solid  #d7d7d7;
+                 border-radius: 5px;
+                 background: #ffffff;
+                 width: 1300px;
+                 margin-bottom: 24px;
+              }
+            
+         }
+        .HomepageTOPback{
+            height: 45px;
+            background: #f4f4f4;
+            padding-left: 20px;
+            font-size: 16px;
+            font-family: "Microsoft YaHei" !important;
+            line-height: 45px;
+            border-bottom: 1px solid  #d7d7d7;
+           }
+         .Partitiontable{
+               width: 678px;
+               text-align: center;
+               margin: 20px;
+               display: inline-block;
+           }
+          .histogramchart{
+               width: 500px;
+               height: 300px;
+               display: inline-block;
+          }
+          .Homepagebuttomleft{
+            width: 1300px;
+          }
 
+          .Homepagebuttomright{
+             padding-left: 25px;
+              .Homepagebuttomrightlayout{
+                 border:1px solid #d7d7d7;
+                  width: 346px;
+                  height: 600px;
+                  border-radius: 5px;
+              }
 
+          }
+          .off-line{
+              color: #ffb400;
+           }
+           .overproof{
+              color: #ff6c00;
+           }
+           .vindicate{
+             color: #07acd0;
+           }
+           .earlywarning{
+             color: #e50005;
+           }
 
      }
+</style>
+<style type="text/css">
+   .Partitiontable .cell{
+      text-align: center;
+   }
+      .DivisonalStatistics .el-table .is-leaf{
+               background: #7cb9f0;
+               color: #ffffff;
+       }
+    .Partitiontable .el-table__body{
+      height: 251px;
+     width: 100%;
+    }
+
+
+
 </style>
 
 

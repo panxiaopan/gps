@@ -2,7 +2,7 @@
  <el-row  class="Container PersonalCenter">
    <el-row>
       <el-col :span='24' class="CurrentPosition">
-        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right">个人中心</i></div> 
+        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right"><span class="currentcolor">个人中心</span></i></div> 
       </el-col>
    </el-row>
     <el-row class="PersonalMessage">

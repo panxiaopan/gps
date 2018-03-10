@@ -8,7 +8,7 @@
 			        	<i class="el-icon-location"></i>
 			        	<span>当前位置:</span>
 			        	<i class="el-icon-arrow-right">实时监控</i>
-			        	<i class="el-icon-arrow-right">地图轨迹</i>
+			        	<i class="el-icon-arrow-right"> <span class="currentcolor">地图轨迹</span></i>
 			        </div> 
 			      </el-col>
 			   </el-row>
@@ -16,7 +16,7 @@
 	  </el-row> 
      <el-row>
      	<el-col :span='24'>
-     		   <div class="TrajectorySecrch">
+     		   <div class="MapTrajectorySecrch">
      		        <el-form :inline="true"  class="demo-form-inline" size="small">
 						  <el-form-item label="设备:">
   						     <el-select v-model="AllEquipmentName" placeholder="选择设备"> 
@@ -49,7 +49,7 @@
                 <el-button type="primary" size="small" class="DataExport" @click="reset">播放行程</el-button>
               </el-form-item> -->
 						   <el-form-item>
-						    <el-button type="primary" size="small" class="DataExport">导出数据</el-button>
+						    <el-button type="primary" size="small" class="DataExport" @click="DerivedData">导出数据</el-button>
 						  </el-form-item>
 
 					</el-form> 
@@ -77,7 +77,7 @@
   </el-row>
 </template>
 <script>
-  import{GetMapShowsGroupLoggerInfoData,GetMapTrackData}from'@/api/api'
+  import{GetMapShowsGroupLoggerInfoData,GetMapTrackData,ExportMapTrackDataPdf}from'@/api/api'
 	import {BmlMarkerClusterer} from 'vue-baidu-map'
   import {BmlLushu} from 'vue-baidu-map'
 export default {
@@ -112,10 +112,6 @@ export default {
              reset () {
                 this.play = false
               },
-/*            handleSearchComplete (res) {
-              console.log(res.getPlan(0));
-                this.path = res.getPlan(0).getRoute(0).getPath()
-              },*/
              AllEquipmentList(){
                 this.EquipmentList=[]//调用前清空
                  var params={
@@ -162,14 +158,32 @@ export default {
                    this.Tourend.lng=Number(this.path[this.path.length-1].lng)//最后一个点
                    this.Tourend.lat=Number(this.path[this.path.length-1].lat)
                   })
-
-
                  console.log(this.path)
                },
          Demand(){//查询轨迹
                this.GetTravelpath() 
-          },
+            },
+            DerivedData(){
+              var params={
+                     loggerInfoSn:this.AllEquipmentName,
+                     staDate:this.TrajectoryTime[0],
+                     endDate:this.TrajectoryTime[1]
+                   }
 
+                 ExportMapTrackDataPdf(params).then(res=>{
+                     console.log(params)
+                      console.log(res)
+                      if(res.State==1){
+                         window.open("res.Url")
+                      }else{
+                        this.$message({
+                           type:'error',
+                           message:'导出数据失败'
+                        })
+                      }
+
+                 })
+            },
 
          },
 
@@ -194,8 +208,9 @@ export default {
 		              margin-left: 15px;
 		    		}
 		     } 
-        .TrajectorySecrch{
+        .MapTrajectorySecrch{
         	height: 35px;
+
         }
         .demo-form-inline{
                margin: 15px 0px 0px 15px;

@@ -4,7 +4,7 @@
 	    <el-col :span='24'>
 		    <el-row>
 		      <el-col :span='24' class="CurrentPosition">
-		        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right">系统管理</i></div> 
+		        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right"><span class="currentcolor">系统管理</span></i></div> 
 		      </el-col>
 		   </el-row>
 	   </el-col>
@@ -542,7 +542,7 @@ export default {
                  Switchvalue:null,//设备显示开关
       	         DataChannel:[],//显示多个通道的数据显示;
                  pageIndex:1,
-                 pageSize:6,
+                 pageSize:10,
                  totalNumber:null,
                  groupName:'',
                  loggerInfoState:'',//
@@ -613,8 +613,6 @@ export default {
                 })
              },
              DeletePartition(val){//左侧选中
-             	 console.log("仪器ID")
-             	console.log(val)
              	console.log(this.SelectDelete)
              },
             DelectZone(){
@@ -654,7 +652,7 @@ export default {
                        console.log(res)
 
 	                for(let item of res.Data){
-	                    this.totalNumber=res.Data.length;//总条数.
+	                    this.totalNumber=res.TotalNumber;//总条数.
 	                    /*item.LoggerState = item.LoggerState == 1 ? true : false;*/
 	                    if(item.LoggerState == 1){
 	                    	item.LoggerState=true
@@ -714,6 +712,8 @@ export default {
              pageIndexChange(pageIndex){//翻页监控当前页面发生变化没有! 重新获取列表的页面!~
              	console.log("页码")
              	console.log(pageIndex)
+
+
 	             this.pageIndex = pageIndex;//传当前页面   
 	             this.GetEquipmentList()// 列表刷新.
 	           },
@@ -1040,6 +1040,9 @@ export default {
               line-height: 40px;
               margin-left: 15px;
     		}
+    		.currentcolor{
+    			color: #008ce5
+    		}
     	}
       .SystemManagementCoent{
       	     height: calc(100% - 60px);
@@ -1047,7 +1050,7 @@ export default {
               margin: 20px;
               background: #fff;
 		     .lightZone {
-				    height: calc(100% - 60px);
+				    height: calc(100% - 4px);
 				    background:#eeeeee;
 				    overflow-y: scroll;
 				    .AreaSearch{

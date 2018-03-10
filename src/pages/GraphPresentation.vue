@@ -4,7 +4,7 @@
 		    <el-col :span='24'>
 			    <el-row>
 			      <el-col :span='24' class="CurrentPosition">
-			        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right">实时监控</i><i class="el-icon-arrow-right">图形展示</i></div> 
+			        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right"><span class="currentcolor">实时监控</span></i><i class="el-icon-arrow-right">图形展示</i></div> 
 			      </el-col>
 			   </el-row>
 		   </el-col>
@@ -26,8 +26,7 @@
                          <el-radio :label="item.Id"  @change="DeletePartition"> 	
                            {{item.GroupName}}
                           </el-radio>
-                        </el-radio-group>
-                   <hr  class="hr"/>    
+                        </el-radio-group>   
                 </div> 
 			  	</div>
 		  </el-col>  
@@ -122,18 +121,16 @@
               </div>
             </el-col>
              <el-col :span="24">
-                  <div class="myPagination">
-                      <el-pagination
-                        background
-                        layout="prev, pager, next,  total"
-                        :total="totalNumber" 
-                        :current-page='pageIndex'
-                        :page-size='pageSize'
-                        @current-change='pageIndexChange'>
-                      </el-pagination>
-                 </div>
+                   <div class="myPagination"><!-- 组件翻页 -->
+                        <el-pagination
+                          background
+                          layout="prev, pager, next,  total"
+                          :total="totalNumber" 
+                          :page-size='pageSize'
+                          @current-change='pageIndexChange'>
+                        </el-pagination>
+                   </div>
              </el-col>
-
           </el-col>
 	</el-row>  
 
@@ -150,7 +147,7 @@ export default {
           SeachPartation:'',
           groupId:'',//分区ID
           pageIndex:1,//显示第一页
-          pageSize:6,//每页6条
+          pageSize:12,//每页6条
           totalNumber:null,
           ChannewFour:false,
           ChannewThree:false,
@@ -237,17 +234,17 @@ export default {
                   	 pageSize:this.pageSize,
                   }
                this.EquipmentList=[]//调用前清空
-              this.totalNumber=null;
                GetInstrumentData(params).then(res=>{
 	                for(let item of res.Data){
-	                     this.totalNumber=res.Data.length;//总条数.
+	                     this.totalNumber=res.TotalNumber;//总条数.
                        this.EquipmentList.push(item) 
 	                 } 
+
                 }) 
              },          
          pageIndexChange(pageIndex){//翻页监控当前页面发生变化没有! 重新获取列表的页面!~
 	             this.pageIndex = pageIndex;//传当前页面   
-	             /*this.GetEquipmentList()// 列表刷新.*/
+	              this.GetEquipmentList()// 列表刷新.
 	           },
 
      	 },
@@ -284,6 +281,7 @@ export default {
 				    .PartitionList{
 				    	margin-left: 11%;
 				    	padding: 10px;
+              border-bottom: 1px solid #d7d7d7;
 				    }
 				  }
 				  .InstrumentsDisplay{
@@ -381,7 +379,7 @@ export default {
           .Oneleft{
              width: 150px;
              font-family: "Microsoft YaHei" !important;
-             font-size: 18px;
+             font-size: 30px;
              height: 100%;
              display: inline-block;
              line-height: 96px;
