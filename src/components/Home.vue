@@ -2,7 +2,7 @@
   
     <el-container class="huatocontainer">
         <el-header class="huatologoheader">
-            <i class="logocion"></i> 
+            <i class="logocion" ></i> 
             <span class="PPCloud">云平台</span>
 
             <span class="loginusername">
@@ -15,8 +15,13 @@
 
         </el-header>
         <el-container>
-            <el-aside width="200px">
+         <div style="height: 37px; position: absolute; width: 198px; border-right: 1px solid #d7d7d7">
+             <i class="replicate" :class='{"openmenu":this.isCollapse==false,"closemenu":this.isCollapse==true}' @click="Clickfold"></i>
+             </div> 
+            <el-aside :width="Collapsing" >
+                
                 <el-menu
+                    :collapse="isCollapse"
                     background-color='#f7f7f7'
                     text-color="#666666"
                     active-text-color="#fff"
@@ -77,8 +82,10 @@
 export default {
     data () {
         return {
+             isCollapse:false,
              activeIndex:'0',
               userName:'',//登录时候显示的用户名称
+              Collapsing: '200px', 
            }
        },
     methods:{
@@ -94,6 +101,20 @@ export default {
                     return false;
                    }) 
                 },
+              Clickfold(){
+                    if(this.isCollapse){
+                      this.isCollapse = false;
+                       console.log("dakai")
+                       console.log(this.isCollapse)
+                       this.Collapsing=200+'px';
+                       
+                    }else{
+                        console.log("guanbi")
+                        this.isCollapse = true
+                        this.Collapsing=60+'px';
+                      
+                    }
+              },
     },
     mounted(){
           let user = JSON.parse(sessionStorage.getItem('user'));
@@ -130,6 +151,7 @@ export default {
                color: #fff;
                overflow: hidden;
                vertical-align: middle;
+
             }
            .smallbell{
                display: inline-block;
@@ -188,7 +210,7 @@ export default {
        }
   .el-menu{
     .el-menu{
-             .el-menu-item{
+         .el-menu-item{
                     padding-left: 55px;
                  }
          }
@@ -196,11 +218,32 @@ export default {
       .fontpadding{
         margin-left: 30px;
       }
-
       .el-aside{
-        height: calc(100% - 60px);
-        padding-top: 60px;
+      height: calc(100% - 160px);
+           margin-top: 40px;
+         .el-menu{
+          height:calc(100% - 80px);
+          
+
+         } 
       }
+      .replicate{
+        position: absolute;
+        display: inline-block;
+        width: 50px;
+        height: 35px;
+        background: url(../assets/img/icon.png) no-repeat 2px -75px ;
+        cursor: pointer;
+      }
+    .openmenu{
+      margin-left: 116px;
+
+    }
+   .closemenu{
+      margin-left: 0px;
+   }
+
 }
+
 </style>
 

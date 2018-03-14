@@ -6,13 +6,13 @@
       </el-col>
    </el-row>
     <el-row class="PersonalMessage">
-       <el-col :span="8">
+       <el-col :span="8" class="HuatoMessage">
 		       	<div class="grid-content bg-purple ">
 	                  <div class="Icon_height">
 			       		  <i  class="huatoIcon"></i> 
 	                  </div>
 	                  <el-row >
-		                  <el-col :span="16">
+		                  <el-col :span="24">
 		                     <el-form :label-position="labelPosition" status-icon label-width="80px" :rules='PersonnalRules' ref='personnalRule' :model="PersonalMessagelable" class="PersonalMessagelable">
 								  <el-form-item label="公司:">
 								       <el-input  v-model="PersonalMessagelable.CompanyName" class="borderNone" :readonly="true"></el-input>
@@ -29,8 +29,9 @@
 		                            <el-form-item label="邮箱:" prop="Mailbox">
 								       <el-input v-model="PersonalMessagelable.Mailbox" :readonly="readtrue"></el-input>
 								  </el-form-item>
-		                          <el-form-item label="微信:" v-show="weixinshow">
-								       <el-input v-model="UserWx" :disabled="true"><i class="fa fa-check-circle-o" ></i></el-input>
+		                          <el-form-item label="微信:" v-show="weixinshow" class="weixinfrom">
+								       <el-input v-model="UserWx" :disabled="true"></el-input>
+								        <el-button type="primary" size="small"  @click="GainWechat" v-if="WexinButton">获取</el-button>
 								  </el-form-item>
 								  <el-form-item label="报警类型:" v-show="alarmshow" class="AlarmI">
 		                                    <el-tooltip class='item' effect='light' content="暂无报警类型" v-show="DeviceSafety">
@@ -47,19 +48,18 @@
 								       <el-button type="primary" size="mini" @click="EditSubmission">确定</el-button><el-button  size="mini" @click="AbolishEdit">取消</el-button>
 								  </el-form-item>
 		                    </el-form>
+			                 <div class="Edit" v-show="EditHideshow">
+		                    	<el-button type="primary" size="mini" @click="editMessage">编辑</el-button>
+		                    	<el-button type="primary" size="mini" @click="PassDialogVisible = true">修改密码</el-button>
+		                    	<el-button type="primary" size="mini">添加报警接受人</el-button>
+		                    </div>
 		                </el-col>
-		                <el-col :span="8" class="Gainlayout">
-		                	 <el-button type="primary" size="small" class="Gainweixin" @click="GainWechat" v-if="WexinButton">获取微信</el-button>
-		                </el-col>
+
                     </el-row>
-	                    <div class="Edit" v-show="EditHideshow">
-	                    	<el-button type="primary" size="mini" @click="editMessage">编辑</el-button>
-	                    	<el-button type="primary" size="mini" @click="PassDialogVisible = true">修改密码</el-button>
-	                    	<el-button type="primary" size="mini">添加报警接受人</el-button>
-	                    </div>
+
 		       	</div>
        </el-col>
-       <el-col :span="16">
+       <el-col :span="16" class="Loginrecord">
 	       	<div class="grid-content bg-purple">
 	       	   <div class="NowLogin">最近登录</div>
 			          <el-form :inline="true" :model="formInline" class="demo-form-inline  userfrom">
@@ -123,7 +123,7 @@
 	       </div>
 	   </el-col>
      </el-row>
-     <el-row :span="24">
+     <el-row :span="24" v-if="ChildUsers" class="ManageUser">
      	  <div class=" bg-purple">
      	  	 <el-form :inline="true"  class="demo-form-inline  Submenufrom" >
 	                    <el-form-item label="用户名:">
@@ -149,24 +149,28 @@
 						    <el-button type="primary" size="small" @click="UserCreation" >创建用户</el-button>
 						  </el-form-item>
 			      </el-form>
-                  	 <div class="blockTable">
+                  	 <div class="blockTable SubUserTable">
 	                	   <el-table
 						    :data="SubUserDataList"
-						    height="150"
+						    height="190"
 						    border
-						    style="width: 100%">
+						    style="width: 100%"
+						    >
 						    <el-table-column
 						      prop="Username"
 						      label="用户名"
-						      width="180">
+						      width="180"
+						      >
 						    </el-table-column>
 						    <el-table-column
 						      label="用户角色"
-						      width="180">
-	                            <template slot-scope="scope">
+						      width="180"
+						      >
+                 	          <template slot-scope="scope">
 	                                <span  v-if='SubUserDataList[scope.$index].UserLevel==1' >管理员</span>
 	                                <span  v-if='SubUserDataList[scope.$index].UserLevel==2' >普通用户</span>
-	                            </template>
+	                          </template>
+
 						    </el-table-column>
 						    <el-table-column
 						      prop="Ucompany"
@@ -217,6 +221,7 @@
                   </div>
 			   </div>
      </el-row>
+
       <el-dialog
 		  title="修改密码"
 		  :visible.sync="PassDialogVisible"
@@ -244,6 +249,8 @@
 				      <el-button type="primary" @click="PassWordSend" size='small'>确 定</el-button>
 		       </span>
 		</el-dialog>
+
+
         <el-dialog
 			  title="创建用户"
 			  :visible.sync="CreateDialogVisible"
@@ -389,16 +396,19 @@ export default {
       var checkNewpassword = (rule,value,callback)=>{
            if(value === ''){
            	  callback(new Error('请输入新密码'));
-           }
-          callback(); 
+           } 
+           	    callback();   
       }
-     var checkConfirmPass=(rule,value,callback)=>{
+
+     //修改密码时候的判断.
+     var checkConfirmPasshost=(rule,value,callback)=>{
 	      if(value === '') {
 	          callback(new Error('请再次输入密码'));
 	        } else if (value !== this.PasswordForm.Newpass) {
 	          callback(new Error('两次输入密码不一致!'));
-	        } 
-	       callback();   
+	        }else{
+	        	 callback();   
+	        }   
      }
     //验证新建用户名规则
      var   checkUserName=(rule,value,callback)=>{
@@ -431,6 +441,7 @@ export default {
 
 
      return{
+     	     ChildUsers:false,//子用户列表显示
      	     //发送子分区选中的值
      	     ListGroup:[],
             //子用户编辑时候选中的分区,
@@ -510,7 +521,7 @@ export default {
            ], 
    
         },
-         passwordRule:{
+         passwordRule:{//修改自己密码的时候.
               Oldpassword:[
 		          { validator: checkOldpassword, trigger: 'blur' }
 		        ],
@@ -518,7 +529,7 @@ export default {
 		          { validator: checkNewpassword, trigger: 'blur' }
 		        ],
 		       ConfirmPass:[
-		          { validator: checkConfirmPass, trigger: 'blur' }
+		          { validator: checkConfirmPasshost, trigger: 'blur' }
 		        ],
            },
            PasswordForm:{//修改密码
@@ -571,10 +582,12 @@ export default {
       	   }
       },
       methods:{
-
-
           Gutuser(){
           	 GetPersonalCenter().then(res=>{
+                   console.log("获取信息")
+                   console.log(res)
+                   
+                   sessionStorage.setItem('UserLevel', JSON.stringify(res.Data[0]));
                    this.UserWx=res.Data[0].UserWx
                    this.Id=res.Data[0].Id//编辑的时候要穿ID
                    this.UgroupGuid=res.Data[0].UserGuid//创建用的时候要传
@@ -612,7 +625,9 @@ export default {
                    }
                 
                 if(res.Data[0].UserLevel==1){//判断是管理员登录的时候显示
+                	this.ChildUsers=true;//子用户显示列表
                   for(let item of res.Data[0].ListUser){//子用户
+                   if( item.UserLevel==2){
                      this.SubUserDataList.push({
                             Username:item.UserName,
                             UserLevel:item.UserLevel,
@@ -622,21 +637,28 @@ export default {
                             AlarmType:item.AlarmType,
                             Id:item.Id
                          }) 
-                    }
-
+                       }
+                     }
                   }
 
           	  }) 
           },
           GainWechat(){//获取微信
-               
+              
             var params={
             	userCode:this.Id.toString(),//数字类型,转化字符串
             	userPhone:this.PersonalMessagelable.CellPhone
             } 
      GetUserWechatData(qs.stringify(params)).then(res=>{
-                 
-             	console.log(res)
+                   if(JSON.stringify(res.State)==1){ 
+                   	   this.UserWx=null;//清空以前的
+                   	   this.UserWx=res.Data.touser
+                   }else {
+                      this.$message({
+                           type:'error',
+                           message:'获取失败'
+                          })
+                   }
              }) 
           },
           SelectTable(){
@@ -662,7 +684,6 @@ export default {
 	                 this.weixinshow=true;
 	                 this.EditSureshow=true;
 	                 this.WexinButton=true;
-	         	     console.log("编辑")
 	         },
 	       AbolishEdit(){//编辑取消
 	                 this.readtrue=true;//打开可编辑
@@ -802,7 +823,9 @@ export default {
 	                     		message:'创建成功'
 	                     	})
 	                    this.CreateDialogVisible=false;
+
 	                     this.$refs['CreateRule'].resetFields();
+	                     this.Gutuser()//重新请求一边函数
 	                     	}else{
 	                     		this.$message({
 	                     			type:'error',
@@ -871,13 +894,10 @@ export default {
 				 staDate:this.SuberUser[0],
 				 endDate: this.SuberUser[1]
         	}
+        	this.SubUserDataList=[]//如果一条数据都没有,清空  
            GetUserSelect(qs.stringify(parms)).then(res=>{ 
-           	console.log(res)
-                      if(res.TotalNumber==0){
-                          this.SubUserDataList=[]//如果一条数据都没有,清空   
-                      }else {
-                   for(let item of res.Data){//子用户
-                       this.SubUserDataList=[]//如果一条数据都没有,清空  
+                  for(let item of res.Data){//子用户
+                   if(item.UserLevel==2)  {
                      this.SubUserDataList.push({
                             Username:item.UserName,
                             UserLevel:item.UserLevel,
@@ -887,8 +907,9 @@ export default {
                             AlarmType:item.AlarmType,
                             Id:item.Id
                        }) 
-                    }
-                 }
+                     } 
+                  }
+                 
            })    
         },
         PartitionRequest(){//用户分区列表显示
@@ -904,12 +925,11 @@ export default {
             	  userName:this.SubUserDataList[index].Username
                     }
 	             GetUserManageTop1(qs.stringify(parms)).then(res=>{
-	             	console.log(res)
-	             	this.checkedPartion=[];//清空选中
+	             	/*this.checkedPartion=[];//清空选中*/
 	             	this.SuberUserCheckList=[]//右边的报警状态
                    for(var i=0;  i<res.Data.ListGroup.length;i++){
                          this.checkedPartion.push(
-                                res.Data.ListGroup[i].Id
+                              res.Data.ListGroup[i].Id
                          	)
                    } 
                   switch(res.Data.AlarmType){//报警时候的选中显示,
@@ -937,7 +957,7 @@ export default {
             },
          checkPositionval(val){//分区选中的值.
             	  this.EditZone=val;
-            	  this.ListGroup=[];
+            	
             	for(var i=0; i<this.EditZone.length;i++){
             		  this.ListGroup.push({
             		  	Id:Number(this.EditZone[i])
@@ -961,6 +981,15 @@ export default {
 	               }
             },
           EditSubSend(){
+          	       let Selected=[];
+                   for(let i=0; i<this.checkedPartion.length;i++){
+                   	   Selected.push({
+                   	   	 id:this.checkedPartion[i]
+                   	   })
+                   }
+                   console.log("yanzhengxuanz")
+               console.log(Selected)
+
                  var user={
                       UserEmail:this.EditPartition.UserEmail,
                       UserTrueName:this.EditPartition.UserTrueName,
@@ -969,9 +998,12 @@ export default {
                   	  Uvalidity:this.EditPartition.Uvalidity,
                   	  Id:this.EditPartition.Id,//点击的时候,把ID拿过来
                   	  AlarmType:this.EditPartition.AlarmType,
-                  	  ListGroup:this.ListGroup
+                  	  ListGroup:Selected
                  }
          	   UpdateUser(user).then(res=>{
+         	   	console.log("发送的值")
+         	   	       console.log(user)
+         	   	       console.log(res)
                          if(res.State==1){
                               	 this.$message({
 	                     			type:'success',
@@ -997,7 +1029,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+   
+
+
     .PersonalCenter{
+          height: calc(100% - 10px);
+
     	.CurrentPosition{
     		height: 40px;
     		background:#f7f7f7; 
@@ -1006,19 +1043,31 @@ export default {
               margin-left: 15px;
     		}
     	}
+
+    	.HuatoMessage{
+    		.el-form-item{
+    			margin-bottom: 10px;
+    		}
+
+    	}
 		  .bg-purple {
 		    background: #fefefe;
 		    margin:10px;
 		  }
 		  .grid-content {
 		    border-radius: 4px;
-		    min-height:580px;
+		    height: 536px;
 
 		  }
 		  .row-bg {
 		    padding: 10px 0;
 		  
-		  }  
+		  } 
+		  .el-table__row {
+		  	.el-table td{
+		  		padding: 3px 0;
+		  	}
+		  } 
 		  .Icon_height{
 		  	height: 160px;
 		  	text-align: center;
@@ -1031,27 +1080,27 @@ export default {
          	background: url(../assets/img/icon.png)  no-repeat -20px -974px ;
          }
 	     .PersonalMessagelable{
-	     	width:82%;
-	     	height: 365px;
+	     	margin:  0px 100px 0px 72px;
+	     	height:302px;
 	     }
 		  .Ultralimit{
 	       	  cursor: pointer;
 		  	  display: inline-block;
-		  	  width: 35px;
-		  	  height:43px;
-		  	background: url(../assets/img/icon.png)  no-repeat -20px -1150px ;
+		  	  width: 36px;
+		  	  height:30px;
+		  	background: url(../assets/img/icon.png)  no-repeat -22px -1157px ;
 		  }
 	     .LostConnection{
 	     	 cursor: pointer;
 		  	  display: inline-block;
-		  	  width: 35px;
-		  	  height:43px;
-		  	background: url(../assets/img/icon.png)  no-repeat -78px -1150px ;
+		  	  width: 36px;
+		  	  height:30px;
+		  	background: url(../assets/img/icon.png)  no-repeat -81px -1157px ;
 		  }
 	      .Edit{
-	      	line-height: 50px;
-	      	height:50px;
-	      	margin-left: 10%;
+	      	line-height: 38px;
+	      	height:38px;
+	        text-align: center;
 	      }
 	      .NowLogin{
 	      	font-size: 20px;
@@ -1061,6 +1110,12 @@ export default {
 	      }
 	      .userfrom{
 	      	margin-left: 20px;
+            .el-input__inner{
+            	height: 35px !important;
+            } 
+            .el-range-editor.el-input__inner{
+            	padding: 1px 10px;
+            }
 	      }
 	      .blockTable{
 	      	margin: 10px;
@@ -1068,9 +1123,12 @@ export default {
 	      }
 	      .Submenufrom{
 	            padding: 15px 15px 0px 15px;
+	            .el-input__inner{
+                   height: 35px;
+	            }
 	      }
 		 .el-form-item{
-			 	margin-bottom: 18px;
+			 	margin-bottom: 5px;
 			 }
 	     .fa {
 	     	cursor: pointer;
@@ -1090,14 +1148,13 @@ export default {
 		   	   	margin-left: 0px;
 		   	    }
 		     }
+         .weixinfrom{
+              .el-input{
+              	width:74%;
+              }
+         }
 
-		 .Gainweixin{
-
-               margin-top:95%;
-		 }
-		 .Gainlayout{
-		 	height: 365px;
-		 }
+  
   }
 
 </style>
@@ -1105,10 +1162,23 @@ export default {
         .blockTable .cell{
 		      	text-align: center;
 		      }
-/*	.borderNone .el-input__inner{
-      	border: none;
-      }*/
    .el-checkbox .el-checkbox__label{
      	vertical-align: middle;
      }
+     .Loginrecord .el-table td, .el-table th{
+     	padding: 3px 0px  !important;
+     }
+ 
+       .ManageUser .el-table td, .el-table th{
+    		padding: 0px 0px  !important;
+    	}
+        .HuatoMessage .el-input__inner{
+              height: 34px !important;
+        }
+       .userfrom .el-input__inner{
+        	height: 35px;
+        }
+        .Submenufrom .el-input__inner{
+             height: 35px;
+        } 
 	</style>

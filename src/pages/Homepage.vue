@@ -68,7 +68,6 @@
                             </el-col> 
                           <div class="Presentation">华图测控有限公司诚邀您使用"冷链宝" APP定位监测系统,让监测更便捷,更直观.</div>
                    </el-col>
-
 	    	 </el-col>
         </el-row>
         <el-row  class="Homepagebuttom">
@@ -80,8 +79,8 @@
                                 <el-table
                                     :data="PartitiontableData"
                                     border
-                                    stripe
                                     height='300'
+                                    style="width: 100%"
                                     >
                                     <el-table-column
                                       prop="Name"
@@ -91,11 +90,11 @@
                                     <el-table-column
                                       prop="NormalNumber"
                                       label="正常"
-                                      width="100">
+                                      >
                                     </el-table-column>
                                     <el-table-column
                                       label="离线"
-                                      width="100">
+                                      >
                                    <template slot-scope="scope">
                                       <span :class='{"off-line":PartitiontableData[scope.$index].OfflineNumber>0}'>{{PartitiontableData[scope.$index].OfflineNumber}}</span>
                                    </template>
@@ -109,7 +108,7 @@
                                     </el-table-column>
                                     <el-table-column
                                       label="维护"
-                                       width="100">
+                                       width="120">
                                      <template slot-scope="scope">
                                       <span :class='{"vindicate":PartitiontableData[scope.$index].MaintenanceNumber>0}'>{{PartitiontableData[scope.$index].MaintenanceNumber}}</span>
                                      </template>
@@ -121,9 +120,6 @@
                                      <template slot-scope="scope">
                                       <span :class='{"earlywarning":PartitiontableData[scope.$index].EarlyWarningNumber>0}'>{{PartitiontableData[scope.$index].EarlyWarningNumber}}</span>
                                      </template>
-
-
-
                                     </el-table-column>
                                 </el-table>
                               </div>
@@ -146,8 +142,8 @@
                                 <el-table
                                     :data="classifydata"
                                     border
-                                    stripe
                                     height='300'
+                                    style="width: 100%"
                                     >
                                     <el-table-column
                                       prop="Name"
@@ -175,14 +171,14 @@
                                     </el-table-column>
                                     <el-table-column
                                       label="维护"
-                                       width="100">
+                                      >
                                       <template slot-scope="scope">
                                       <span :class='{"vindicate":classifydata[scope.$index].MaintenanceNumber>0}'>{{classifydata[scope.$index].MaintenanceNumber}}</span>
                                      </template>
                                     </el-table-column>
                                      <el-table-column
                                       label="预警未处理"
-                                       width="100">
+                                       >
                                      <template slot-scope="scope">
                                       <span :class='{"earlywarning":classifydata[scope.$index].EarlyWarningNumber>0}'>{{classifydata[scope.$index].EarlyWarningNumber}}</span>
                                      </template>  
@@ -204,8 +200,17 @@
                          </el-col>
                        </el-col>
                         <el-col :span="4"  class="Homepagebuttomright">
-                               <el-col  :span="24" class="Homepagebuttomrightlayout">
-                                 
+                               <el-col  :span="24" class="Homepagebuttomrightlayout" >
+                                  <div class="Product">
+                                    <span class="program">新产品方案介绍</span><span class="Seemore">查看更多</span>
+                                  </div>
+                                   <el-col :span="10" style="border-top: 1px solid #d7d7d7; height: 150px">
+                                        <i class="InstrumentIcon"></i>
+                                   </el-col>
+                                   <el-col :span="14" style="border-top :1px solid #d7d7d7 ;height: 150px">
+                                        <div style="font-size: 16px; color: #333333;margin-top: 30px">S400解决方案</div>
+                                        <span style="margin-right: 20px; color: #666666;font-size:14px; ">S400解决方案</span>
+                                   </el-col>
                                </el-col>
                         </el-col>
                       </el-col>
@@ -481,6 +486,7 @@ export default {
                   width: 346px;
                   height: 600px;
                   border-radius: 5px;
+                  background: #fff;
               }
 
           }
@@ -496,6 +502,42 @@ export default {
            .earlywarning{
              color: #e50005;
            }
+         .Homepagebuttomrightlayout{
+                .InstrumentIcon{
+                   display: inline-block;
+                   width: 107px;
+                   height:116px;
+                   border: 1px solid #d7d7d7;  
+                   margin: 15px 0px 0px 20px;
+                   background: url(../assets/img/pic_4.png) no-repeat -1px  -1px; 
+                }
+         }
+
+         .Product{
+            height: 45px;
+            .program{
+                width: 150px;
+                height: 45px;
+                line-height: 45px;
+                display:inline-block; 
+                font-size: 16px;
+                font-family: "Microsoft YaHei" !important;
+                color: #333333;
+                padding-left: 20px;
+            }
+            .Seemore{
+              display: inline-block;
+              height: 45px;
+              width:80px;
+              line-height: 45px;
+              float: right;
+              font-size: 14px;
+              color: #888888;
+              font-family: "Microsoft YaHei" !important;
+              cursor: pointer;
+            }
+         }
+          
 
      }
 </style>

@@ -13,12 +13,12 @@
                   <el-col :span="12"  style="height: 100%;" class="loginConteinerminddleright">
                       <div class="loginform">
                         <div style="height: 80px; line-height: 80px; font-size:26px; color:#008ce5; text-align: center;font-weight: bold;">用户登录</div>
-                         <el-form label-width="100px">
-                            <el-form-item label='用户名:'>
-                                <el-input v-model='LoginForm.userName'   ></el-input>
+                         <el-form label-width="100px" :model='userLogin' :rules='loginRules' ref='loginForm'>
+                            <el-form-item label='用户名:' prop='userName' :error='showError' >
+                                <el-input v-model='userLogin.userName' @change='showError = null'></el-input>
                             </el-form-item>
-                            <el-form-item label='密码:' >
-                                <el-input v-model='LoginForm.userPass' ></el-input>
+                            <el-form-item label='密码:'  prop='userPass' :error='showError'>
+                                <el-input type="password"  v-model='userLogin.userPass' @change='showError = null' @keyup.enter.native="submitForm()" ></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button @click='submitForm' type="primary" class="Register">登录</el-button>
@@ -41,46 +41,57 @@ import {getIp} from '@/assets/js/getIp';
 export default {
   data () {
       return {
-          LoginForm: {
+          userLogin: {
               userName: '',
               userPass: '',
-              loginIp:''
-          }
+              loginIp: ''
+          },
+        loginRules: {
+              userName: [
+                { required: true, message: '请输入用户名', trigger: 'blur'}
+              ],
+              userPass: [
+                { required: true, message: '请输入密码', trigger: 'blur' }
+              ]
+           },
+            showError: null
       }
   },
   methods: {
       submitForm () {
-          let user = { name: this.LoginForm.userName }
-        
-      console.log(this.LoginForm)
-       userLogin(qs.stringify(this.LoginForm)).then(res=>{
-            console.log("登录")
-             console.log(this.LoginForm)
-             console.log(res)
+         var _this = this;
+         this.showError = null;
+         let user = { name: this.userLogin.userName }
+         this.$refs['loginForm'].validate((valid) =>{
+                        console.log("打印IP")
+                       console.log(this.userLogin)
+                 if(valid){
+                      userLogin(qs.stringify(this.userLogin)).then(res=>{
+                     
 
-             console.log(qs.stringify(this.LoginForm))
-           if(res.State==1){
-             sessionStorage.setItem('user', JSON.stringify(user));
-              this.$router.push('/Homepage')
-            }else{
-               
-            }
-       })
-/*          if(this.LoginForm.userName !== '') {
-              sessionStorage.setItem('user', JSON.stringify(user));
-              this.$router.push('/')
-          }*/
-      }
+                         if(res.State==1){
+                           sessionStorage.setItem('user', JSON.stringify(user));
+                            this.$router.push('/Homepage')
+                          }else{
+                              this.showError = '用户名或密码错误';
+                              this.$refs['loginForm'].validateField('userName')  
+                           }
+                      })
+                  }
+            })      
+
+        }
   },
       mounted() {
-      var _this = this;//代表上面的函数,点击.
+   
       // 获取真实ip
       getIp((ip) => {
-        /*console.log(ip);*/
-        this.LoginForm.loginIp = ip;
-      })
+         console.log("ip地址")
+         console.log(ip);
+         this.userLogin.loginIp = ip;
+        })
 
-    }
+      }
 }
 </script>
 <style lang="scss" scoped>

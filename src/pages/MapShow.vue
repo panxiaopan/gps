@@ -24,7 +24,6 @@
                  
                   <div class="EquipmentName" 
                     :class='{"active":activeName == item.LoggerInfoSn}'
-
                   @click="exactsearch(item.LoggerInfoSn)">
     					      <span class="EquipmentState">	
                       <i :class='{"Status StatusClose":item.LoggerInfoState==2,"Status StatusOpen":item.LoggerInfoState==1}'></i>

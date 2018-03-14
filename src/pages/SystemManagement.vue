@@ -14,36 +14,46 @@
 			  	<div class="grid-content bg-purple-light">
 			  		 <div class="AreaSearch">
 				  		   <el-input
-				  		    class="Seach"
+				  		    class="Seachsubregion"
 						    placeholder="请输入分区名称"
-						    suffix-icon="el-icon-search"
 						    v-model="groupNameSeach"
 						    @keyup.enter.native="PartitionRequest()"
 						     >
 						  </el-input> 
+						   <i class="SystemManaSearch" @click="SystemManaSearchIcon"></i>
 					  </div>
-					 <div class="AddPartition"> 
+					 <div class="AddPartition" v-show="AddPartitionjurisdiction"> 
 					 	<el-button type="primary" icon="fa fa-plus-circle" size='small' @click="AddDialogVisible = true"> 添加分区</el-button>
                         <el-button type="danger" icon="fa fa-trash" size='small' @click='DelectZone'> 删除分区</el-button>
 					 </div>
                    <div>
                      <el-radio-group v-model="radio2"  class="Selectpatation">
-                       <el-form >
-　　　　　　　　　　　　　<el-form-item v-for='(item,index) in PositionList' :key='item.Id' size="small">
-			                        <div class="PartitionList"  >
-                                          <el-radio-group v-model="SelectDelete">
+			                        <div class="PartitionList"   v-for='(item,index) in PositionList' :key='item.Id'>
+                                          <el-radio-group v-model="SelectDelete" >
                                              <template slot-scope="scope">
-					                        	<el-radio :label="item.Id" @change="DeletePartition">
-					                        		<el-input v-model="item.GroupName"  :readonly="item.readtrue"></el-input>
-					                                  <i class="fa fa-pencil-square-o   fa-2x"  @click="EditPartion(index)" v-show="item.EditIcon"></i> 
-					                                   <el-button type="primary" size="mini" v-show="item.EditSend" @click="EditZoning(index)" class="Edit">确定</el-button>  
+					                        	<el-radio :label="item.Id" @change="DeletePartition" >
+					                        		<!-- <el-input v-model="item.GroupName"  readonly="readonly"></el-input> -->
+					                        		   <span style="display: inline-block; width: 150px;"> {{item.GroupName}}</span>
+					                                  <i class="fa fa-pencil-square-o   fa-2x" 
+					                                     @click="EditPartion(item.GroupName)"
+					                                      v-show="item.EditIcon"
+					                                      ></i> 
+					                        		    
+<!-- 					                                   <el-button type="primary" 
+					                                      size="mini"
+					                                       :cc
+					                                       @click="EditZoning(index)" 
+					                                       class="Edit"
+                                                           v-show="EditSend"
+					                                       >确定
+					                                   </el-button>   -->
+					                                   
 					                        	</el-radio>
                                              </template>
                                            </el-radio-group>
 			                        </div> 
-                                  <hr  class="hr" />
-	                  　　</el-form-item>
-                       </el-form>
+                                 
+
                        </el-radio-group>
                     </div>
 			  	</div>
@@ -52,15 +62,15 @@
 			  	<div class="grid-content bg-purple-right">
 			  	     <div class="AddEquipments"> 
 					 	<el-button type="primary" icon="fa fa-plus-circle" size='small' @click="AddDevice">添加设备</el-button>
-                        <el-button type="danger" icon="fa fa-trash" size='small' @click="BatchRemove" > 批量删除</el-button>
+                        <el-button type="danger" icon="fa fa-trash" size='small' @click="BatchRemove" v-show="BatchDele"> 批量删除</el-button>
                         <div class="SearchAreaSearch">
                           <el-input
 						    placeholder="请输入分区名称"
-						    suffix-icon="el-icon-search"
 						    v-model="SeachPartation"
 						     @keyup.enter.native='GetEquipmentList()'
 						     >
 						  </el-input> 
+						  <i class="SystemManaSearch" @click="SearchRealTime"></i>
                         </div>
 					 </div> 
                      <div class="EquipmentsTable">
@@ -93,13 +103,38 @@
 					    </el-table-column>
 					    <el-table-column
 					      label="实时数据"
+					      width='360'
 					      >
-
 					      <template slot-scope='scope' >
-					      	<span >{{EquipmentList[scope.$index].LogsChone}}</span>
-					      	<span>{{EquipmentList[scope.$index].LogsChtwo}}</span>
-					      	<span>{{EquipmentList[scope.$index].LogsChthree}}</span>
-					      	<span>{{EquipmentList[scope.$index].LogsChone}}</span>
+					      	<span class="chumwidth" 
+					      	  v-if="EquipmentList[scope.$index].LoggerChnum>0"
+                              :class='{"hyperthermia":EquipmentList[scope.$index].LogsChone>Number(EquipmentList[scope.$index].ChoneHigh)||EquipmentList[scope.$index].LogsChone<Number(EquipmentList[scope.$index].ChoneLow)}'
+					      	  >
+						      	{{EquipmentList[scope.$index].LogsChone}}
+	                            {{EquipmentList[scope.$index].ChoneType === 8 ? EquipmentList[scope.$index].ChoneUs : SensorOptions[EquipmentList[scope.$index].ChoneType].label}}
+					      	 </span>
+					      	<span class="chumwidth" 
+					      	   v-if="EquipmentList[scope.$index].LoggerChnum>1"
+                               :class='{"hyperthermia":EquipmentList[scope.$index].LogsChtwo>Number(EquipmentList[scope.$index].ChtwoHigh)||EquipmentList[scope.$index].LogsChtwo<Number(EquipmentList[scope.$index].ChtwoLow)}'
+					      	   >
+					      	 {{EquipmentList[scope.$index].LogsChtwo}}
+					      	 {{EquipmentList[scope.$index].ChtwoType ===8 ? EquipmentList[scope.$index].ChtwoUs : SensorOptions[EquipmentList[scope.$index].ChtwoType].label}}
+					        </span>
+					      	<span class="chumwidth" 
+					      	  v-if="EquipmentList[scope.$index].LoggerChnum>2"
+                              :class='{"hyperthermia":EquipmentList[scope.$index].LogsChthree>Number(EquipmentList[scope.$index].ChthrHigh)||EquipmentList[scope.$index].LogsChthree<Number(EquipmentList[scope.$index].ChthrLow)}'
+					      	  >
+					      	  {{EquipmentList[scope.$index].LogsChthree}}
+					      	  {{EquipmentList[scope.$index].ChthrUs ===8 ? EquipmentList[scope.$index].ChthrUs :  SensorOptions[EquipmentList[scope.$index].ChthrType].label}}
+					        </span>
+					      	<span class="chumwidth"
+					      	 v-if="EquipmentList[scope.$index].LoggerChnum>3"
+                              :class='{"hyperthermia":EquipmentList[scope.$index].LogsChfour>Number(EquipmentList[scope.$index].ChforHigh)||EquipmentList[scope.$index].LogsChfour<Number(EquipmentList[scope.$index].ChforLow)}'
+					      	 >
+					      	  {{EquipmentList[scope.$index].LogsChfour}}
+					      	  {{ EquipmentList[scope.$index].ChforUs ===8 ? EquipmentList[scope.$index].ChforUs : SensorOptions[EquipmentList[scope.$index].ChforType].label}}
+      
+					      	</span>
 					      </template>
 					    </el-table-column>
                          <el-table-column
@@ -124,7 +159,7 @@
 					      >
                           	  <template slot-scope="scope">
 						      	  <i class="fa fa-edit fa-2x" @click="EditFacility(scope.$index)"></i>
-						      	  <i class="fa fa-trash-o fa-2x" @click="DelectFacility(scope.$index)"></i>
+						      	  <i class="fa fa-trash-o fa-2x" @click="DelectFacility(scope.$index)" v-show="Delectsingle"></i>
 						      </template>
 					    </el-table-column>
 					  </el-table>
@@ -141,11 +176,26 @@
 
 			  	</div>
 		  </el-col>
+         <el-dialog
+			  title="修改分区"
+			  :visible.sync="EditDialogVisible"
+			  width="20%"
+			  center>
+			  <el-form :model="RulepartitionEdit" status-icon :rules="ruleszone" ref="RulespartitionEdit" label-width="100px" class="demo-ruleForm">
+				  <el-form-item label="分区名称" prop="name">
+				     <el-input  v-model="RulepartitionEdit.name" auto-complete="off"></el-input>
+				  </el-form-item>
+			  </el-form> 
+			  <span slot="footer" class="dialog-footer">
+			    <el-button @click="EditDialogVisible = false" size="mini">取 消</el-button>
+			    <el-button type="primary" @click="EditZoning" size="mini">确 定</el-button>
+			  </span>
+	</el-dialog>
    </el-row>      
      <el-dialog
 		  title="添加分区"
 		  :visible.sync="AddDialogVisible"
-		  width="30%"
+		  width="20%"
 		  >
 	    <el-form :model="Rulepartition" status-icon :rules="ruleszone" ref="Rulespartition" label-width="100px" class="demo-ruleForm">
 			  <el-form-item label="分区名称" prop="name">
@@ -160,7 +210,7 @@
 		<el-dialog
 		  title="设备参数"
 		  :visible.sync="AddEquipmentDialog"
-		  width="55%"
+		  width="39%"
 		  size="small"
 		  center
 		   @close='AddEquipmentDialogClose'
@@ -221,7 +271,8 @@
 			 	  <el-checkbox  v-model="Gps" @change="GPSSelect">GPS</el-checkbox>
 			 </div>
 			 <div class="SensorParameter" >
-			 	<table  cellpadding="0" cellspacing="0" border='1'>
+			 	<table  cellpadding="0" cellspacing="0" class="tableborder">
+                  <thead class="thd_bg">
 			 		<tr>
 			 			 <th class="lineSensing">传感器</th>
                          <th>上限</th>
@@ -229,10 +280,12 @@
                          <th>类型</th>
                          <th>小数点</th>
 			 		</tr>
+                  </thead>
+                  <tbody  class="tbd_bg">
                      <tr>
                     	 <td>传感器一</td>
-                    	 <td><el-input v-model="ChoneHigh"></el-input></td>
-                     	 <td><el-input v-model="ChoneLow"></el-input></td>
+                    	 <td><el-input v-model="ChoneHigh" type="number" ref="ChoneHigh"></el-input></td>
+                     	 <td><el-input v-model="ChoneLow" type="number"  ref="ChoneLow"></el-input></td>
                     	 <td>
 	                    	 <el-select v-model="ChoneType">
 							      <el-option
@@ -255,8 +308,8 @@
                     </tr>
                     <tr>
                     	 <td>传感器二</td>
-                    	 <td><el-input :disabled="twoaisle" v-model="ChtwoHigh"></el-input></td>
-                     	 <td><el-input :disabled="twoaisle" v-model="ChtwoLow"></el-input></td>
+                    	 <td><el-input :disabled="twoaisle" v-model="ChtwoHigh" type="number"></el-input></td>
+                     	 <td><el-input :disabled="twoaisle" v-model="ChtwoLow" type="number"></el-input></td>
                     	 <td>
 	                    	 <el-select v-model="ChtwoType" :disabled="twoaisle">
 							      <el-option
@@ -280,8 +333,8 @@
                     </tr>
                     <tr>
                     	 <td>传感器三</td>
-                    	 <td><el-input :disabled="threeaisle" v-model="ChthrHigh"></el-input></td>
-                     	 <td><el-input :disabled="threeaisle" v-model="ChthrLow"></el-input></td>
+                    	 <td><el-input :disabled="threeaisle" v-model="ChthrHigh" type="number"></el-input></td>
+                     	 <td><el-input :disabled="threeaisle" v-model="ChthrLow" type="number"></el-input></td>
                     	 <td>
 	                    	 <el-select v-model="ChthrType" :disabled="threeaisle">
 							      <el-option
@@ -304,8 +357,8 @@
                     </tr>
                      <tr>
                     	 <td>传感器四</td>
-                    	 <td><el-input :disabled="fouraisle" v-model="ChforHigh"></el-input></td>
-                     	 <td><el-input :disabled="fouraisle" v-model="ChforLow"></el-input></td>
+                    	 <td><el-input :disabled="fouraisle" v-model="ChforHigh" type="number"></el-input></td>
+                     	 <td><el-input :disabled="fouraisle" v-model="ChforLow"  type="number"></el-input></td>
                     	 <td>
 	                    	 <el-select v-model="ChforType" :disabled="fouraisle">
 							      <el-option
@@ -326,11 +379,13 @@
 							   </el-select>
                      	 </td>                	                         
                     </tr>
+                  </tbody> 
 			 	</table>
 	
 			</div>
              <div class="AlarmTypeTime">
-             	 <table cellpadding="0" cellspacing="0" border="1">
+             	 <table cellpadding="0" cellspacing="0"  class="tableborder">
+                  <thead class="thd_bg">
              	 	<tr>
 			 			 <th class="lineSensing">报警类型</th>
                          <th>上班延时(分)</th>
@@ -338,6 +393,8 @@
                          <th>报警方式</th>
                          <th>报警连发(次)</th>
 			 		</tr> 
+                   </thead>
+                   <tbody class="tbd_bg">
 			 		<tr>
 			 			<td>超限报警</td>
 			 			<td>
@@ -378,6 +435,7 @@
                           <el-input v-model="LostConnectionSendTheNumber"></el-input>	
 			 			</td>
 			 		</tr>
+			 		</tbody>
              	 </table>
              </div>
 
@@ -415,9 +473,21 @@ export default {
                  callback(new Error('请输入记录时间'));
          	  }
                callback();
-            };         
+            }; 
+
+           var checkpartionName =(rule, value,callback) =>{
+           	 if(value===''){
+	                 callback(new Error('请选择分区'));
+	         	  }
+	               callback();
+	            }; 
+         
+
           
-      return{  
+      return{
+            Delectsingle:false,//单个删除列表的按钮 
+            BatchDele:false,//批量删除的按钮
+      	    AddPartitionjurisdiction:false,//不是管理员的时候隐藏
            //验证添加仪表提交的时候的表单
              AddEquipmentrules:{
              	LoggerSn:[{
@@ -431,13 +501,20 @@ export default {
              	}],
              	IntervalOfRecords:[{
              		validator: checkIntervalOfRecords, trigger: 'blur'
+             	}],
+             	GroupId:[{
+             		 validator: checkpartionName, trigger: 'blur'
              	}]
+                
+                
+
              },
+             EditDialogVisible:false,//修改分区
               Gps:0,
-      	      ChoneUs:'',//为8的时候用户自定义1
-      	      ChtwoUs:'',//用户自定义2
-      	      ChthrUs:'',//用户自定义3
-      	      ChforUs:'',//用户自定义4
+      	      ChoneUs:' ',//为8的时候用户自定义1
+      	      ChtwoUs:' ',//用户自定义2
+      	      ChthrUs:' ',//用户自定义3
+      	      ChforUs:' ',//用户自定义4
               LostConnectionSendTheNumber:0,//掉线报警次数
               OverrunSendTheNumber:0,//超限报警次数
               DisAlarmOffDelay:0,//掉线下班报警时间
@@ -446,10 +523,10 @@ export default {
       	      LimitAlarmOffDelay:0,//超线下班报警
       	      DisAlarmType:'0',//掉线报警类型
       	      LimitAlarmType:'0',//超线报警类型
-      	      ChoneHigh:0,//通道一上下线.
-      	      ChoneLow:0,
-              ChtwoHigh:0,//通道2上下线.
-              ChtwoLow:0,
+      	      ChoneHigh:8,//通道一上下线.默认的值
+      	      ChoneLow:2,//默认的值
+              ChtwoHigh:75,//通道2上下线.
+              ChtwoLow:35,//默认的值
               ChthrHigh:0,//通道3上下线.
               ChthrLow:0,
               ChforHigh:0,//通道4上下线.
@@ -459,7 +536,7 @@ export default {
       	      ChforDot:'1',//通道四小数点
               ChthrDot:'1',//通道三小数点
       	      ChoneType:'0',//通道1默认下拉传值
-      	      ChtwoType:'0',//通道2默认下拉传值
+      	      ChtwoType:'1',//通道2默认下拉传值
       	      ChthrType:'0',//通道3下拉传值
       	      ChforType:'0',//通道4
       	      twoaisle:false,//2通道
@@ -529,7 +606,7 @@ export default {
       	        formInline: {
                     LoggerSn:'',//设备Id
                     LoggerName:'',//设备名称
-                    GroupId:100,//分区名称ID
+                    GroupId:"",//分区名称ID
                     samplingInt:'60',//采样间隔
                     IntervalOfRecords:'60',//记录间隔
                     PosPageno:'1', //设备类型的值
@@ -557,6 +634,9 @@ export default {
                 Rulepartition:{//分区名称
                  	name:''
                  }, 
+                 RulepartitionEdit:{
+                 	name:''
+                 },
                  AddDialogVisible: false,
       	         EditIcon:true,//编辑的图标
                  EditSend:false,//编辑时候发送显示按钮
@@ -565,8 +645,53 @@ export default {
                  radio2:[],
               }  
      	   },
+          watch:{
+          	  ChoneHigh(nonenewvaluehight, oldvalue){
+          	  	 if(nonenewvaluehight<=this.ChoneLow){
+                           alert("不能低于下线1") 
+                           console.log(this)
+
+          	  	   }
+          	  },
+          	 ChoneLow(nonnewvaluelow){
+          	     if(nonnewvaluelow>this.ChoneHigh){
+                           alert("不能低于下线")
+          	  	   }  
+          	   },
+             ChtwoHigh(height){
+                   if(height<this.ChtwoLow){
+                           alert("不能低于下线")       
+          	  	   }  
+             }, 
+             ChtwoLow(low){
+                   if(low>this.ChtwoHigh){
+                           alert("不能大于上限")
+          	  	     }  
+               },
+              ChthrHigh(height){
+                   if(height<this.ChthrLow){
+                           alert("不能低于下线")      
+          	  	     }  
+               }, 
+              ChthrLow(low){
+                   if(low>this.ChthrHigh){
+                           alert("不能大于上限")
+          	  	     }  
+               },
+               ChforHigh(height){
+               	     if(height<this.ChforLow){
+                           alert("不能低于下线")      
+          	  	     }  
+               },
+              ChforLow(low){
+                   if(low>this.ChthrHigh){
+                           alert("不能大于上限")
+          	  	     }  
+               },
+          },
      	  methods:{
 	          PartitionRequest(){//用户分区列表显示
+	          	this.PositionList=[];
 	          	 var params={
 	          	 	groupName:this.groupNameSeach
 	          	 }
@@ -580,12 +705,13 @@ export default {
 		        		 }
 	        	})         
               },
-              EditPartion(index){//编辑修改分区名称,
-                  this.PositionList[index].readtrue=false;//可以编辑
-                  this.PositionList[index].EditSend=true;//编辑时候的按钮显示*/
-                   this.PositionList[index].EditIcon=false;//编辑的图标隐藏*/
+              EditPartion(GroupName){//编辑修改分区名称,
+              	    this.RulepartitionEdit.name=GroupName;
+              	    this.EditDialogVisible=true;
               },
-           
+              SearchRealTime(){//点击实时数据图标查询
+                    this.GetEquipmentList()
+              },
              Addsend(){
                   var group={
                   	   GroupName:this.Rulepartition.name
@@ -601,7 +727,7 @@ export default {
                              	message:'添加成功'
                              })
                               this.$refs["Rulespartition"].resetFields()//清除验证格式
-                              this.GetEquipmentList()//刷新列表.
+                              this.PartitionRequest()//添加成功后刷新分区的列表.
                          }else{
                          	this.$message({
                          		type:'error',
@@ -612,8 +738,14 @@ export default {
                     }
                 })
              },
-             DeletePartition(val){//左侧选中
+             DeletePartition(){//左侧选中
+
+             	console.log('点击选中的那个')
              	console.log(this.SelectDelete)
+               
+                this.GetEquipmentList()//刷新列表
+        
+
              },
             DelectZone(){
             	var group={
@@ -635,10 +767,14 @@ export default {
                              }
             	})
             }, 
+            SystemManaSearchIcon(){//点击图标执行一次查询函数
+            	this.PartitionRequest()
+            },
             handleSelectionChange(val) {//设备删除的全选
 		        this.multipleSelection = val;
 		         console.log(this.multipleSelection)
 		      },
+              
              GetEquipmentList(){//设备列表请求
              	  this.EquipmentList=[]//调用前清空
                   var params={
@@ -648,11 +784,18 @@ export default {
                   	 pageSize:this.pageSize,
                   }
                GetInstrumentData(params).then(res=>{
-                       console.log("liebiao")
-                       console.log(res)
+                       console.log("+++++++++++liebiao++++++++++++++++")
+                         console.log(res)
+                      if(res.UserRank == 1){//判断是不是管理员用户,
+	                      	this.AddPartitionjurisdiction=true;//隐藏添加分区按钮,删除分区按钮.
+	                        this.BatchDele=true;
+	                        this.Delectsingle=true;
+                      }
 
+
+                        this.totalNumber=res.TotalNumber;//总条数.
 	                for(let item of res.Data){
-	                    this.totalNumber=res.TotalNumber;//总条数.
+	                   
 	                    /*item.LoggerState = item.LoggerState == 1 ? true : false;*/
 	                    if(item.LoggerState == 1){
 	                    	item.LoggerState=true
@@ -663,25 +806,36 @@ export default {
 	                 } 
                   }) 
              },
-             EditZoning(index){//分区编辑,
+             EditZoning(){//分区编辑,
              	 var  group={
              	 	Id:this.SelectDelete,//
-             	 	GroupName:this.PositionList[index].GroupName
+             	 	GroupName:this.RulepartitionEdit.name
              	 }
-               UpdateGroupManage(group).then(res=>{
-                           if(res.State==1){
-                                this.$message({
-                                	type:'success',
-                                	message:'修改成功'
-                                })
+                 
+                this.$refs["RulespartitionEdit"].validate((valid) =>{
+                     if(valid){
+                    UpdateGroupManage(group).then(res=>{
+	                	 console.log(res)
+                         if(res.State==1){
+                             this.AddDialogVisible=false;
+                             this.$message({
+                             	type:'success',
+                             	message:'修改成功'
+                             })
+                              this.EditDialogVisible=false;
+                              this.$refs["RulespartitionEdit"].resetFields()//清除验证格式
+
                                this.PartitionRequest()//刷新列表
-                           }else{
-                           	  this.$message({
-                           	  	type:'error',
-                           	  	message:'修改失败'
-                           	  })
-                           }
-                })   
+                         }else{
+                         	this.$message({
+                         		type:'error',
+                         		message:'修改失败'
+                         	})
+                         }
+                       })
+                    }
+                })
+
              },
              swicthFacility(index,val){//设置仪器开关按钮
              	 if (val==false) {
@@ -712,8 +866,6 @@ export default {
              pageIndexChange(pageIndex){//翻页监控当前页面发生变化没有! 重新获取列表的页面!~
              	console.log("页码")
              	console.log(pageIndex)
-
-
 	             this.pageIndex = pageIndex;//传当前页面   
 	             this.GetEquipmentList()// 列表刷新.
 	           },
@@ -721,24 +873,34 @@ export default {
              	var  listlLoggerInfos={
                       listlLoggerInfos:this.multipleSelection
              	};
-                 
-               DeleteLoggerInfo(listlLoggerInfos).then(res=>{
-               	console.log("批量删除")
-                         console.log(listlLoggerInfos)
-                         if(res.State==1){
-                         	 this.$message({
-                         	 	type:'success',
-                         	 	message:'删除成功'
-                         	 })
-                             this.EquipmentList=[];
-                            this.GetEquipmentList()//刷新
-                         }else{
-                            this.$message({
-                         	 	type:'error',
-                         	 	message:'删除失败'
-                         	 })
-                         }
-               }) 
+			           DeleteLoggerInfo(listlLoggerInfos).then(res=>{
+			               	console.log("批量删除")
+			                console.log(listlLoggerInfos)
+			                   console.log(this.multipleSelection)
+
+			                         if(res.State==1){
+			                         	 this.$message({
+			                         	 	type:'success',
+			                         	 	message:'删除成功'
+			                         	 })
+			                             this.EquipmentList=[];
+			                             this.GetEquipmentList()//刷新
+			                          } else if(res.State==3){
+                                            this.$message({
+			                         	 	   type:'error',
+			                         	 	   message:'存在不允许删除的仪器'
+			                         	 })
+
+			                          }else{
+			                             this.$message({
+			                         	 	   type:'error',
+			                         	 	   message:'删除失败'
+			                         	 })
+			                         }
+
+
+
+			                     }) 
              },
              AddDevice(){//添加设备
                    this.AddEquipmentDialog=true;
@@ -754,8 +916,8 @@ export default {
              },
              GPSSelect(val){//有没有选中GPs
                    console.log(Number(val))
-                 console.log(this.Gps)
-                 this.Gps=val
+                  console.log(this.Gps)
+                  this.Gps=val
              },
              DeviceType(){//设备类型下拉
                   GetLoggerInfoWarehouseType().then(res=>{
@@ -805,10 +967,8 @@ export default {
       if(this.isAdd){
             this.EquipmentList=[];
            this.$refs['AddEquipmentForm'].validate((valid) => {
-               if (valid) {
+               if (valid) {   
                	   InsertLoggerInfo(loggerInfo).then(res=>{
-               	   	       console.log(res)
-               	   	       console.log(loggerInfo)
                        if(res.State==1){
                         	this.$message({
                         		type:'success',
@@ -817,11 +977,6 @@ export default {
                           this.$refs['AddEquipmentForm'].resetFields();
                           this.AddEquipmentDialog=false;
                           this.GetEquipmentList()//刷新
-                        }else if(res.State==0) {
-                             this.$message({
-                        		type:'error',
-                        		message:'仪器序列号重复'
-                        	})
                         }
            	     }) 
                }
@@ -849,50 +1004,48 @@ export default {
            }
           },
           AddEquipmentDialogClose(val){//关闭清空原来的值,
-          	console.log("关闭")
-          	console.log(val)
                 this.formInline={
                     LoggerSn:'',//设备Id
                     LoggerName:'',//设备名称
-                    GroupId:100,//分区名称ID
+                    GroupId:'',//分区名称ID
                     samplingInt:'60',//采样间隔
                     IntervalOfRecords:'60',//记录间隔
                     PosPageno:'1', //设备类型的值
                     VerId:'1',//仪器类型
                     LoggerChnum:'2',//通道数.
 					        }
-              this.Gps=0,
-      	      this.ChoneUs='',//为8的时候用户自定义1
-      	      this.ChtwoUs='',//用户自定义2
-      	      this.ChthrUs='',//用户自定义3
-      	      this.ChforUs='',//用户自定义4
-              this.LostConnectionSendTheNumber=0,//掉线报警次数
-              this.OverrunSendTheNumber=0,//超限报警次数
-              this.DisAlarmOffDelay=0,//掉线下班报警时间
-      	      this.DisAlarmWorkDelay=0,//掉线上班报警时间
-      	      this.LimitAlarmWorkDelay=0,//超线上班报警
-      	      this.LimitAlarmOffDelay=0,//超线下班报警
-      	      this.DisAlarmType='0',//掉线报警类型
-      	      this.LimitAlarmType='0',//超线报警类型
-      	      this.ChoneHigh=0,//通道一上下线.
-      	      this.ChoneLow=0,
-              this.ChtwoHigh=0,//通道2上下线.
-              this.ChtwoLow=0,
-              this.ChthrHigh=0,//通道3上下线.
-              this.ChthrLow=0,
-              this.ChforHigh=0,//通道4上下线.
-              this.ChforLow=0,
-      	      this.ChoneDot='1',//通道1默认小数点
-              this.ChtwoDot='1',//通道2默认小数点
-      	      this.ChforDot='1',//通道四小数点
-              this.ChthrDot='1',//通道三小数点
-      	      this.ChoneType='0',//通道1默认下拉传值
-      	      this.ChtwoType='0',//通道2默认下拉传值
-      	      this.ChthrType='0',//通道3下拉传值
-      	      this.ChforType='0',//通道4
-      	      this.twoaisle=false,//2通道
-              this.fouraisle=true,//4通道
-      	      this.threeaisle=true//3通道
+		              this.Gps=0,
+		      	      this.ChoneUs=' ',//为8的时候用户自定义1
+		      	      this.ChtwoUs=' ',//用户自定义2
+		      	      this.ChthrUs=' ',//用户自定义3
+		      	      this.ChforUs=' ',//用户自定义4
+		              this.LostConnectionSendTheNumber=0,//掉线报警次数
+		              this.OverrunSendTheNumber=0,//超限报警次数
+		              this.DisAlarmOffDelay=0,//掉线下班报警时间
+		      	      this.DisAlarmWorkDelay=0,//掉线上班报警时间
+		      	      this.LimitAlarmWorkDelay=0,//超线上班报警
+		      	      this.LimitAlarmOffDelay=0,//超线下班报警
+		      	      this.DisAlarmType='0',//掉线报警类型
+		      	      this.LimitAlarmType='0',//超线报警类型
+		      	      this.ChoneHigh=8,//通道一上下线.
+		      	      this.ChoneLow=2,
+		              this.ChtwoHigh=75,//通道2上下线.
+		              this.ChtwoLow=35,
+		              this.ChthrHigh=0,//通道3上下线.
+		              this.ChthrLow=0,
+		              this.ChforHigh=0,//通道4上下线.
+		              this.ChforLow=0,
+		      	      this.ChoneDot='1',//通道1默认小数点
+		              this.ChtwoDot='1',//通道2默认小数点
+		      	      this.ChforDot='1',//通道四小数点
+		              this.ChthrDot='1',//通道三小数点
+		      	      this.ChoneType='0',//通道1默认下拉传值
+		      	      this.ChtwoType='1',//通道2默认下拉传值
+		      	      this.ChthrType='0',//通道3下拉传值
+		      	      this.ChforType='0',//通道4
+		      	      this.twoaisle=false,//2通道
+		              this.fouraisle=true,//4通道
+		      	      this.threeaisle=true//3通道
           },
 	     EditFacility(index){//点击编辑的时候.找到对应的饿编辑参数
 	     	          this.AddEquipmentDialog=true;
@@ -981,6 +1134,12 @@ export default {
                          	 })
                              this.EquipmentList=[];
                             this.GetEquipmentList()//刷新
+                         }else if(res.State==3){
+                            this.$message({
+                         	 	type:'error',
+                         	 	message:'该仪器不允许删除'
+                         	 })
+
                          }else{
                             this.$message({
                          	 	type:'error',
@@ -1020,12 +1179,8 @@ export default {
                 this.GetEquipmentList()//列表请求.
                 this.GetInstrumentType()//仪器类型接口请求
                 this.DeviceType()//设备类型下拉列表,
-/*                  $(window).keyup(function(ev){//enetr键快捷搜
-                         if(ev.keyCode == 13){
-                         	 _this.EquipmentList=[];
-                            _this.GetEquipmentList()//列表请求.
-                        }
-                     })*/
+                /*this.jurisdiction()//显示权限*/
+
           }
     }
 </script>
@@ -1033,6 +1188,7 @@ export default {
   .SystemManagement{
          height: calc(100% - 40px);
          background: #eaedf1;
+         min-width: 1570px;
     .CurrentPosition{
     		height: 40px;
     		background:#f7f7f7; 
@@ -1050,11 +1206,22 @@ export default {
               margin: 20px;
               background: #fff;
 		     .lightZone {
+		     	   width: 360px;
+		     	   text-align:center;
 				    height: calc(100% - 4px);
 				    background:#eeeeee;
 				    overflow-y: scroll;
 				    .AreaSearch{
-                            padding: 20px;
+                            background: #fff;
+                            display: inline-block;
+                            width: 302px;
+                            border: 1px solid #d7d7d7;
+                            margin: 20px 0px 20px 0px;
+                            border-radius: 20px;
+				    }
+				    .Seachsubregion{
+				    	width: 240px;
+				    	border: none;
 				    }
 				    .AddPartition{
                         padding: 0px 20px;
@@ -1067,20 +1234,43 @@ export default {
 							}
 				    	i{
 				    		color: #0890e6;
-				    		margin-left: 50px;
 				    	}
+
 				    }
 				  }
 				}
       .fa-pencil-square-o{
       	vertical-align: middle;
-      }	 
+      }	
+     .tableborder{
+     	border:1px solid #d7d7d7;
+     	width: 652px;
+     }
       .AddEquipments{
       	padding: 20px;
       } 
       .SearchAreaSearch{
+      	text-align: center;
+      	border: 1px solid #d7d7d7;
       	display: inline-block;
-      	margin-left:50%;
+      	height: 30px;
+      	float: right;
+      	border-radius: 20px;
+      	width: 280px;
+      	 .el-input{
+      	 	width: 220px;
+      	 	height: 30px;
+      	 	.el-input__inner{
+      	 		height: 30px;
+      	 	}
+      	 }
+      }
+      .PartitionList{
+      	 border-bottom: 1px solid #d7d7d7;
+      	 height: 39px;
+      	 line-height: 39px;
+      	 width: 290px;
+
       }
       .myPagination{
       	text-align: center;
@@ -1098,7 +1288,7 @@ export default {
      .InstrumentIndication{
             margin-bottom: 20px;
      }
-     	 .fa {
+     .fa {
 	     	cursor: pointer;
 	     	margin-right: 9px;
 	     }
@@ -1108,7 +1298,9 @@ export default {
       	  }  
       }
       .bg-purple-right{
-      	margin-left: 40px;
+		      padding-left: 40px;
+		      min-width: 1100px;
+
       }
       .hr{
       	height:1px;
@@ -1122,6 +1314,58 @@ export default {
       	 	width: 222px;
       	 }
       }
+     .chumwidth{
+     	display: inline-block;
+     	width: 80px;
+     }
+     .hyperthermia{
+     	color: red;
+     }
+     .SystemManaSearch{
+     	display: inline-block;
+     	width: 30px;
+     	height: 30px;
+     	border-left: 1px solid #d7d7d7;
+     	background: url(../assets/img/icon.png) no-repeat -16px -445px;
+     	vertical-align: middle;
+     	cursor: pointer;
+     }
+     .IntrumentType {
+     	 .el-form-item{
+     	 	margin-bottom: 14px;
+     	 }
+     }
+        .thd_bg{
+			    height: 32px;
+			    tr{
+			      height: 32px;
+			     
+			      th{
+			        border-right: 1px solid #dcdfe6;
+			        border-bottom: 1px solid #dcdfe6;
+			        font-family: Microsoft YaHei;
+			        font-weight: 500;
+			        font-size: 14px;
+			        color: #666;
+			      }
+			    }
+		  }
+	 .tbd_bg{
+		    height: 26px;
+		    tr{
+		      height: 26px;
+		      text-align: center;
+		      td{
+		        border-right: 1px solid #dcdfe6;
+		        border-bottom: 1px solid #dcdfe6;
+		        font-family: Microsoft YaHei;
+		        font-weight: 500;
+		        font-size: 14px;
+		        color: #666;
+		      }
+		    }
+	  }
+
 
    }
 </style>
@@ -1136,15 +1380,24 @@ export default {
    .el-checkbox .el-checkbox__label{
      	vertical-align: middle;
      }
-     .AreaSearch  .el-input__inner{
-        	border-radius: 20px;  
-        }
+    .SearchAreaSearch .el-input__inner{
+    	height: 30px;
+    	border: none;
+    } 
 
      .IntrumentType  .el-input__inner{
-      	width: 200px;
+      	width: 150px;
+
       }
       .SensorParameter  .el-input__inner{
-      	width: 200px;
+      	width: 120px;
+      	border:none;
+      	text-align: left;
+      	border:1px solid #d7d7d7;
+      }
+      .AlarmTypeTime .el-input__inner{
+      	 width: 137px;
+      	 text-align: center;
       }
     .UserDefined{
       	display: inline;
@@ -1154,7 +1407,21 @@ export default {
       	 	width: 60px;
       	 	display: inline;
       }
-      .SearchAreaSearch .el-input__inner{
-      	  border-radius: 20px;
+     .Selectpatation .el-input__inner{
+  	 	 border: none;
+  	 	 background: #eeeeee !important;    
+      	  }
+
+      .Seachsubregion .el-input__inner{
+      	border: none;
       }
+/*     .Seachsubregion  .el-radio-group{
+				    		border-bottom: 1px solid #eeeeee;
+		
+
+				    	}*/
+
+	.PartitionList .el-radio__label{
+      	 	text-align: left;
+      	 }
 </style>
