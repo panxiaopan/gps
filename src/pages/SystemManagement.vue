@@ -4,7 +4,7 @@
 	    <el-col :span='24'>
 		    <el-row>
 		      <el-col :span='24' class="CurrentPosition">
-		        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right"><span class="currentcolor">系统管理</span></i></div> 
+		        <div class="NowPositon"><i class="el-icon-location"></i><span>{{$t('m.Location')}}:</span><i class="el-icon-arrow-right"><span class="currentcolor">{{$t('m.SystemManagement')}}</span></i></div> 
 		      </el-col>
 		   </el-row>
 	   </el-col>
@@ -12,48 +12,38 @@
    <el-row class="SystemManagementCoent">
 		  <el-col :span="6" class="lightZone">
 			  	<div class="grid-content bg-purple-light">
+			  		<div style="text-align:center;">
 			  		 <div class="AreaSearch">
 				  		   <el-input
 				  		    class="Seachsubregion"
-						    placeholder="请输入分区名称"
+						    :placeholder="$t('m.PartitionName')"
 						    v-model="groupNameSeach"
 						    @keyup.enter.native="PartitionRequest()"
 						     >
 						  </el-input> 
 						   <i class="SystemManaSearch" @click="SystemManaSearchIcon"></i>
 					  </div>
+                    </div>
 					 <div class="AddPartition" v-show="AddPartitionjurisdiction"> 
-					 	<el-button type="primary" icon="fa fa-plus-circle" size='small' @click="AddDialogVisible = true"> 添加分区</el-button>
-                        <el-button type="danger" icon="fa fa-trash" size='small' @click='DelectZone'> 删除分区</el-button>
+					 	<el-button type="primary" icon="fa fa-plus-circle" size='small' @click="AddDialogVisible = true"> {{$t('m.InputSiteName')}}</el-button>
+                        <el-button type="danger" icon="fa fa-trash" size='small' @click='DelectZone'>{{$t('m.DateSite')}}</el-button>
 					 </div>
                    <div>
                      <el-radio-group v-model="radio2"  class="Selectpatation">
 			                        <div class="PartitionList"   v-for='(item,index) in PositionList' :key='item.Id'>
                                           <el-radio-group v-model="SelectDelete" >
                                              <template slot-scope="scope">
-					                        	<el-radio :label="item.Id" @change="DeletePartition" >
+					                        	<el-radio :label="item.Id" @change="DeletePartition(item.GroupName)" >
 					                        		<!-- <el-input v-model="item.GroupName"  readonly="readonly"></el-input> -->
 					                        		   <span style="display: inline-block; width: 150px;"> {{item.GroupName}}</span>
 					                                  <i class="fa fa-pencil-square-o   fa-2x" 
 					                                     @click="EditPartion(item.GroupName)"
 					                                      v-show="item.EditIcon"
-					                                      ></i> 
-					                        		    
-<!-- 					                                   <el-button type="primary" 
-					                                      size="mini"
-					                                       :cc
-					                                       @click="EditZoning(index)" 
-					                                       class="Edit"
-                                                           v-show="EditSend"
-					                                       >确定
-					                                   </el-button>   -->
-					                                   
+					                                      ></i>   
 					                        	</el-radio>
                                              </template>
                                            </el-radio-group>
 			                        </div> 
-                                 
-
                        </el-radio-group>
                     </div>
 			  	</div>
@@ -61,12 +51,12 @@
 		  <el-col :span="18">
 			  	<div class="grid-content bg-purple-right">
 			  	     <div class="AddEquipments"> 
-					 	<el-button type="primary" icon="fa fa-plus-circle" size='small' @click="AddDevice">添加设备</el-button>
-                        <el-button type="danger" icon="fa fa-trash" size='small' @click="BatchRemove" v-show="BatchDele"> 批量删除</el-button>
+					 	<el-button type="primary" icon="fa fa-plus-circle" size='small' @click="AddDevice">{{$t('m.AddDdevice')}}</el-button>
+                        <el-button type="danger" icon="fa fa-trash" size='small' @click="BatchRemove" v-show="BatchDele">{{$t('m.BulkDeleting')}}</el-button>
                         <div class="SearchAreaSearch">
                           <el-input
-						    placeholder="请输入分区名称"
-						    v-model="SeachPartation"
+						    :placeholder="$t('m.SeachNameID')"
+						     v-model="SeachPartation"
 						     @keyup.enter.native='GetEquipmentList()'
 						     >
 						  </el-input> 
@@ -87,22 +77,22 @@
 					       width="55">
 					    </el-table-column>
 					     <el-table-column
-                            label="序号"
+                            :label="$t('m.Number')"
 							type="index"
 							width="50">
 						 </el-table-column>
 					    <el-table-column
 					      prop='LoggerName'
-					      label="设备名称"
+					      :label="$t('m.DeviceName')"
 					      width="120">
 					    </el-table-column>
 					    <el-table-column
-					      label="设备ID"
+					      :label="$t('m.DeviceID')"
 					      prop='LoggerSn'
 					      width="120">
 					    </el-table-column>
 					    <el-table-column
-					      label="实时数据"
+					      :label="$t('m.RealTimeData')"
 					      width='360'
 					      >
 					      <template slot-scope='scope' >
@@ -125,37 +115,41 @@
                               :class='{"hyperthermia":EquipmentList[scope.$index].LogsChthree>Number(EquipmentList[scope.$index].ChthrHigh)||EquipmentList[scope.$index].LogsChthree<Number(EquipmentList[scope.$index].ChthrLow)}'
 					      	  >
 					      	  {{EquipmentList[scope.$index].LogsChthree}}
-					      	  {{EquipmentList[scope.$index].ChthrUs ===8 ? EquipmentList[scope.$index].ChthrUs :  SensorOptions[EquipmentList[scope.$index].ChthrType].label}}
+					      	  {{EquipmentList[scope.$index].ChthrType ===8 ? EquipmentList[scope.$index].ChthrUs :  SensorOptions[EquipmentList[scope.$index].ChthrType].label}}
 					        </span>
 					      	<span class="chumwidth"
 					      	 v-if="EquipmentList[scope.$index].LoggerChnum>3"
                               :class='{"hyperthermia":EquipmentList[scope.$index].LogsChfour>Number(EquipmentList[scope.$index].ChforHigh)||EquipmentList[scope.$index].LogsChfour<Number(EquipmentList[scope.$index].ChforLow)}'
 					      	 >
 					      	  {{EquipmentList[scope.$index].LogsChfour}}
-					      	  {{ EquipmentList[scope.$index].ChforUs ===8 ? EquipmentList[scope.$index].ChforUs : SensorOptions[EquipmentList[scope.$index].ChforType].label}}
-      
+					      	  {{ EquipmentList[scope.$index].ChforType ===8 ? EquipmentList[scope.$index].ChforUs : SensorOptions[EquipmentList[scope.$index].ChforType].label}}
 					      	</span>
 					      </template>
 					    </el-table-column>
                          <el-table-column
-					      label="更新时间"
+					      :label="$t('m.UpdateTime')"
 					      prop="LogsTime"
+					      width='180'
 					      >
 					    </el-table-column>
                         <el-table-column
-					      label="设备状态"
+                        width="120"
+					      :label="$t('m.DeviceStatus')"
 					      >
 					      	<template slot-scope="scope">
-					      	    <el-switch
-					      	     @change="swicthFacility(scope.$index,$event)"
-								  v-model="EquipmentList[scope.$index].LoggerState"
-								  active-color="#13ce66"
-								  inactive-color="#ff4949">
-								</el-switch>
+					      		  <el-tooltip :content= "EquipmentList[scope.$index].LoggerState == true ? $t('m.Open') :  $t('m.Maintenance') "  placement="right"  >
+							      	    <el-switch
+							      	          @change="swicthFacility(scope.$index,$event)"
+											  v-model="EquipmentList[scope.$index].LoggerState"
+											  active-color="#13ce66"
+											  inactive-color="#ff4949"
+										    >
+										</el-switch>
+                                  </el-tooltip>
 					      </template>
 					    </el-table-column>
                         <el-table-column
-					      label="操作"
+					      :label="$t('m.Operate')"
 					      >
                           	  <template slot-scope="scope">
 						      	  <i class="fa fa-edit fa-2x" @click="EditFacility(scope.$index)"></i>
@@ -177,49 +171,49 @@
 			  	</div>
 		  </el-col>
          <el-dialog
-			  title="修改分区"
+			  :title="$t('m.ReviseSite')"
 			  :visible.sync="EditDialogVisible"
 			  width="20%"
 			  center>
 			  <el-form :model="RulepartitionEdit" status-icon :rules="ruleszone" ref="RulespartitionEdit" label-width="100px" class="demo-ruleForm">
-				  <el-form-item label="分区名称" prop="name">
+				  <el-form-item :label="$t('m.SiteName')" prop="name">
 				     <el-input  v-model="RulepartitionEdit.name" auto-complete="off"></el-input>
 				  </el-form-item>
 			  </el-form> 
 			  <span slot="footer" class="dialog-footer">
-			    <el-button @click="EditDialogVisible = false" size="mini">取 消</el-button>
-			    <el-button type="primary" @click="EditZoning" size="mini">确 定</el-button>
+			    <el-button @click="EditDialogVisible = false" size="mini">{{$t('m.NO')}}</el-button>
+			    <el-button type="primary" @click="EditZoning" size="mini">{{$t('m.YES')}}</el-button>
 			  </span>
 	</el-dialog>
    </el-row>      
      <el-dialog
-		  title="添加分区"
+		  :title="$t('m.InputSiteName')"
 		  :visible.sync="AddDialogVisible"
 		  width="20%"
 		  >
 	    <el-form :model="Rulepartition" status-icon :rules="ruleszone" ref="Rulespartition" label-width="100px" class="demo-ruleForm">
-			  <el-form-item label="分区名称" prop="name">
+			  <el-form-item :label="$t('m.SiteName')" prop="name">
 			     <el-input  v-model="Rulepartition.name" auto-complete="off"></el-input>
 			  </el-form-item>
 		</el-form>           
 		  <span slot="footer" class="dialog-footer">
-		    <el-button @click="AddDialogVisible = false" size="mini">取 消</el-button>
-		    <el-button type="primary" size="mini" @click="Addsend">确 定</el-button>
+		    <el-button @click="AddDialogVisible = false" size="mini">{{$t('m.NO')}}</el-button>
+		    <el-button type="primary" size="mini" @click="Addsend">{{$t('m.YES')}}</el-button>
 		  </span>
 	</el-dialog>
 		<el-dialog
-		  title="设备参数"
+		  :title="$t('m.DeviceParameter')"
 		  :visible.sync="AddEquipmentDialog"
-		  width="39%"
+		  width="688px"
 		  size="small"
 		  center
 		   @close='AddEquipmentDialogClose'
 		  >
 		   <el-form :inline="true" :model="formInline" class="IntrumentType" label-width="130px" size="small" status-icon  :rules="AddEquipmentrules" ref="AddEquipmentForm">
-				  <el-form-item label="设备ID"  prop="LoggerSn">
-				    <el-input v-model="formInline.LoggerSn"></el-input>
+				  <el-form-item :label="$t('m.DeviceID')"  prop="LoggerSn" >
+				    <el-input   v-model="formInline.LoggerSn"  :disabled="Editdisabled"   placeholder=' 如:HE20180331'></el-input>
 				  </el-form-item>
-				  <el-form-item label="分区名称">
+				  <el-form-item :label="$t('m.SiteName')"  prop="GroupId">
                         <el-select v-model="formInline.GroupId">
 							    <el-option
 							      v-for="item in PositionList"
@@ -229,11 +223,11 @@
 							     </el-option>
 						</el-select>
 				  </el-form-item>
-                  <el-form-item label="设备名称"  prop="LoggerName">
-                     <el-input v-model="formInline.LoggerName"></el-input>
+                  <el-form-item :label="$t('m.DeviceName')"  prop="LoggerName" >
+                     <el-input v-model="formInline.LoggerName" placeholder='如:库房1S400BP0994'></el-input>
 				  </el-form-item>
-                  <el-form-item label="仪器类型">
-                       <el-select v-model="formInline.VerId"  placeholder="请选择">
+                  <el-form-item :label="$t('m.DeviceType')">
+                       <el-select v-model="formInline.VerId"  :placeholder="$t('m.Selelct')">
 							    <el-option
 							      v-for="item in IntrumentType"
 							      :key="item.LoggerTypeCode"
@@ -242,7 +236,7 @@
 							     </el-option>
 						</el-select>
 				  </el-form-item>
-                  <el-form-item label="设备类型">
+                  <el-form-item :label="$t('m.Deviceenvironment')">
                      <el-select v-model="formInline.PosPageno" >
 					    <el-option
 						       v-for="item in MediaType"
@@ -252,40 +246,43 @@
 					     </el-option>
 					  </el-select>
 				  </el-form-item>
-                  <el-form-item label="采样间隔时间(秒)" prop="samplingInt">
-                     <el-input v-model="formInline.samplingInt"></el-input>
+                  <el-form-item :label="$t('m.SamplingInterval')" prop="samplingInt">
+                     <el-input type="number" min="0"  v-model="formInline.samplingInt"></el-input>
 				  </el-form-item>
-                  <el-form-item label="记录间隔" prop="IntervalOfRecords">
-                     <el-input v-model="formInline.IntervalOfRecords" ></el-input>
+                  <el-form-item :label="$t('m.LogInterval')" prop="IntervalOfRecords">
+                     <el-input type="number" min="0" v-model="formInline.IntervalOfRecords" ></el-input>
 				  </el-form-item>
-                  <el-form-item label="传感器数量">
+                  <el-form-item :label="$t('m.SensorQty')">
 		         <el-select v-model="formInline.LoggerChnum" @change="Sensorquantity">
-                     <el-option label="通道一" value="1"></el-option>
-                     <el-option label="通道二" value="2"></el-option>
-                     <el-option label="通道三" value="3"></el-option>
-                     <el-option label="通道四" value="4"></el-option>
+                     <el-option :label="$t('m.Channelone')" value="1"></el-option>
+                     <el-option :label="$t('m.Channeltwo')" value="2"></el-option>
+                     <el-option :label="$t('m.Channelthree')" value="3"></el-option>
+                     <el-option :label="$t('m.Channelfour')" value="4"></el-option>
                   </el-select>
 				  </el-form-item>
 			</el-form>
 			 <div  class="InstrumentIndication">
 			 	  <el-checkbox  v-model="Gps" @change="GPSSelect">GPS</el-checkbox>
+                  <el-checkbox  v-model="GspState" >GSP</el-checkbox>
+                  <el-checkbox  v-model="AutoDel">{{$t('m.AutoSave')}}</el-checkbox>
+                  <el-checkbox  v-model="AutoDown" >{{$t('m.AutomaticallyDownload')}}</el-checkbox>
 			 </div>
 			 <div class="SensorParameter" >
 			 	<table  cellpadding="0" cellspacing="0" class="tableborder">
                   <thead class="thd_bg">
 			 		<tr>
-			 			 <th class="lineSensing">传感器</th>
-                         <th>上限</th>
-                         <th>下限</th>
-                         <th>类型</th>
-                         <th>小数点</th>
+			 			 <th class="lineSensing">{{$t('m.Sensor')}}</th>
+                         <th>{{$t('m.UpperLimit')}}</th>
+                         <th>{{$t('m.LowerLimit')}}</th>
+                         <th>{{$t('m.Type')}}</th>
+                         <th>{{$t('m.DecimalPoints')}}</th>
 			 		</tr>
                   </thead>
-                  <tbody  class="tbd_bg">
+                  <tbody  class="tbd_bg tbodywidth">
                      <tr>
-                    	 <td>传感器一</td>
-                    	 <td><el-input v-model="ChoneHigh" type="number" ref="ChoneHigh"></el-input></td>
-                     	 <td><el-input v-model="ChoneLow" type="number"  ref="ChoneLow"></el-input></td>
+                    	 <td>{{$t('m.Sensorone')}}</td>
+                    	 <td><el-input v-model="ChoneHigh" type="number" :min='ChoneLow'></el-input></td>
+                     	 <td><el-input v-model="ChoneLow" type="number"  :max='ChoneHigh' ></el-input></td>
                     	 <td>
 	                    	 <el-select v-model="ChoneType">
 							      <el-option
@@ -298,7 +295,8 @@
 						      <el-input class="UserDefined" placeholder="自定义" v-model="ChoneUs"></el-input>
                     	 </td>
                      	 <td>
-	                     	  <el-select v-model="ChoneDot" placeholder="小数点位">
+	                     	  <el-select v-model="ChoneDot" :placeholder="$t('m.DecimalPoints')">
+	                     	  	  <el-option label="0" value="0"></el-option>
 							      <el-option label="0.0" value="1"></el-option>
 							      <el-option label="0.00" value="2"></el-option>
 							      <el-option label="0.000" value="3"></el-option>
@@ -307,9 +305,9 @@
                      	 </td>                	                         
                     </tr>
                     <tr>
-                    	 <td>传感器二</td>
-                    	 <td><el-input :disabled="twoaisle" v-model="ChtwoHigh" type="number"></el-input></td>
-                     	 <td><el-input :disabled="twoaisle" v-model="ChtwoLow" type="number"></el-input></td>
+                    	 <td>{{$t('m.Sensortwo')}}</td>
+                    	 <td><el-input :disabled="twoaisle" v-model="ChtwoHigh" type="number" :min='ChtwoLow'></el-input></td>
+                     	 <td><el-input :disabled="twoaisle" v-model="ChtwoLow" type="number"  :max='ChtwoHigh'></el-input></td>
                     	 <td>
 	                    	 <el-select v-model="ChtwoType" :disabled="twoaisle">
 							      <el-option
@@ -323,7 +321,8 @@
 						     <el-input class="UserDefined" placeholder="自定义" v-model="ChtwoUs" :disabled="twoaisle"></el-input>
                     	 </td>
                      	 <td>
-	                     	  <el-select v-model="ChtwoDot" placeholder="小数点位" :disabled="twoaisle">
+	                     	  <el-select v-model="ChtwoDot" :placeholder="$t('m.DecimalPoints')" :disabled="twoaisle">
+	                     	  	  <el-option label="0" value="0"></el-option>
 							      <el-option label="0.0" value="1"></el-option>
 							      <el-option label="0.00" value="2"></el-option>
 							      <el-option label="0.000" value="3"></el-option>
@@ -332,9 +331,9 @@
                      	 </td>                	                         
                     </tr>
                     <tr>
-                    	 <td>传感器三</td>
-                    	 <td><el-input :disabled="threeaisle" v-model="ChthrHigh" type="number"></el-input></td>
-                     	 <td><el-input :disabled="threeaisle" v-model="ChthrLow" type="number"></el-input></td>
+                    	 <td>{{$t('m.Sensorthree')}}</td>
+                    	 <td><el-input :disabled="threeaisle" v-model="ChthrHigh" type="number" :min='ChthrLow'></el-input></td>
+                     	 <td><el-input :disabled="threeaisle" v-model="ChthrLow" type="number"  :max='ChthrHigh'></el-input></td>
                     	 <td>
 	                    	 <el-select v-model="ChthrType" :disabled="threeaisle">
 							      <el-option
@@ -347,7 +346,8 @@
 						       <el-input class="UserDefined" placeholder="自定义" v-model="ChthrUs" :disabled="threeaisle"></el-input>
                     	 </td>
                      	 <td>
-	                     	  <el-select v-model="ChthrDot" placeholder="小数点位" :disabled="threeaisle">
+	                     	  <el-select v-model="ChthrDot" :placeholder="$t('m.DecimalPoints')" :disabled="threeaisle">
+	                     	  	  <el-option label="0" value="0"></el-option>
 							      <el-option label="0.0" value="1"></el-option>
 							      <el-option label="0.00" value="2"></el-option>
 							      <el-option label="0.000" value="3"></el-option>
@@ -356,9 +356,9 @@
                      	 </td>                	                         
                     </tr>
                      <tr>
-                    	 <td>传感器四</td>
-                    	 <td><el-input :disabled="fouraisle" v-model="ChforHigh" type="number"></el-input></td>
-                     	 <td><el-input :disabled="fouraisle" v-model="ChforLow"  type="number"></el-input></td>
+                    	 <td>{{$t('m.Sensorfour')}}</td>
+                    	 <td><el-input :disabled="fouraisle" v-model="ChforHigh" type="number" :min='ChforLow'></el-input></td>
+                     	 <td><el-input :disabled="fouraisle" v-model="ChforLow"  type="number" :max='ChforHigh'></el-input></td>
                     	 <td>
 	                    	 <el-select v-model="ChforType" :disabled="fouraisle">
 							      <el-option
@@ -371,7 +371,8 @@
 							   <el-input class="UserDefined" placeholder="自定义" v-model="ChforUs" :disabled="fouraisle"></el-input>
                     	 </td>
                      	 <td>
-	                     	  <el-select v-model="ChforDot" placeholder="小数点位" :disabled="fouraisle">
+	                     	  <el-select v-model="ChforDot" :placeholder="$t('m.DecimalPoints')" :disabled="fouraisle">
+	                     	  	  <el-option label="0" value="0"></el-option>
 							      <el-option label="0.0" value="1"></el-option>
 							      <el-option label="0.00" value="2"></el-option>
 							      <el-option label="0.000" value="3"></el-option>
@@ -387,52 +388,52 @@
              	 <table cellpadding="0" cellspacing="0"  class="tableborder">
                   <thead class="thd_bg">
              	 	<tr>
-			 			 <th class="lineSensing">报警类型</th>
-                         <th>上班延时(分)</th>
-                         <th>下班延时(分)</th>
-                         <th>报警方式</th>
-                         <th>报警连发(次)</th>
+			 			 <th class="lineSensing">{{$t('m.AlarmType')}}</th>
+                         <th>{{$t('m.DelayforWork')}}</th>
+                         <th>{{$t('m.Delayforoff')}}</th>
+                         <th>{{$t('m.alarmmeans')}}</th>
+                         <th>{{$t('m.RepeatAlarm')}}</th>
 			 		</tr> 
                    </thead>
-                   <tbody class="tbd_bg">
+                   <tbody class="tbd_bg tbodywidth">
 			 		<tr>
-			 			<td>超限报警</td>
+			 			<td>{{$t('m.ExceedsRangealarm')}}</td>
 			 			<td>
-			 				<el-input v-model="LimitAlarmWorkDelay"></el-input>
+			 				<el-input type="number" min="0" v-model="LimitAlarmWorkDelay" ></el-input>
 			 			</td>
 			 			<td>
-			 				<el-input v-model="LimitAlarmOffDelay" ></el-input>
+			 				<el-input type="number" min="0" v-model="LimitAlarmOffDelay" ></el-input>
 			 			</td>
 			 			<td>
 			 			 <el-select v-model="LimitAlarmType">
-			 			 	      <el-option label="无报警" value="0"></el-option>
-							      <el-option label="微信报警" value="1"></el-option>
-							      <el-option label="邮箱报警" value="2"></el-option>
-							      <el-option label="邮箱与微信" value="3"></el-option>
+			 			 	      <el-option :label="$t('m.NOALARM')" value="0"></el-option>
+							      <el-option :label="$t('m.Wechatalarm')" value="1"></el-option>
+							      <el-option :label="$t('m.Emailalarm')" value="2"></el-option>
+							    <!--   <el-option label="邮箱与微信" value="3"></el-option> -->
 						 </el-select>
 			 			</td>
 			 			<td>
-                            <el-input v-model="OverrunSendTheNumber"></el-input>
+                            <el-input type="number" min="0" max='5' v-model="OverrunSendTheNumber"></el-input>
 			 			</td>
 			 		</tr>
 			 		<tr>
-			 			<td>掉线报警</td>
+			 			<td>{{$t('m.Droppedalarm')}}</td>
 			 			<td>
-			 				<el-input v-model="DisAlarmWorkDelay"></el-input>
+			 				<el-input type="number" min="0" v-model="DisAlarmWorkDelay"></el-input>
 			 			</td>
 			 			<td>
-			 				<el-input v-model="DisAlarmOffDelay" ></el-input>
+			 				<el-input type="number" min="0" v-model="DisAlarmOffDelay" ></el-input>
 			 			</td>
 			 			<td>
 			 			 <el-select v-model="DisAlarmType" >
-			 			 	      <el-option label="无报警" value="0"></el-option>
-							      <el-option label="微信报警" value="1"></el-option>
-							      <el-option label="邮箱报警" value="2"></el-option>
-							      <el-option label="邮箱与微信" value="3"></el-option>
+			 			 	      <el-option :label="$t('m.NOALARM')" value="0"></el-option>
+							      <el-option :label="$t('m.Wechatalarm')" value="1"></el-option>
+							      <el-option  :label="$t('m.Emailalarm')" value="2"></el-option>
+							      <!-- <el-option label="邮箱与微信" value="3"></el-option> -->
 						 </el-select>
 			 			</td>
 			 			<td>
-                          <el-input v-model="LostConnectionSendTheNumber"></el-input>	
+                          <el-input type="number" min="0"  max='3'  v-model="LostConnectionSendTheNumber"></el-input>	
 			 			</td>
 			 		</tr>
 			 		</tbody>
@@ -440,8 +441,8 @@
              </div>
 
 		  <span slot="footer" class="dialog-footer">
-		    <el-button @click="AddEquipmentDialog = false" size='mini'>取 消</el-button>
-		    <el-button type="primary" @click="AddEquipmentSend" size='mini'>确 定</el-button>
+		    <el-button @click="AddEquipmentDialog = false" size='mini'>{{$t('m.NO')}}</el-button>
+		    <el-button type="primary" @click="AddEquipmentSend" size='mini'>{{$t('m.YES')}}</el-button>
 		  </span>
 		</el-dialog>
   </el-row>
@@ -452,39 +453,42 @@ export default {
      data(){
          var checkLoggerSn =(rule, value,callback) =>{
          	if(value===''){
-                 callback(new Error('请输入设备ID'));
+                 callback(new Error(this.$t('m.InputDevice')));
+         	  }else if(value !=='' && !(/^([^\u4e00-\u9fa5]){10}$/).test(value)){
+         	  	 callback(new Error(this.$t('m.Lengthoften')));
          	  }
                callback();
             };
           var checkLoggerName =(rule, value,callback) =>{
          	if(value===''){
-                 callback(new Error('请输入设名称'));
+                 callback(new Error(this.$t('m.enterDevice')));
          	  }
                callback();
             };         
           var checksamplingInt =(rule, value,callback) =>{
          	if(value===''){
-                 callback(new Error('请输入采样间隔时间'));
+                 callback(new Error(this.$t('m.IntervalTime')));
          	  }
                callback();
             };         
           var checkIntervalOfRecords =(rule, value,callback) =>{
          	if(value===''){
-                 callback(new Error('请输入记录时间'));
+                 callback(new Error(this.$t('m.Recordtime')));
          	  }
                callback();
             }; 
 
            var checkpartionName =(rule, value,callback) =>{
            	 if(value===''){
-	                 callback(new Error('请选择分区'));
+	                 callback(new Error(this.$t('m.Selectpartition')));
 	         	  }
 	               callback();
 	            }; 
-         
-
-          
       return{
+      	    AutoDown:0,//是否自动下载.
+      	    AutoDel:0,//自动删除
+            GspState:0,//gsp仪器选中
+      	    Editdisabled:false,//编辑的时候不能修改
             Delectsingle:false,//单个删除列表的按钮 
             BatchDele:false,//批量删除的按钮
       	    AddPartitionjurisdiction:false,//不是管理员的时候隐藏
@@ -505,16 +509,13 @@ export default {
              	GroupId:[{
              		 validator: checkpartionName, trigger: 'blur'
              	}]
-                
-                
-
              },
              EditDialogVisible:false,//修改分区
               Gps:0,
-      	      ChoneUs:' ',//为8的时候用户自定义1
-      	      ChtwoUs:' ',//用户自定义2
-      	      ChthrUs:' ',//用户自定义3
-      	      ChforUs:' ',//用户自定义4
+      	      ChoneUs:"",//为8的时候用户自定义1
+      	      ChtwoUs:"",//用户自定义2
+      	      ChthrUs:"",//用户自定义3
+      	      ChforUs:"",//用户自定义4
               LostConnectionSendTheNumber:0,//掉线报警次数
               OverrunSendTheNumber:0,//超限报警次数
               DisAlarmOffDelay:0,//掉线下班报警时间
@@ -580,7 +581,7 @@ export default {
                    },
                    {
                    	value:'8',
-                   	label:'用户定义'
+                   	label:'用户自定义'
                    },
                    {
                    	value:'9',
@@ -592,11 +593,11 @@ export default {
                    },
                    {
                    	value:'11',
-                   	label:'PM2.5(ug/m³)'
+                   	label:'ug/m³'
                    },
                    {
                    	value:'12',
-                   	label:'PM10(ug/m³)'
+                   	label:'ug/m³'
                    },
                    {
                    	value:'13',
@@ -606,7 +607,7 @@ export default {
       	        formInline: {
                     LoggerSn:'',//设备Id
                     LoggerName:'',//设备名称
-                    GroupId:"",//分区名称ID
+                    GroupId:'',//分区名称ID
                     samplingInt:'60',//采样间隔
                     IntervalOfRecords:'60',//记录间隔
                     PosPageno:'1', //设备类型的值
@@ -643,52 +644,9 @@ export default {
 	      	     readtrue:true,//刚进入页面的时候不能修改.需要点击修改的图标,
 	             PositionList:[],//分区显示.
                  radio2:[],
+                 DelectZonename:"",
               }  
      	   },
-          watch:{
-          	  ChoneHigh(nonenewvaluehight, oldvalue){
-          	  	 if(nonenewvaluehight<=this.ChoneLow){
-                           alert("不能低于下线1") 
-                           console.log(this)
-
-          	  	   }
-          	  },
-          	 ChoneLow(nonnewvaluelow){
-          	     if(nonnewvaluelow>this.ChoneHigh){
-                           alert("不能低于下线")
-          	  	   }  
-          	   },
-             ChtwoHigh(height){
-                   if(height<this.ChtwoLow){
-                           alert("不能低于下线")       
-          	  	   }  
-             }, 
-             ChtwoLow(low){
-                   if(low>this.ChtwoHigh){
-                           alert("不能大于上限")
-          	  	     }  
-               },
-              ChthrHigh(height){
-                   if(height<this.ChthrLow){
-                           alert("不能低于下线")      
-          	  	     }  
-               }, 
-              ChthrLow(low){
-                   if(low>this.ChthrHigh){
-                           alert("不能大于上限")
-          	  	     }  
-               },
-               ChforHigh(height){
-               	     if(height<this.ChforLow){
-                           alert("不能低于下线")      
-          	  	     }  
-               },
-              ChforLow(low){
-                   if(low>this.ChthrHigh){
-                           alert("不能大于上限")
-          	  	     }  
-               },
-          },
      	  methods:{
 	          PartitionRequest(){//用户分区列表显示
 	          	this.PositionList=[];
@@ -702,8 +660,11 @@ export default {
                           	  item.EditIcon=true;
                           	  item.readtrue=true;
                             }
+                           if(this.PositionList.length !==0){
+                           	  this.formInline.GroupId = this.PositionList[0].Id 
+                           }
 		        		 }
-	        	})         
+	        	 })         
               },
               EditPartion(GroupName){//编辑修改分区名称,
               	    this.RulepartitionEdit.name=GroupName;
@@ -712,7 +673,7 @@ export default {
               SearchRealTime(){//点击实时数据图标查询
                     this.GetEquipmentList()
               },
-             Addsend(){
+              Addsend(){
                   var group={
                   	   GroupName:this.Rulepartition.name
                   }
@@ -724,94 +685,104 @@ export default {
                              this.AddDialogVisible=false;
                              this.$message({
                              	type:'success',
-                             	message:'添加成功'
+                             	message:this.$t('m.Successfullyadded')
                              })
                               this.$refs["Rulespartition"].resetFields()//清除验证格式
                               this.PartitionRequest()//添加成功后刷新分区的列表.
                          }else{
                          	this.$message({
                          		type:'error',
-                         		message:'添加失败'
+                         		message:this.$t('m.additionfailed')
                          	})
                          }
                        })
                     }
                 })
              },
-             DeletePartition(){//左侧选中
-
-             	console.log('点击选中的那个')
-             	console.log(this.SelectDelete)
-               
+             DeletePartition(value){//左侧选中
+             	var _this=this
+             	this.DelectZonename=value
                 this.GetEquipmentList()//刷新列表
-        
-
              },
             DelectZone(){
             	var group={
             		Id:this.SelectDelete
             	}
-            	DeleteGroupManage(group).then(res=>{
+                if(this.SelectDelete==null){
+                     this.$message({
+                     	type:'error',
+                     	message:this.$t('m.Wanttodelete')
+                     })
+                }else{
+                      this.$confirm(this.$t('m.Delect')+this.DelectZonename+'   ？', this.$t('m.Determineb'), {
+				                    confirmButtonText: this.$t('m. YES'),
+				                    cancelButtonText: this.$t('m.NO'),
+				                    type: 'warning'
+				                  }).then(() => {
+				         DeleteGroupManage(group).then(res=>{
                              if(res.State==1){
                              	this.$message({
                              		type:'success',
-                             		message:'删除成功'
+                             		message:this.$t('m.SuccessfullyDelete')
                              	})
                              	this.PartitionRequest()//刷新一次列表下显示.
-                             }else{
-                             	this.$message({
+                             } else if(res.State==3){
+                                this.$message({
                              		type:'error',
-                             		message:'删除失败'
+                             		message:this.$t('m.Instrumentsdeleted')
 
                              	})
                              }
-            	})
+                           else{
+                             	this.$message({
+                             		type:'error',
+                             		message:this.$t('m.Deletefailed')
+                             	})
+                             }
+            	          })  
+				        }).catch(() => {
+				               return false;
+				        }) 
+                }
             }, 
             SystemManaSearchIcon(){//点击图标执行一次查询函数
             	this.PartitionRequest()
             },
             handleSelectionChange(val) {//设备删除的全选
 		        this.multipleSelection = val;
-		         console.log(this.multipleSelection)
 		      },
               
              GetEquipmentList(){//设备列表请求
-             	  this.EquipmentList=[]//调用前清空
+             	   this.EquipmentList=[]//调用前清空
                   var params={
-                  	 condition:this.SeachPartation,
-                  	 groupId:this.SelectDelete,
-                  	 pageIndex:this.pageIndex,
-                  	 pageSize:this.pageSize,
-                  }
-               GetInstrumentData(params).then(res=>{
-                       console.log("+++++++++++liebiao++++++++++++++++")
-                         console.log(res)
-                      if(res.UserRank == 1){//判断是不是管理员用户,
+	                  	 condition:this.SeachPartation ,
+	                  	 groupId:this.SelectDelete,
+	                  	 pageIndex:this.pageIndex,
+	                  	 pageSize:this.pageSize,
+                     }
+                 GetInstrumentData(params).then(res=>{
+                    if(res.UserRank == 1){//判断是不是管理员用户,
 	                      	this.AddPartitionjurisdiction=true;//隐藏添加分区按钮,删除分区按钮.
 	                        this.BatchDele=true;
 	                        this.Delectsingle=true;
                       }
-
-
                         this.totalNumber=res.TotalNumber;//总条数.
-	                for(let item of res.Data){
-	                   
-	                    /*item.LoggerState = item.LoggerState == 1 ? true : false;*/
-	                    if(item.LoggerState == 1){
+                       res.Data.forEach((item,index) =>{//forEach遍历词组的时候方便添加属性
+	                      if(item.LoggerState == 1){
 	                    	item.LoggerState=true
-	                    }else{
-	                    	item.LoggerState=false
-	                    }
-                        this.EquipmentList.push(item) 
-	                 } 
-                  }) 
+	                       }else{
+	                    	  item.LoggerState=false
+	                      }   
+                          this.EquipmentList.push(item)
+	                     this.EquipmentList[index].LogsTime=this.EquipmentList[index].LogsTime.slice(0,16)
+                        })
+                    }) 
              },
              EditZoning(){//分区编辑,
              	 var  group={
              	 	Id:this.SelectDelete,//
              	 	GroupName:this.RulepartitionEdit.name
              	 }
-                 
                 this.$refs["RulespartitionEdit"].validate((valid) =>{
                      if(valid){
                     UpdateGroupManage(group).then(res=>{
@@ -820,7 +791,7 @@ export default {
                              this.AddDialogVisible=false;
                              this.$message({
                              	type:'success',
-                             	message:'修改成功'
+                             	message:this.$t('m.EidtSuccess')
                              })
                               this.EditDialogVisible=false;
                               this.$refs["RulespartitionEdit"].resetFields()//清除验证格式
@@ -829,7 +800,7 @@ export default {
                          }else{
                          	this.$message({
                          		type:'error',
-                         		message:'修改失败'
+                         		message:this.$t('m.Editfailure')
                          	})
                          }
                        })
@@ -843,29 +814,29 @@ export default {
              	 }else{
              	 	  this.loggerInfoState=1 
              	 }
-              console.log(this.loggerInfoState)
-              var params =  {
-                     loggerInfoState:this.loggerInfoState,
-                     loggerInfoSn:this.EquipmentList[index].LoggerSn
-              }
+	              var params =  {
+	                     loggerInfoState:this.loggerInfoState,
+	                     loggerInfoSn:this.EquipmentList[index].LoggerSn
+	              }
                 UpdateLoggerInfoState(params).then(res=>{
-                        if(res.State){
+
+
+                	console.log(res)
+                        if(res.State == 1){
                         	this.$message({
                         		type:'success',
-                        		message:'设置成功'
+                        		message:this.$t('m.Successfullyset')
 
                         	})
                         }else{
                         	this.$message({
                         		type:'error',
-                        		message:'设置失败'
+                        		message:this.$t('m.Setupfailed')
                         	})
                         }
                 })
              },
              pageIndexChange(pageIndex){//翻页监控当前页面发生变化没有! 重新获取列表的页面!~
-             	console.log("页码")
-             	console.log(pageIndex)
 	             this.pageIndex = pageIndex;//传当前页面   
 	             this.GetEquipmentList()// 列表刷新.
 	           },
@@ -873,45 +844,53 @@ export default {
              	var  listlLoggerInfos={
                       listlLoggerInfos:this.multipleSelection
              	};
-			           DeleteLoggerInfo(listlLoggerInfos).then(res=>{
-			               	console.log("批量删除")
-			                console.log(listlLoggerInfos)
-			                   console.log(this.multipleSelection)
+                if (listlLoggerInfos.listlLoggerInfos ==  undefined) {
+                           this.$message({
+                           	    type:'error',
+                           	     message:this.$t('m.Selectinstrument')
+                           })
 
+                   }else{
+                  this.$confirm(this.$t('m.Confirmdelete'), this.$t('m.Determineb'), {
+	                    confirmButtonText: this.$t('m.YES'),
+	                    cancelButtonText: this.$t('m.NO'),
+	                    type: 'warning'
+	                  }).then(() => {
+                         DeleteLoggerInfo(listlLoggerInfos).then(res=>{
 			                         if(res.State==1){
 			                         	 this.$message({
 			                         	 	type:'success',
-			                         	 	message:'删除成功'
+			                         	 	message:this.$t('m.SuccessfullyDelete')
 			                         	 })
 			                             this.EquipmentList=[];
 			                             this.GetEquipmentList()//刷新
 			                          } else if(res.State==3){
                                             this.$message({
 			                         	 	   type:'error',
-			                         	 	   message:'存在不允许删除的仪器'
+			                         	 	   message:this.$t('m.Instrumentsdeleted')
 			                         	 })
 
 			                          }else{
 			                             this.$message({
 			                         	 	   type:'error',
-			                         	 	   message:'删除失败'
+			                         	 	   message:this.$t('m.Deletefailed')
 			                         	 })
 			                         }
 
-
-
-			                     }) 
+			                     })      
+	                  }).catch(() => {
+	                    return false;
+	                   }) 
+                  }
              },
              AddDevice(){//添加设备
+             	   this.Editdisabled=false;
                    this.AddEquipmentDialog=true;
                     this.isAdd=true;
-                   console.log("添加")
              },
              GetInstrumentType(){//仪器类型列表显示.
              	GetLoggerInfoType().then(res=>{
                      this.IntrumentType=res.Data
-                     console.log("仪器类型列表显示")
-                     console.log(this.IntrumentType)
              	})
              },
              GPSSelect(val){//有没有选中GPs
@@ -924,7 +903,13 @@ export default {
                   	   this.MediaType=res.Data
                   })  
              },
-           AddEquipmentSend(){//点击的新增仪器仪器
+            AddEquipmentSend(){//点击的新增仪器仪器
+                if(Number(this.ChoneHigh)<=Number(this.ChoneLow)||Number(this.ChtwoHigh)<=Number(this.ChtwoLow)||Number(this.ChthrHigh)<Number(this.ChthrLow)||Number(this.ChforHigh)<Number(this.ChforLow)){
+                        this.$message({
+	                        	type:'error',
+	                        	message:this.$t('m.lowerlimit')
+                        })
+                }else{
                    var loggerInfo={
 		                   LoggerSn:this.formInline.LoggerSn,//设备Id
 		                   LoggerName:this.formInline.LoggerName,//设备名称
@@ -934,7 +919,10 @@ export default {
 		                   PosPageno:this.formInline.PosPageno, //设备类型的值
 		                   VerId:this.formInline.VerId,//仪器类型
 		                   LoggerChnum:this.formInline.LoggerChnum,//通道数.
-			               Gps:Number(this.Gps),
+			               Gps:Number(this.Gps),//GPS定位
+			               GspState:Number(this.GspState),
+			               AutoDel:Number(this.AutoDel),//自动保存
+			               AutoDown:Number(this.AutoDown),//自动下载
 			      	      ChoneUs:this.ChoneUs,//为8的时候用户自定义1
 			      	      ChtwoUs:this.ChtwoUs,//用户自定义2
 			      	      ChthrUs:this.ChthrUs,//用户自定义3
@@ -963,46 +951,52 @@ export default {
 			      	      ChtwoType:this.ChtwoType,//通道2默认下拉传值
 			      	      ChthrType:this.ChthrType,//通道3下拉传值
 			      	      ChforType:this.ChforType,//通道4
-                   }
-      if(this.isAdd){
-            this.EquipmentList=[];
-           this.$refs['AddEquipmentForm'].validate((valid) => {
-               if (valid) {   
-               	   InsertLoggerInfo(loggerInfo).then(res=>{
-                       if(res.State==1){
-                        	this.$message({
-                        		type:'success',
-                        		message:'仪器创建成功'
-                        	})
-                          this.$refs['AddEquipmentForm'].resetFields();
-                          this.AddEquipmentDialog=false;
-                          this.GetEquipmentList()//刷新
-                        }
-           	     }) 
-               }
-           })
-           }else{
-           	      this.EquipmentList=[];
-            this.$refs['AddEquipmentForm'].validate((valid) => {
-               if (valid) {
-               	   UpdateLoggerInfo(loggerInfo).then(res=>{
-               	   	       console.log("编辑")
-               	   	       console.log(res)
-               	   	       console.log(loggerInfo)
-                       if(res.State==1){
-                        	this.$message({
-                        		type:'success',
-                        		message:'仪器编辑成功'
-                        	})
-                          this.$refs['AddEquipmentForm'].resetFields();
-                          this.AddEquipmentDialog=false;
-                          this.GetEquipmentList()//刷新
-                        }
-           	     }) 
-               }
-           })
-           }
-          },
+                      }
+				      if(this.isAdd){
+				           this.$refs['AddEquipmentForm'].validate((valid) => {
+				               if (valid) {   
+				               	   InsertLoggerInfo(loggerInfo).then(res=>{
+
+				               	   	console.log(loggerInfo)
+				                       if(res.State==1){
+				                         	this.EquipmentList=[];
+				                        	this.$message({
+				                        		type:'success',
+				                        		message:this.$t('m.CreatingSuccessful'),
+				                        		
+				                        	})
+				                          this.$refs['AddEquipmentForm'].resetFields();
+				                          this.AddEquipmentDialog=false;
+				                          this.GetEquipmentList()//刷新
+				                        }else if( res.State==3){
+				                        	this.$message({
+				                        		type:'error',
+				                        		message:this.$t('m.Alreadyexists')
+				                        	})
+				                        }
+				           	     }) 
+				               }
+				           })
+				           }else{
+				           	      this.EquipmentList=[];
+				            this.$refs['AddEquipmentForm'].validate((valid) => {
+				               if (valid) {
+				               	   UpdateLoggerInfo(loggerInfo).then(res=>{
+				                       if(res.State==1){
+				                        	this.$message({
+				                        		type:'success',
+				                        		message:this.$t('m.EidtSuccess')
+				                        	})
+				                          this.$refs['AddEquipmentForm'].resetFields();
+				                          this.AddEquipmentDialog=false;
+				                          this.GetEquipmentList()//刷新
+				                        }
+				           	     }) 
+				               }
+				            })
+				          }
+				         }
+        },
           AddEquipmentDialogClose(val){//关闭清空原来的值,
                 this.formInline={
                     LoggerSn:'',//设备Id
@@ -1015,6 +1009,9 @@ export default {
                     LoggerChnum:'2',//通道数.
 					        }
 		              this.Gps=0,
+		              this.GspState=0,
+		              this.AutoDel =0,
+		              this.AutoDown =0,
 		      	      this.ChoneUs=' ',//为8的时候用户自定义1
 		      	      this.ChtwoUs=' ',//用户自定义2
 		      	      this.ChthrUs=' ',//用户自定义3
@@ -1048,14 +1045,16 @@ export default {
 		      	      this.threeaisle=true//3通道
           },
 	     EditFacility(index){//点击编辑的时候.找到对应的饿编辑参数
+	     	          this.Editdisabled=true;//编辑的时候不能修改设备的ID
 	     	          this.AddEquipmentDialog=true;
 	     	          this.isAdd=false;
 	     	          console.log(this.isAdd)
-	     	          console.log("bianji")
+
                      var params={
                      	  loggerSn:this.EquipmentList[index].LoggerSn
                      }
                GetInstrumentDataTop1(params).then(res=>{
+               	         console.log("bianji")
                	           console.log(res)
                       switch(res.Data[0].LoggerChnum.toString()){
 		                    case '1':
@@ -1088,6 +1087,9 @@ export default {
 		                  this.formInline.VerId=String(res.Data[0].VerId);//仪器类型
 		                  this.formInline.LoggerChnum=String(res.Data[0].LoggerChnum);//通道数.
 			              this.Gps=Boolean(res.Data[0].Gps);
+			              this.GspState=Boolean(res.Data[0].GspState);
+			              this.AutoDel =Boolean(res.Data[0].AutoDel);
+			              this.AutoDown =Boolean(res.Data[0].AutoDown);
 			      	      this.ChoneUs=res.Data[0].ChoneUs;//为8的时候用户自定义1
 			      	      this.ChtwoUs=res.Data[0].ChtwoUs;//用户自定义2
 			      	      this.ChthrUs=res.Data[0].ChthrUs;//用户自定义3
@@ -1098,8 +1100,8 @@ export default {
 			      	      this.DisAlarmWorkDelay=res.Data[0].DisAlarmWorkDelay;//掉线上班报警时间
 			      	      this.LimitAlarmWorkDelay=res.Data[0].LimitAlarmWorkDelay;//超线上班报警
 			      	      this.LimitAlarmOffDelay=res.Data[0].LimitAlarmOffDelay;//超线下班报警
-			      	      this.DisAlarmType=res.Data[0].DisAlarmType;//掉线报警类型
-			      	      this.LimitAlarmType=res.Data[0].LimitAlarmType;//超线报警类型
+			      	      this.DisAlarmType=String(res.Data[0].DisAlarmType);//掉线报警类型
+			      	      this.LimitAlarmType=String(res.Data[0].LimitAlarmType);//超线报警类型
 			      	      this.ChoneHigh=res.Data[0].ChoneHigh;//通道一上下线.
 			      	      this.ChoneLow=res.Data[0].ChoneLow;
 			              this.ChtwoHigh=res.Data[0].ChtwoHigh;//通道2上下线.
@@ -1115,7 +1117,9 @@ export default {
 			      	      this.ChoneType=String(res.Data[0].ChoneType);//通道1默认下拉传值
 			      	      this.ChtwoType=String(res.Data[0].ChtwoType);//通道2默认下拉传值
 			      	      this.ChthrType=String(res.Data[0].ChthrType);//通道3下拉传值
-			      	      this.ChforType=String(res.Data[0].ChforType);//通道4 */     
+			      	      this.ChforType=String(res.Data[0].ChforType);//通道4 */   
+
+			      	      console.log(this.formInline)  
                 })
 	       },
          DelectFacility(index){//仪器删除
@@ -1125,28 +1129,35 @@ export default {
                     };
              var listlLoggerInfos={
                       listlLoggerInfos:[LoggerInfos]
-             }
-         DeleteLoggerInfo(listlLoggerInfos).then(res=>{
-                       if(res.State==1){
-                         	 this.$message({
-                         	 	type:'success',
-                         	 	message:'删除成功'
-                         	 })
-                             this.EquipmentList=[];
-                            this.GetEquipmentList()//刷新
-                         }else if(res.State==3){
-                            this.$message({
-                         	 	type:'error',
-                         	 	message:'该仪器不允许删除'
-                         	 })
+             }  
+          this.$confirm(this.$t('m.Delect')+this.EquipmentList[index].LoggerName+'   ？',this.$t('m.Determineb'),{
+	                    confirmButtonText: this.$t('m. YES'),
+	                    cancelButtonText:this.$t('m. NO'),
+			          }).then(() =>{
+		                    DeleteLoggerInfo(listlLoggerInfos).then(res=>{
+		                       if(res.State==1){
+		                         	 this.$message({
+		                         	 	type:'success',
+		                         	 	message:this.$t('m.SuccessfullyDelete')
+		                         	 })
+		                             this.EquipmentList=[];
+		                            this.GetEquipmentList()//刷新
+		                         }else if(res.State==3){
+		                            this.$message({
+		                         	 	type:'error',
+		                         	 	message:this.$t('m.Instrumentsdeleted')
+		                         	 })
 
-                         }else{
-                            this.$message({
-                         	 	type:'error',
-                         	 	message:'删除失败'
-                         	 })
-                         }
-               }) 
+		                         }else{
+		                            this.$message({
+		                         	 	type:'error',
+		                         	 	message:this.$t('m.Deletefailed')
+		                         	 })
+		                         }
+		                 }) 
+			          }).catch(() =>{
+			          	 return false;
+			          })
           },
           Sensorquantity(val){//传感器数量选择显示
                 switch(val){
@@ -1175,12 +1186,12 @@ export default {
      	   },
           mounted(){
           	    var _this=this;
+          	   this.SeachPartation=this.$route.params.id 
                 this.PartitionRequest()///钩子函数
                 this.GetEquipmentList()//列表请求.
                 this.GetInstrumentType()//仪器类型接口请求
                 this.DeviceType()//设备类型下拉列表,
-                /*this.jurisdiction()//显示权限*/
-
+                /*this.jurisdiction()//显示权限*/  
           }
     }
 </script>
@@ -1189,6 +1200,7 @@ export default {
          height: calc(100% - 40px);
          background: #eaedf1;
          min-width: 1570px;
+         min-height: 823px;
     .CurrentPosition{
     		height: 40px;
     		background:#f7f7f7; 
@@ -1196,9 +1208,7 @@ export default {
               line-height: 40px;
               margin-left: 15px;
     		}
-    		.currentcolor{
-    			color: #008ce5
-    		}
+
     	}
       .SystemManagementCoent{
       	     height: calc(100% - 60px);
@@ -1206,8 +1216,7 @@ export default {
               margin: 20px;
               background: #fff;
 		     .lightZone {
-		     	   width: 360px;
-		     	   text-align:center;
+		     	    width: 360px;
 				    height: calc(100% - 4px);
 				    background:#eeeeee;
 				    overflow-y: scroll;
@@ -1298,9 +1307,8 @@ export default {
       	  }  
       }
       .bg-purple-right{
-		      padding-left: 40px;
-		      min-width: 1100px;
-
+	      padding-left: 40px;
+	      min-width: 1100px;
       }
       .hr{
       	height:1px;
@@ -1365,7 +1373,11 @@ export default {
 		      }
 		    }
 	  }
-
+     .tbodywidth{
+     	.el-input{
+     		width: 120px;
+     	}
+     }
 
    }
 </style>
@@ -1396,16 +1408,16 @@ export default {
       	border:1px solid #d7d7d7;
       }
       .AlarmTypeTime .el-input__inner{
-      	 width: 137px;
+      	
       	 text-align: center;
       }
     .UserDefined{
-      	display: inline;
+      	display: inline !important;
       	width: 60px;
       }
        .UserDefined .el-input__inner{
       	 	width: 60px;
-      	 	display: inline;
+      	 	display: inline ;
       }
      .Selectpatation .el-input__inner{
   	 	 border: none;
@@ -1424,4 +1436,10 @@ export default {
 	.PartitionList .el-radio__label{
       	 	text-align: left;
       	 }
+      .tableborder  .el-input{
+      	width: 120px !important;
+      }
+      .tbodywidth  .el-input{
+      	width: 120px;
+      }
 </style>

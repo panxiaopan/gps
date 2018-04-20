@@ -10,6 +10,15 @@ html, body {
 .CurrentPosition{
 	height:100px;
 }
-.Container{
-	background:red;
+.currentcolor{
+  color: #008ce5
 }
+ //表头上面的
+ .CurrentPosition{
+    		height: 40px;
+    		background:#f7f7f7; 
+    .NowPositon{
+              line-height: 40px;
+              margin-left: 15px;
+    		}
+    } 

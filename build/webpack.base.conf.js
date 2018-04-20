@@ -22,9 +22,10 @@ const createLintingRule = () => ({
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
-  entry: {
-    app: './src/main.js'
-  },
+  // entry: {
+  //   app: './src/main.js'
+  // },
+  entry: ["babel-polyfill", "./src/main.js"],//兼容IE的
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -60,10 +61,10 @@ module.exports = {
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       },
-     {
+/*     {
         test: /\.scss$/,
-        loaders: ['style', 'css', 'sass']
-      },
+        loaders: ['style', 'css', 'sass','style-loader']
+      },*/
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
         loader: 'url-loader',
@@ -72,6 +73,25 @@ module.exports = {
           name: utils.assetsPath('media/[name].[hash:7].[ext]')
         }
       },
+/*          {
+          test: /\.css$/,
+          //下面两行，作用相同，选择自己比较喜欢的样式即可
+          // use: [ 'style-loader', 'css-loader' ]
+          loader: 'style-loader!css-loader'
+      },*/
+/*      {
+          test: /\.less$/,
+          //下面两行，作用相同，选择自己比较喜欢的样式即可
+          // loader: 'style-loader!css-loader!less-loader'
+          use: [
+              'style-loader',
+              { loader: 'css-loader', options: { importLoaders: 1 } },
+              'less-loader'
+          ]
+      },*/
+
+
+
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',

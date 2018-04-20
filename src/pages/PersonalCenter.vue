@@ -1,8 +1,8 @@
 <template>
- <el-row  class="Container PersonalCenter">
+ <el-row  class="PersonalCenter">
    <el-row>
       <el-col :span='24' class="CurrentPosition">
-        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right"><span class="currentcolor">个人中心</span></i></div> 
+        <div class="NowPositon"><i class="el-icon-location"></i><span>{{$t('m.Location')}}</span><i class="el-icon-arrow-right"><span class="currentcolor">{{$t('m.usercenter')}}</span></i></div> 
       </el-col>
    </el-row>
     <el-row class="PersonalMessage">
@@ -13,58 +13,56 @@
 	                  </div>
 	                  <el-row >
 		                  <el-col :span="24">
-		                     <el-form :label-position="labelPosition" status-icon label-width="80px" :rules='PersonnalRules' ref='personnalRule' :model="PersonalMessagelable" class="PersonalMessagelable">
-								  <el-form-item label="公司:">
+		                     <el-form :label-position="labelPosition" status-icon label-width="120px" :rules='PersonnalRules' ref='personnalRule' :model="PersonalMessagelable" class="PersonalMessagelable">
+								  <el-form-item :label="$t('m.Company')">
 								       <el-input  v-model="PersonalMessagelable.CompanyName" class="borderNone" :readonly="true"></el-input>
 								  </el-form-item>
-								  <el-form-item label="用户名:">
+								  <el-form-item :label="$t('m.UserName')">
 								     <el-input  v-model="PersonalMessagelable.UserName" class="borderNone" :readonly="true"></el-input>
 								  </el-form-item>
-								  <el-form-item label="真实姓名:" prop="RealName">
+								  <el-form-item :label="$t('m.StaffName')" prop="RealName">
 								       <el-input v-model="PersonalMessagelable.RealName" :readonly="readtrue"></el-input>
 								  </el-form-item>
-		 						  <el-form-item label="手机:" prop="CellPhone">
+		 						  <el-form-item :label="$t('m.PhoneNO')" prop="CellPhone">
 								       <el-input v-model="PersonalMessagelable.CellPhone" :readonly="readtrue"></el-input>
 								  </el-form-item>
-		                            <el-form-item label="邮箱:" prop="Mailbox">
+		                            <el-form-item :label="$t('m.Emaial')" prop="Mailbox">
 								       <el-input v-model="PersonalMessagelable.Mailbox" :readonly="readtrue"></el-input>
 								  </el-form-item>
-		                          <el-form-item label="微信:" v-show="weixinshow" class="weixinfrom">
+		                          <el-form-item :label="$t('m.WeChat')" v-show="weixinshow" class="weixinfrom">
 								       <el-input v-model="UserWx" :disabled="true"></el-input>
-								        <el-button type="primary" size="small"  @click="GainWechat" v-if="WexinButton">获取</el-button>
+								        <el-button type="primary" size="small"  @click="GainWechat" v-if="WexinButton">{{$t('m.Gain')}}</el-button>
 								  </el-form-item>
-								  <el-form-item label="报警类型:" v-show="alarmshow" class="AlarmI">
-		                                    <el-tooltip class='item' effect='light' content="暂无报警类型" v-show="DeviceSafety">
+								  <el-form-item :label="$t('m.AlarmType')" v-show="alarmshow" class="AlarmI">
+		                                    <el-tooltip class='item' effect='light' :content="$t('m.NOALARMtype')" v-show="DeviceSafety">
 								        	    <i class="fa-chevron-down"></i>
 		                                    </el-tooltip>
-								        	<el-tooltip class='item' effect='light' content="超限" v-show='Ultralimit'>
+								        	<el-tooltip class='item' effect='light' :content="$t('m.Overrun')" v-show='Ultralimit'>
 								        		<i class="Ultralimit"></i>
 								        	</el-tooltip>
-		                                    <el-tooltip class='item' effect='light' content="掉线" v-show="LostConnection">
+		                                    <el-tooltip class='item' effect='light' :content="$t('m.Dropped')" v-show="LostConnection">
 								        	    <i class="LostConnection"></i>
 		                                    </el-tooltip>
 								  </el-form-item>
 								  <el-form-item  v-show="EditSureshow">
-								       <el-button type="primary" size="mini" @click="EditSubmission">确定</el-button><el-button  size="mini" @click="AbolishEdit">取消</el-button>
+								       <el-button type="primary" size="mini" @click="EditSubmission">{{$t('m.YES')}}</el-button><el-button  size="mini" @click="AbolishEdit">{{$t('m. NO')}}</el-button>
 								  </el-form-item>
 		                    </el-form>
 			                 <div class="Edit" v-show="EditHideshow">
-		                    	<el-button type="primary" size="mini" @click="editMessage">编辑</el-button>
-		                    	<el-button type="primary" size="mini" @click="PassDialogVisible = true">修改密码</el-button>
-		                    	<el-button type="primary" size="mini">添加报警接受人</el-button>
+		                    	<el-button type="primary" size="mini" @click="editMessage">{{$t('m.Edit')}}</el-button>
+		                    	<el-button type="primary" size="mini" @click="PassDialogVisible = true">{{$t('m.ChangePassword')}}</el-button>
+		                    	<el-button type="primary" size="mini">{{$t('m.AddalarmReceiver')}}</el-button>
 		                    </div>
 		                </el-col>
-
                     </el-row>
-
 		       	</div>
        </el-col>
        <el-col :span="16" class="Loginrecord">
 	       	<div class="grid-content bg-purple">
-	       	   <div class="NowLogin">最近登录</div>
+	       	   <div class="NowLogin">{{$t('m.Recentlylogin')}}</div>
 			          <el-form :inline="true" :model="formInline" class="demo-form-inline  userfrom">
-	                    <el-form-item label="用户名:">
-						    <el-select v-model="formInline.selectvalue" placeholder="选择用户名">
+	                    <el-form-item  :label="$t('m.UserName')">
+						    <el-select v-model="formInline.selectvalue" :placeholder="$t('m.SelectUsername')" @change="checkedvalue">
 	                             <el-option
 							      v-for="item in options"
 							      :key="item.value"
@@ -74,21 +72,21 @@
 							    </el-option>
 						    </el-select>
 						  </el-form-item>
-						  <el-form-item label="时间段:">
+						  <el-form-item :label="$t('m.TimePeriod')">
 						        <div class="block">
 								    <el-date-picker
 								          value-format="yyyy-MM-dd"
-								          @change="logTimeInquire"
 									      v-model="valueTime"
-									      type="daterange"
+									       type="daterange"
+									       :picker-options='disabledDate'
 									      range-separator="至"
-									      start-placeholder="开始日期"
-									      end-placeholder="结束日期">
+									      :start-placeholder="$t('m.StartTime')"
+									      :end-placeholder="$t('m.EndTime')">
 								    </el-date-picker>
 								</div>
 						  </el-form-item>
 						  <el-form-item>
-						    <el-button type="primary" size="small" @click="LoginInquire">查询</el-button>
+						    <el-button type="primary" size="small" @click="LoginInquire">{{$t('m.Search')}}</el-button>
 						  </el-form-item>
 			      </el-form>
 			         <div class="blockTable">
@@ -99,24 +97,36 @@
 						    style="width: 100%">
 						    <el-table-column
 						      prop="Username"
-						      label="用户名"
+						      :label="$t('m.UserName')"
 						      width="180">
 						    </el-table-column>
 						    <el-table-column
-						      label="用户角色"
+						      :label="$t('m.UserRating')"
 						      width="180">
 	                            <template slot-scope="scope">
-	                                <span  v-if='tableDataList[scope.$index].UserRole==1' >管理员</span>
-	                                <span  v-if='tableDataList[scope.$index].UserRole==2' >普通用户</span>
+	                                <span  v-if='tableDataList[scope.$index].UserRole==1' >{{$t('m.Administrator')}}</span>
+	                                <span  v-if='tableDataList[scope.$index].UserRole==2' >{{$t('m.Conventional')}}</span>
 	                            </template>
 						    </el-table-column>
 						    <el-table-column
 						      prop="IPaddress"
-						      label="IP地址">
+						      :label="$t('m.IPaddress')">
 						    </el-table-column>
                         	 <el-table-column
-						      prop="logTime"
-						      label="登录时间">
+						        prop="logTime"
+						       :label="$t('m.Logintime')">
+						    </el-table-column>
+                            <el-table-column
+						        prop="UserLoginRemark"
+						      :label="$t('m.loggingStatus')">
+						    </el-table-column>
+                             <el-table-column
+						       :label="$t('m.LoginInstructions')">
+                               <template slot-scope="scope">
+                               	    <span  v-if='tableDataList[scope.$index].UserLoginType==1' >{{$t('m.WebClient')}}</span>
+	                                <span  v-if='tableDataList[scope.$index].UserLoginType==2' >{{$t('m.MobileAPP')}}</span>
+	                                <span  v-if='tableDataList[scope.$index].UserLoginType==null' >{{$t('m.Abnormal')}}</span>
+                               </template>
 						    </el-table-column>
 					      </el-table>
                   </div>
@@ -125,28 +135,29 @@
      </el-row>
      <el-row :span="24" v-if="ChildUsers" class="ManageUser">
      	  <div class=" bg-purple">
-     	  	 <el-form :inline="true"  class="demo-form-inline  Submenufrom" >
-	                    <el-form-item label="用户名:">
-                             <el-input  placeholder="请输入内容" v-model="ChilderVal"></el-input>
+     	  	 <el-form :inline="true"  class="demo-form-inline  Submenufrom"  label-width="100px" >
+	                    <el-form-item :label="$t('m.UserName')">
+                             <el-input    v-model="ChilderVal"></el-input>
 						  </el-form-item>
-						  <el-form-item label="时间段:">
+						  <el-form-item :label="$t('m.TimePeriod')">
 						        <div class="block">
 								    <el-date-picker
 								          value-format="yyyy-MM-dd"
 								           v-model="valueTimeSub"
 								          @change="SuberUserInquireval"
 									      type="daterange"
+									      :picker-options='disabledDate'
 									      range-separator="至"
-									      start-placeholder="开始日期"
-									      end-placeholder="结束日期">
+									      :start-placeholder="$t('m.StartTime')"
+									      :end-placeholder="$t('m.EndTime')">
 								    </el-date-picker>
 								</div>
 						  </el-form-item>
 						  <el-form-item>
-						    <el-button type="primary" size="small" @click="SubUserInquire">查询</el-button>
+						    <el-button type="primary" size="small" @click="SubUserInquire">{{$t('m.Search')}}</el-button>
 						  </el-form-item>
 						  <el-form-item>
-						    <el-button type="primary" size="small" @click="UserCreation" >创建用户</el-button>
+						    <el-button type="primary" size="small" @click="UserCreation" >{{$t('m.CreatUser')}}</el-button>
 						  </el-form-item>
 			      </el-form>
                   	 <div class="blockTable SubUserTable">
@@ -158,60 +169,58 @@
 						    >
 						    <el-table-column
 						      prop="Username"
-						      label="用户名"
+						      :label="$t('m.UserName')"
 						      width="180"
 						      >
 						    </el-table-column>
 						    <el-table-column
-						      label="用户角色"
+						      :label="$t('m.UserRating')"
 						      width="180"
 						      >
                  	          <template slot-scope="scope">
-	                                <span  v-if='SubUserDataList[scope.$index].UserLevel==1' >管理员</span>
-	                                <span  v-if='SubUserDataList[scope.$index].UserLevel==2' >普通用户</span>
+	                                <span  v-if='SubUserDataList[scope.$index].UserLevel==1' >{{$t('m.Administrator')}}</span>
+	                                <span  v-if='SubUserDataList[scope.$index].UserLevel==2' >{{$t('m.Conventional')}}</span>
 	                          </template>
-
 						    </el-table-column>
 						    <el-table-column
 						      prop="Ucompany"
-						      label="公司名称">
+						      :label="$t('m.Company')">
 						    </el-table-column>
                         	 <el-table-column
 						      prop="UrecordDate"
-						      label="申请日期">
+						      :label="$t('m.ApplyData')">
 						    </el-table-column>
                           	 <el-table-column
 						      prop="Uvalidity"
-						      label="有效期">
+						      :label="$t('m.Periodvalidity')">
 						    </el-table-column>
                             <el-table-column
 						      prop="AlarmType"
-						      label="报警类型">
+						      :label="$t('m.AlarmType')">
                              <template slot-scope="scope">
                                    <span v-if='SubUserDataList[scope.$index].AlarmType==1'>
-							        	<el-tooltip class='item' effect='light' content="超限" >
+							        	<el-tooltip class='item' effect='light' :content="$t('m.Overrun')" >
 							        		<i class="Ultralimit"></i>
 							        	</el-tooltip>
                                     </span>
                                     <span v-if='SubUserDataList[scope.$index].AlarmType==2'>
-	                                    <el-tooltip class='item' effect='light' content="掉线"  >
+	                                    <el-tooltip class='item' effect='light' :content="$t('m.Dropped')"  >
 							        	    <i class="LostConnection"></i>
 	                                    </el-tooltip>
                                     </span>
                                     <span v-if='SubUserDataList[scope.$index].AlarmType==3' >
-                                    	<el-tooltip class='item' effect='light' content="超限" >
+                                    	<el-tooltip class='item' effect='light' :content="$t('m.Overrun')" >
 							        		<i class="Ultralimit"></i>
 							        	</el-tooltip>
-							         <el-tooltip class='item' effect='light' content="掉线"  >
+							         <el-tooltip class='item' effect='light' :content="$t('m.Dropped')"  >
 							        	    <i class="LostConnection"></i>
 	                                   </el-tooltip>
                                     </span>
                               </template> 
 						    </el-table-column>
                             <el-table-column
-                              prop="Uvalidity"
                               width='150'
-						      label="操作">
+						      :label="$t('m.Operation')">
 						       <template slot-scope="scope">
 						      	  <i class="fa fa-edit fa-2x" @click="EditorUser(scope.$index)" ></i>
 						      	  <i class="fa fa-trash-o fa-2x" @click="DelectUser(scope.$index)" ></i>
@@ -221,139 +230,150 @@
                   </div>
 			   </div>
      </el-row>
-
       <el-dialog
-		  title="修改密码"
+		   :title="$t('m.ChangePassword')"
 		  :visible.sync="PassDialogVisible"
-		  width="25%"
+		  width="30%"
 		  @close='closeUpdatePass'
 		  center>
 		     <el-form 
 		       :model="PasswordForm" status-icon 
-		        label-width="100px"  
 		        ref="passwordRules" 
 		        :rules="passwordRule" 
-	         class="demo-ruleForm" >
-		         <el-form-item label="原始密码:" prop="Oldpassword" >
+		         class="demo-ruleForm" 
+	             label-width="180px"
+		         >
+		         <el-form-item :label="$t('m.OriginalPassword')" prop="Oldpassword" >
 				     <el-input type="password" v-model="PasswordForm.Oldpassword"></el-input>
 				  </el-form-item>
-				  <el-form-item label="新密码" prop="Newpass">
+				  <el-form-item :label="$t('m.NewPassword')" prop="Newpass">
 				     <el-input type="password" v-model="PasswordForm.Newpass" auto-complete="off"></el-input>
 				  </el-form-item>
-				  <el-form-item label="确认新密码" prop="ConfirmPass">
+				  <el-form-item :label="$t('m.ConfirmNewPassword')"  prop="ConfirmPass">
 				     <el-input type="password" v-model="PasswordForm.ConfirmPass" auto-complete="off"></el-input>
 				  </el-form-item> 
 		     </el-form>
 		      <span slot="footer" class="dialog-footer">
-                      <el-button @click="PassDialogVisible = false" size="small" >取 消</el-button>
-				      <el-button type="primary" @click="PassWordSend" size='small'>确 定</el-button>
+                      <el-button @click="PassDialogVisible = false" size="small" >{{$t('m.NO')}}</el-button>
+				      <el-button type="primary" @click="PassWordSend" size='small'>{{$t('m.YES')}}</el-button>
 		       </span>
 		</el-dialog>
-
-
         <el-dialog
-			  title="创建用户"
+			  :title="$t('m.CreatUser')"
 			  :visible.sync="CreateDialogVisible"
 			  width="30%"
 			  @close='closeCreate'
 			  center>
-			<el-form :model="CreateruleForm" status-icon  :rules="CreateRules" ref="CreateRule" label-width="100px" class="demo-ruleForm" >
-					  <el-form-item label="用户名:" prop="UserName">
+			<el-form :model="CreateruleForm" status-icon  :rules="CreateRules" ref="CreateRule" label-width="150px" class="demo-ruleForm" >
+					  <el-form-item :label="$t('m.UserName')" prop="UserName">
 					        <el-input  v-model="CreateruleForm.UserName"></el-input>
 					  </el-form-item>
-					  <el-form-item label="真实姓名" prop="UserTrueName">
+					  <el-form-item :label="$t('m.RealName')" prop="UserTrueName">
 					         <el-input  v-model="CreateruleForm.UserTrueName" ></el-input>
 					  </el-form-item>
-					  <el-form-item label="密码"  prop="UserPassword">
+					  <el-form-item :label="$t('m.Password')"  prop="UserPassword">
 					         <el-input type="password" v-model="CreateruleForm.UserPassword"></el-input>
 					  </el-form-item>
-					  <el-form-item label="确认密码"  prop="ConfirmUserPassword">
+					  <el-form-item :label="$t('m.ConfirmPassword')"  prop="ConfirmUserPassword">
 					         <el-input type="password"  v-model="CreateruleForm.ConfirmUserPassword" ></el-input>
 					  </el-form-item>
-					  <el-form-item label="联系电话" prop="UserPhone">
+					  <el-form-item :label="$t('m.PhoneNO')" prop="UserPhone">
 					         <el-input  v-model="CreateruleForm.UserPhone" ></el-input>
 					  </el-form-item>
-					   <el-form-item label="邮箱" prop="UserEmail">
+					   <el-form-item :label="$t('m.Emaial')" prop="UserEmail">
 					         <el-input v-model="CreateruleForm.UserEmail"></el-input>
 					  </el-form-item>
-					   <el-form-item label="报警类型">
+					   <el-form-item :label="$t('m.AlarmType')">
 					        <el-checkbox-group v-model="CheckList" @change="handleCheckedCitiesChange">
 								    <el-checkbox label="1"> 
-	                                  	<el-tooltip class='item' effect='light' content="超限" >
+	                                  	<el-tooltip class='item' effect='light' :content="$t('m.Overrun')" >
 								        		<i class="Ultralimit"></i>
 								        </el-tooltip>
 								    </el-checkbox>
 								    <el-checkbox label="2">
-								    	   <el-tooltip class='item' effect='light' content="掉线"  >
+								    	   <el-tooltip class='item' effect='light' :content="$t('m.Dropped')"  >
 								        	    <i class="LostConnection"></i>
 		                                   </el-tooltip>
 								    </el-checkbox>
 							 </el-checkbox-group>
 					  </el-form-item>
+                      <el-form-item :label="$t('m.LanguageSelection')">
+                      	     <el-radio-group v-model="UserLanguage ">
+								    <el-radio :label="1">{{$t('m.Chinese')}}</el-radio>
+								    <el-radio :label="2">{{$t('m.English')}}</el-radio>
+							 </el-radio-group>
+                      </el-form-item>
 			  </el-form>
 			  <span slot="footer" class="dialog-footer">
-			    <el-button @click="CreateDialogVisible = false" size="small">取 消</el-button>
-			    <el-button type="primary" @click="CreateSend" size="small">确 定</el-button>
+			    <el-button @click="CreateDialogVisible = false" size="small">{{$t('m.NO')}}</el-button>
+			    <el-button type="primary" @click="CreateSend" size="small">{{$t('m.YES')}}</el-button>
 			  </span>
 		</el-dialog>
          <el-dialog
               class="EditDialogcent"
-			  title="用户编辑"
+			  :title="$t('m.EditUser')"
 			  :visible.sync="EditDialog"
-			  width="30%"
+			  width="35%"
 			  center>
+			<div  class="Editmiddlelog" style="height: 450px">
 			  <el-col :span="8">
 			    	<div class="PartitionLight Partition  ">
 			  	          <el-checkbox-group  v-model="checkedPartion"  @change='checkPositionval'>
-	                            <el-checkbox  v-for='item in PositionList' :key='item.Id' :label="item.Id">{{item.GroupName}}</el-checkbox >
+	                            <el-checkbox  v-for='item in PositionList' :key='item.Id' :label="item.Id" style="display: block;">{{item.GroupName}}</el-checkbox >
 						  </el-checkbox-group> 
 				    </div>
 			 </el-col>
              <el-col :span="16">
 			   <div class="PartitionRight Partition" >
-                  <el-form :model="EditPartition"  label-width="80px" class=" demo-dynamic" :rules="EditPartitionRules">
-					  <el-form-item  label="真实姓名:"  prop="UserTrueName" >
+                  <el-form :model="EditPartition"  label-width="120px" class=" demo-dynamic" :rules="EditPartitionRules" ref="EditPartitionRules">
+					  <el-form-item  :label="$t('m.StaffName')"  prop="UserTrueName" >
 					    <el-input v-model="EditPartition.UserTrueName"></el-input>
 					  </el-form-item>
-                      <el-form-item  label="密码:"  prop="UserPassword">
+                      <el-form-item :label="$t('m.Password')"  prop="UserPassword">
 					    <el-input v-model="EditPartition.UserPassword"></el-input>
 					  </el-form-item >
-                       <el-form-item label="手机:"  prop="UserPhone">
+                       <el-form-item :label="$t('m.PhoneNO')"  prop="UserPhone">
 					    <el-input v-model="EditPartition.UserPhone"></el-input>
 					  </el-form-item>
-                       <el-form-item label="邮箱:"  prop="UserEmail">
+                       <el-form-item :label="$t('m.Emaial')"  prop="UserEmail">
 					    <el-input v-model="EditPartition.UserEmail"></el-input>
 					   </el-form-item>
-                      <el-form-item label="有效期:" prop="Uvalidity" >
+                      <el-form-item :label="$t('m.Periodvalidity')" prop="Uvalidity" >
 					        <el-date-picker
 						      v-model="EditPartition.Uvalidity"
 						      type="date"
-						      placeholder="选择日期"
+						      :placeholder="$t('m.SelectDate')"
 						      value-format="yyyy-MM-dd">
 						    </el-date-picker>
 					  </el-form-item>
-					   <el-form-item label="报警类型:">
+					   <el-form-item :label="$t('m.AlarmType')">
 					        <el-checkbox-group v-model="SuberUserCheckList" @change="EdithandChange">
 								    <el-checkbox label="1"> 
-	                                  	<el-tooltip class='item' effect='light' content="超限" >
+	                                  	<el-tooltip class='item' effect='light' :content="$t('m.Overrun')" >
 								        		<i class="Ultralimit"></i>
 								        </el-tooltip>
 								    </el-checkbox>
 								    <el-checkbox label="2">
-								    	   <el-tooltip class='item' effect='light' content="掉线"  >
+								    	   <el-tooltip class='item' effect='light' :content="$t('m.Dropped')"  >
 								        	    <i class="LostConnection"></i>
 		                                   </el-tooltip>
 								    </el-checkbox>
 							 </el-checkbox-group>
 					  </el-form-item>
-
+                        <el-form-item :label="$t('m.LanguageSelection')">
+                      	     <el-radio-group v-model="EditPartition.UserLanguageeit">
+								    <el-radio :label="1">{{$t('m.Chinese')}}</el-radio>
+								    <el-radio :label="2">{{$t('m.English')}}</el-radio>
+							 </el-radio-group>
+                      </el-form-item>
                  </el-form>
                   
                </div>
 			 </el-col>
+			 </div>
               <span slot="footer" class="dialog-footer">
-			    <el-button @click="EditDialog = false" size='mini'>取 消</el-button>
-			    <el-button type="primary" size="mini" @click="EditSubSend">确 定</el-button>
+			    <el-button @click="EditDialog = false" size='mini'>{{$t('m.NO')}}</el-button>
+			    <el-button type="primary" size="mini" @click="EditSubSend">{{$t('m. YES')}}</el-button>
 			 </span>
 		</el-dialog>
   </el-row>
@@ -361,41 +381,42 @@
 <script>
 import qs from 'qs';
  import{ GetPersonalCenter,GetUserManageComboBoxData,GetUserLogSelect,UpdateUser,LoginUpdateUser,UpdateUserPass,InsertUser,DeleteUserManage,GetUserSelect,GetUserManageTop1,GetGroupData,GetUserWechatData}from '@/api/api';
+     import{SevenDay,timeFormattershow}from'@/assets/js/common';
 export default {
-      data(){
+    data(){
                //  表单验证规则---自定义的
     var checkName = (rule, value, callback) => {
 	      if(value === '') {
-	        callback(new Error('请输入真实姓名'));
+	        callback(new Error(this.$t('m.RealNameenter')));
 	      }
 	      callback();
 	    };
 	 var checkPhone = (rule, value, callback) => {
 	      if(value !== '' && !(/^(13[0-9]|14[5|7|9]|15[0|1|2|3|5|6|7|8|9]|17[0|6|7|8]|18[0|1|2|3|4|5|6|7|8|9])\d{8}$/).test(value)) {
-	        callback(new Error('请输入正确的联系电话'));
+	        callback(new Error(this.$t('m.PhoneNumber')));
 	      } else if (value == '') {
-	        callback(new Error('请输入联系电话'));
+	        callback(new Error(this.$t('m.PhoneNumber')));
 	      }
 	      callback();
 	    }; 
 	var checkMailbox =(rule,value,callback)=>{
-		 if(value !== '' && !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/).test(value)) {
-	        callback(new Error('请输入正确的邮箱'));
+		 if(value !== '' && !(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/).test(value)) {
+	        callback(new Error(this.$t('m.CorrectMailbox')));
 	      } else if (value == '') {
-	        callback(new Error('请输入邮箱'));
+	        callback(new Error(this.$t('m.CorrectMailbox')));
 	      }
 	      callback();
 	} 
         //密码验证规则
      var checkOldpassword =(rule,value,callback)=>{
        	 if(value === '') {
-		        callback(new Error('请输入原始密码'));
+		        callback(new Error(this.$t('m.EnterOriginalPassword')));
 		      }
 	  	      callback();
        }
       var checkNewpassword = (rule,value,callback)=>{
            if(value === ''){
-           	  callback(new Error('请输入新密码'));
+           	  callback(new Error(this.$t('m.EnterNEWpassword')));
            } 
            	    callback();   
       }
@@ -403,9 +424,9 @@ export default {
      //修改密码时候的判断.
      var checkConfirmPasshost=(rule,value,callback)=>{
 	      if(value === '') {
-	          callback(new Error('请再次输入密码'));
+	          callback(new Error(this.$t('m.Passwordagain')));
 	        } else if (value !== this.PasswordForm.Newpass) {
-	          callback(new Error('两次输入密码不一致!'));
+	          callback(new Error(this.$t('m.passwordsinconsistent')));
 	        }else{
 	        	 callback();   
 	        }   
@@ -413,34 +434,38 @@ export default {
     //验证新建用户名规则
      var   checkUserName=(rule,value,callback)=>{
      	   if(value===''){
-     	   	 callback(new Error('请输入创建用户名'))
+     	   	 callback(new Error(this.$t('m.Createusername')))
      	   }
      	   callback(); 
      }
       var  checkUserpassword=(rule,value,callback)=>{
       	  if (value==='') {
-      	  	 callback(new Error('请输入创建密码'))
+      	  	 callback(new Error(this.$t('m.CreatePassword')))
       	  }
       	  callback(); 
       }
       var  checkConfirmPass=(rule,value,callback)=>{
 	      if(value === '') {
-	          callback(new Error('请再次输入密码'));
+	          callback(new Error(this.$t('m.Passwordagain')));
 	        } else if (value !== this.CreateruleForm.UserPassword) {
-	          callback(new Error('两次输入密码不一致!'));
+	          callback(new Error(this.$t('m.passwordsinconsistent')));
 	        } 
 	       callback();   
       }
         //用户编辑的日期验证.
       var checkData=(rule,value,callback)=>{
       	   if(value===''){
-     	   	 callback(new Error('请输入有效日期'))
+     	   	 callback(new Error(this.$t('m.Validdate')))
      	   }
      	   callback(); 
       }
-
-
      return{
+     	    UserLanguage:1,
+		    disabledDate: {
+		          disabledDate(time) {
+		              return time.getTime() > Date.now();
+		          }
+		      },
      	     ChildUsers:false,//子用户列表显示
      	     //发送子分区选中的值
      	     ListGroup:[],
@@ -456,7 +481,8 @@ export default {
                  UserPassword:'',
                  UserPhone:'',
                  UserEmail:'',
-                 Uvalidity:''      
+                 Uvalidity:'',
+                 UserLanguageeit:''      
      	    },
          //编辑的表格验证
            EditPartitionRules:{
@@ -565,7 +591,7 @@ export default {
       	    weixinshow:false,//微信显示的
       	   	 tableDataList:[],
       	   	 SubUserDataList:[],//子用户
-      	     valueTime:'',
+      	     valueTime: [ timeFormattershow(new Date(SevenDay(new Date()))),timeFormattershow(new Date()) ],
       	     valueTimeSub:'',
       	     options:[], 
 	           formInline: {
@@ -584,9 +610,6 @@ export default {
       methods:{
           Gutuser(){
           	 GetPersonalCenter().then(res=>{
-                   console.log("获取信息")
-                   console.log(res)
-                   
                    sessionStorage.setItem('UserLevel', JSON.stringify(res.Data[0]));
                    this.UserWx=res.Data[0].UserWx
                    this.Id=res.Data[0].Id//编辑的时候要穿ID
@@ -620,7 +643,9 @@ export default {
                    	   	    Username:item.UserName,
                    	   	    IPaddress:item.UserLoginIp,
                    	   	    UserRole:item.UserLevel,
-                   	   	    logTime:item.UserLoginTime
+                   	   	    logTime:item.UserLoginTime,
+                   	   	    UserLoginRemark:item.UserLoginRemark,
+                   	   	    UserLoginType:item.UserLoginType
                    	   })
                    }
                 
@@ -644,23 +669,25 @@ export default {
           	  }) 
           },
           GainWechat(){//获取微信
-              
             var params={
             	userCode:this.Id.toString(),//数字类型,转化字符串
             	userPhone:this.PersonalMessagelable.CellPhone
             } 
-     GetUserWechatData(qs.stringify(params)).then(res=>{
-                   if(JSON.stringify(res.State)==1){ 
-                   	   this.UserWx=null;//清空以前的
-                   	   this.UserWx=res.Data.touser
-                   }else {
-                      this.$message({
-                           type:'error',
-                           message:'获取失败'
-                          })
-                   }
-             }) 
+		     GetUserWechatData(qs.stringify(params)).then(res=>{
+		                   if(JSON.stringify(res.State)==1){ 
+		                   	   this.UserWx=null;//清空以前的
+		                   	   this.UserWx=res.Data.touser
+		                   }else {
+		                      this.$message({
+		                           type:'error',
+		                           message:this.$t('m.Failure')
+		                          })
+		                   }
+		             }) 
           },
+       checkedvalue(val){//选中查询一次
+          this.LoginInquire()
+       },
           SelectTable(){
           	   GetUserManageComboBoxData().then(res=>{
                       let options=[]
@@ -672,8 +699,7 @@ export default {
                           		label:res.Data[i].UserName
                           	 })
                           }
-                       }else{
-                       	 //没有下拉时候,显示无数据.
+                        this.formInline.selectvalue=this.options[0].value
                        }
           	     })
           },
@@ -707,7 +733,7 @@ export default {
 		                   if(res.State==1){
 		                        this.$message({
 		                           type:'success',
-		                           message:'编辑成功'
+		                           message:this.$t('m.EidtSuccess')
 		                          }) 
 				                 this.readtrue=true;//打开可编辑
 				                 this.EditHideshow=true;
@@ -718,7 +744,7 @@ export default {
 		                        }else{
 		                        this.$message({
 		                           type:'error',
-		                           message:'编辑失败'
+		                           message:this.$t('m.Editfailure')
 		                          })
 		                        }
 			              })  
@@ -729,25 +755,25 @@ export default {
                  var params={
                  	  userCode:this.SubUserDataList[index].Id
                  }
-		     this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
+		     this.$confirm(this.$t('m.Delect') + this.SubUserDataList[index].Username+',', this.$t('m.Determineb'), {
+		          confirmButtonText: this.$t('m.YES'),
+		          cancelButtonText: this.$t('m.NO'),
 		          type: 'warning'
 		        }).then(() => {
              DeleteUserManage(qs.stringify(params)).then(res=>{
                           if(res.State==1){
                           	        this.$message({
 						            type: 'success',
-						            message: '删除成功!'
+						            message: this.$t('m.SuccessfullyDelete')
 						          });
                               }
                               this.Gutuser()//调用函数刷新列表
                          })
 			        }).catch(() => {
-			          this.$message({
+/*			          this.$message({
 			            type: 'info',
 			            message: '已取消删除'
-			          });          
+			          }); */         
 			        });
 		   },
 	       PassWordSend(){//修改密码发送
@@ -761,14 +787,14 @@ export default {
 	                        if (res.State==1) {
 	                        	this.$message({
 	                        		type:'success',
-	                        		message:'修改成功,请重新登录!'
+	                        		message:this.$t('m.Relogin')
 	                        	})
 	                        this.PassDialogVisible=false;//密码弹框关闭
 							this.$router.push('/Login');//登录页面
 	                        }else{
 	                        	this.$message({
 	                        		type:'error',
-	                        		message:'修改失败'
+	                        		message:this.$t('m.Modifyfailure')
 	                        	})
 	                        }
 	       	         })
@@ -788,7 +814,6 @@ export default {
          },
          handleCheckedCitiesChange(val){//选中时候调用函数
                this.Checkedarml=val
-              console.log(this.Checkedarml);
 	               switch(Number(this.Checkedarml[0])){
 	               	case 1:
 	               		this.CreateruleForm.AlarmType=1;
@@ -811,7 +836,8 @@ export default {
 	               	  UserPhone:this.CreateruleForm.UserPhone,
 	               	  UgroupGuid:this.UgroupGuid,
 	               	  UserEmail:this.CreateruleForm.UserEmail,
-	               	  AlarmType:this.CreateruleForm.AlarmType
+	               	  AlarmType:this.CreateruleForm.AlarmType,
+	               	  UserLanguage:this.UserLanguage
 	               }
 	            // const a = this.prototype
 	         this.$refs['CreateRule'].validate((valid)=>{
@@ -820,7 +846,7 @@ export default {
 	                     if(res.State==1){
 	                     	this.$message({
 	                     		type:'success',
-	                     		message:'创建成功'
+	                     		message:this.$t('m.CreatingSuccessful')
 	                     	})
 	                    this.CreateDialogVisible=false;
 
@@ -829,7 +855,7 @@ export default {
 	                     	}else{
 	                     		this.$message({
 	                     			type:'error',
-	                     			message:'创建失败'
+	                     			message:this.$t('m.CreateFailure')
 	                     		})
 	                     }
 	              })
@@ -849,19 +875,11 @@ export default {
 	               this.CheckList=[] 
 	               this.$refs['CreateRule'].resetFields();
 	            }, 
-          logTimeInquire(val){//登录时候查询的
-          	 if (val==null) {
-                  this.LoginInquireval[0]=undefined;
-                  this.LoginInquireval[1]=undefined;
-          	 }else{
-               this.LoginInquireval=val;
-               }
-          },
          LoginInquire(){//登录时候查询的
           	var parms={
                   condition:this.formInline.selectvalue,
-                  staDate:this.LoginInquireval[0],
-                  endDate:this.LoginInquireval[1]
+                  staDate:this.valueTime ==null ? undefined : this.valueTime[0],
+                  endDate:this.valueTime ==null ? undefined : this.valueTime[1]
           	   }
          	GetUserLogSelect(qs.stringify(parms)).then(res=>{
                if(res.State==1){
@@ -908,8 +926,7 @@ export default {
                             Id:item.Id
                        }) 
                      } 
-                  }
-                 
+                  }     
            })    
         },
         PartitionRequest(){//用户分区列表显示
@@ -950,7 +967,8 @@ export default {
                           	  UserEmail:res.Data.UserEmail,
                           	  Uvalidity:res.Data.Uvalidity,
                           	  Id:res.Data.Id,//点击的时候,把ID拿过来
-                          	  AlarmType:res.Data.AlarmType
+                          	  AlarmType:res.Data.AlarmType,
+                          	  UserLanguageeit:res.Data.UserLanguage
                           }
 
 	             })
@@ -987,8 +1005,6 @@ export default {
                    	   	 id:this.checkedPartion[i]
                    	   })
                    }
-                   console.log("yanzhengxuanz")
-               console.log(Selected)
 
                  var user={
                       UserEmail:this.EditPartition.UserEmail,
@@ -998,24 +1014,33 @@ export default {
                   	  Uvalidity:this.EditPartition.Uvalidity,
                   	  Id:this.EditPartition.Id,//点击的时候,把ID拿过来
                   	  AlarmType:this.EditPartition.AlarmType,
-                  	  ListGroup:Selected
+                  	  ListGroup:Selected,
+                  	  UserLanguage:this.EditPartition.UserLanguageeit,
                  }
-         	   UpdateUser(user).then(res=>{
-         	   	console.log("发送的值")
-         	   	       console.log(user)
-         	   	       console.log(res)
-                         if(res.State==1){
-                              	 this.$message({
-	                     			type:'success',
-	                     			message:'编辑成功'
-	                     		})
-                         }else{
-                              this.$message({
-                              	type:'error',
-                              	message:'编辑失败'
-                              })
-                         }
-          	   }) 
+          this.$refs['EditPartitionRules'].validate((valid) =>{
+		         if(valid){
+	           UpdateUser(user).then(res=>{
+		                         if(res.State==1){
+		                              	 this.$message({
+			                     			type:'success',
+			                     			message:this.$t('m.EidtSuccess')
+			                     		})
+                                       this.EditDialog=false;
+                                       this.$refs['EditPartitionRules'].resetFields();
+                                       this.Gutuser();//刷新数据
+
+		                         }else{
+		                              this.$message({
+		                              	type:'error',
+		                              	message:this.$t('m.Editfailure')
+		                              })
+		                         }
+		          	         }) 
+                          
+		                 }
+
+            })
+
           },
 	    },
 	   mounted(){
@@ -1029,21 +1054,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-   
-
-
     .PersonalCenter{
           height: calc(100% - 10px);
-
-    	.CurrentPosition{
-    		height: 40px;
-    		background:#f7f7f7; 
-    		.NowPositon{
-              line-height: 40px;
-              margin-left: 15px;
-    		}
-    	}
-
+           min-width: 1246px;
     	.HuatoMessage{
     		.el-form-item{
     			margin-bottom: 10px;
@@ -1082,6 +1095,7 @@ export default {
 	     .PersonalMessagelable{
 	     	margin:  0px 100px 0px 72px;
 	     	height:302px;
+	     	min-width: 320px;
 	     }
 		  .Ultralimit{
 	       	  cursor: pointer;
@@ -1127,9 +1141,6 @@ export default {
                    height: 35px;
 	            }
 	      }
-		 .el-form-item{
-			 	margin-bottom: 5px;
-			 }
 	     .fa {
 	     	cursor: pointer;
 	     	margin: 6px;
@@ -1158,20 +1169,20 @@ export default {
   }
 
 </style>
-	<style type="text/css" lang='scss' >
+	<style type="text/css"  >
         .blockTable .cell{
 		      	text-align: center;
 		      }
    .el-checkbox .el-checkbox__label{
      	vertical-align: middle;
      }
-     .Loginrecord .el-table td, .el-table th{
+    .PersonalCenter .el-table td{
      	padding: 3px 0px  !important;
      }
  
-       .ManageUser .el-table td, .el-table th{
+/*       .ManageUser .el-table td, .el-table th{
     		padding: 0px 0px  !important;
-    	}
+    	}*/
         .HuatoMessage .el-input__inner{
               height: 34px !important;
         }
@@ -1181,4 +1192,7 @@ export default {
         .Submenufrom .el-input__inner{
              height: 35px;
         } 
+        .PersonalMessagelable .el-form-item__error{
+        	padding-top: 0px;
+        }
 	</style>

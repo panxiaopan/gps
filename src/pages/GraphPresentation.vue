@@ -4,7 +4,7 @@
 		    <el-col :span='24'>
 			    <el-row>
 			      <el-col :span='24' class="CurrentPosition">
-			        <div class="NowPositon"><i class="el-icon-location"></i><span>当前位置:</span><i class="el-icon-arrow-right"><span class="currentcolor">实时监控</span></i><i class="el-icon-arrow-right">图形展示</i></div> 
+			        <div class="NowPositon"><i class="el-icon-location"></i><span>{{$t('m.Location')}}</span><i class="el-icon-arrow-right">{{$t('m.RealTimeMonitoring')}}</i><i class="el-icon-arrow-right"><span class="currentcolor">{{$t('m.GraphResentation')}}</span></i></div> 
 			      </el-col>
 			   </el-row>
 		   </el-col>
@@ -12,14 +12,16 @@
      <el-row class="GraphPresentationCoent">
 		  <el-col :span="4" class="lightZone">
 			  	<div class="grid-content bg-purple">
-			  		 <div class="AreaSearch">
+			  		 <div class="AreaSearch AreaSearchshow">
 				  		   <el-input
-						    placeholder="设备编号或名称"
-						    suffix-icon="el-icon-search"
-						    v-model='SeachPartation'
-                 @keyup.enter.native='GetEquipmentList()'
+                    class="actualtime"
+    						    :placeholder="$t('m.DeviceNumber')"
+    						    v-model='SeachPartation'
+                    @keyup.enter.native='GetEquipmentList()'
+
 						     >
 						  </el-input> 
+            <i class="SystemManaSearch" @click="Realtimesearch"></i>
 					  </div>　
                 <div class="PartitionList" v-for='item in PositionList' :key='item.Id' size="small" >
                        <el-radio-group v-model="SelectDelete">
@@ -31,35 +33,35 @@
 			  	</div>
 		  </el-col>  
           <el-col :span="20" class="InstrumentsDisplay">
-            <el-col :span="20" class="FlipFixed">
-
               <div class="Apparatus" v-for="item in EquipmentList"  :item='item.LoggerSn'>
               	<div class="Apparatustop">
               		<span class="EquipmentIcon"></span>
               		 <div class="Equipmentmodel">
+                    <el-tooltip :content="item.LoggerName" placement="top" >
               		 	<div class="EquipmentName">{{item.LoggerName}}</div>
-              		 	<div class="EquipmentNumber">{{item.LoggerSn}}</div>
+                    </el-tooltip>
+              		 	<div class="EquipmentNumber">({{item.LoggerSn}})</div>
               		 </div>
               		<div class="EquipmentState">
               			<div class="EquipmentElectric">
-              				<span :class='{
-                                  "battry Batterythree":item.BatteryStatus==3||item.BatteryStatus==17||item.BatteryStatus==11||item.BatteryStatus==7||item.BatteryStatus==1,
-                                  "battry Nopower":item.BatteryStatus==8||item.BatteryStatus==4,
-                                  "battry Batteryone":item.BatteryStatus==5||item.BatteryStatus==9,
-                                  "battry Batterytwo":item.BatteryStatus==6||item.BatteryStatus==10,
-                                  "battry":item.BatteryStatus==0,
-                                    }' ></span>
-              				<span :class='{
-                      "ExternalElectric plugIn":item.BatteryStatus==3||item.BatteryStatus==2||item.BatteryStatus==8||item.BatteryStatus==9||item.BatteryStatus==10||item.BatteryStatus==11
+              				<span  class="battry" :class='{
+                                  "Batterythree":item.BatteryStatus==3||item.BatteryStatus==17||item.BatteryStatus==11||item.BatteryStatus==7||item.BatteryStatus==1,
+                                  "Nopower":item.BatteryStatus==8||item.BatteryStatus==4,
+                                   "Batteryone":item.BatteryStatus==5||item.BatteryStatus==9,
+                                   "Batterytwo":item.BatteryStatus==6||item.BatteryStatus==10,
+                                    }'></span>
+              				<span class="battry noplugIn" :class='{
+                      "plugIn":item.BatteryStatus==3||item.BatteryStatus==2||item.BatteryStatus==8||item.BatteryStatus==9||item.BatteryStatus==10||item.BatteryStatus==11
                     }'></span>
-              				<div class="Updatatime">{{item.LogsTime}}</div>
-              			</div>
+                    </div>
+              				<div class="Updatatimes">{{item.LogsTime}}</div>
+              			
               		</div> 
               	</div>
               <div class="Oneaisle" v-if='item.LoggerChnum==1' >
                      <div class="Oneleft" :class='{"Overheat":item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)}'>{{item.LogsChone}}</div>
                        <div class="Oneright">
-                          <span class="onechum">{{SensorOptions[item.ChoneType].label}}</span>
+                          <span class="onechum">{{item.ChoneType ===8 ? item.ChoneUs : SensorOptions[item.ChoneType].label}}</span>
                           <span class="onechum onechummiddle">{{item.ChoneHigh}}</span>
                           <span class="onechum">{{item.ChoneLow}}</span>
                        </div>
@@ -68,7 +70,7 @@
                      <div class="Twochum  Twotopchum ">
                         <div  class="Twotopleftchum" :class='{"Overheat":item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)}'>{{item.LogsChone}}</div>
                            <div class="Twotoprightchum">
-                              <span class="twochumvue">{{SensorOptions[item.ChoneType].label}}</span>
+                              <span class="twochumvue">{{item.ChoneType ===8 ? item.ChoneUs : SensorOptions[item.ChoneType].label}}</span>
                               <span class="twochumvue twochumvuemiddle">{{item.ChoneHigh}}</span>
                               <span class="twochumvue">{{item.ChoneLow}}</span>
                            </div>
@@ -76,7 +78,7 @@
                      <div class="Twochum  Twobuttomchum">
                          <div  class="Twotopleftchum" :class='{"Overheat":item.LogsChtwo>Number(item.ChtwoHigh)||item.LogsChtwo<Number(item.ChtwoLow)}'>{{item.LogsChtwo}}</div>
                           <div class="Twotoprightchum">
-                              <span class="twochumvue">{{SensorOptions[item.ChtwoType].label}}</span>
+                              <span class="twochumvue">{{item.ChtwoType ===8 ? item.ChtwoUs : SensorOptions[item.ChtwoType].label}}</span>
                               <span class="twochumvue twochumvuemiddle">{{item.ChtwoHigh}}</span>
                               <span class="twochumvue">{{item.ChtwoLow}}</span>
                            </div>
@@ -85,41 +87,40 @@
                <div class="threeaisle"  v-if='item.LoggerChnum==3'>
                       <div class="threechum" :class='{"Overheat":item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)}'>
                            <div class="threechumvue" >{{item.LogsChone}}</div>
-                           <div class="threechumvue">{{SensorOptions[item.ChoneType].label}}</div>
+                           <div class="threechumvue">{{item.ChoneType ===8 ? item.ChoneUs : SensorOptions[item.ChoneType].label}}</div>
                       </div> 
                       <div class="threebottomchum">
                           <div class="threebottomchumvue" :class='{"Overheat":item.LogsChtwo>Number(item.ChtwoHigh)||item.LogsChtwo<Number(item.ChtwoLow)}'>
                                <div class="threevalue" >{{item.LogsChtwo}}</div>
-                               <div class="threevalue">{{SensorOptions[item.ChtwoType].label}}</div>
+                               <div class="threevalue">{{item.ChtwoType ===8 ? item.ChtwoUs : SensorOptions[item.ChtwoType].label}}</div>
                           </div> 
                         <div class="threebottomchumvue threebottomchumline" :class='{"Overheat":item.LogsChthree>Number(item.ChthrHigh)||item.LogsChthree<Number(item.ChthrLow)}'>
                                <div class="threevalue" >{{item.LogsChthree}}</div>
-                               <div class="threevalue">{{SensorOptions[item.ChthrType].label}}</div>
+                               <div class="threevalue">{{item.ChthrType ===8 ? item.ChthrUs : SensorOptions[item.ChthrType].label}}</div>
                           </div>  
                       </div>
                  </div>  
                 <div class="fouraisle"  v-if='item.LoggerChnum==4'>
                      <div class="fourchum" :class='{"Overheat":item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)}'>
                         <div class="fourchumone" >{{item.LogsChone}}</div>
-                        <div class="fourchumone ">{{SensorOptions[item.ChoneType].label}}</div>
+                        <div class="fourchumone ">{{item.ChoneType ===8 ? item.ChoneUs : SensorOptions[item.ChoneType].label}}</div>
                      </div>
-                     <div class="fourchum fourchummiddle" :class='{"Overheat":item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)}'>
+                     <div class="fourchum fourchummiddle" :class='{"Overheat":item.LogsChtwo>Number(item.ChtwoHigh)||item.LogsChtwo<Number(item.ChtwoLow)}'>
                            <div class="fourchumone" >{{item.LogsChtwo}}</div>
-                           <div class="fourchumone ">{{SensorOptions[item.ChtwoType].label}}</div>
+                           <div class="fourchumone ">{{item.ChtwoType ===8 ? item.ChtwoUs : SensorOptions[item.ChtwoType].label}}</div>
                      </div>
                      <div class="fourchum">
                            <div class="fourchumthree" :class='{"Overheat":item.LogsChthree>Number(item.ChthrHigh)||item.LogsChthree<Number(item.ChthrLow)}'>
                                <div class="threevalue">{{item.LogsChthree}}</div>
-                               <div class="threevalue">{{SensorOptions[item.ChthrType].label}}</div>
+                               <div class="threevalue">{{item.ChthrType ===8 ? item.ChthrUs : SensorOptions[item.ChthrType].label}}</div>
                            </div>
                            <div class="fourchumthree fourchumthreeline" :class='{"Overheat":item.LogsChfour>Number(item.ChforHigh)||item.LogsChfour<Number(item.ChforLow)}'>
                              <div class="threevalue" >{{item.LogsChfour}}</div>
-                             <div class="threevalue">{{SensorOptions[item.ChforType].label}}</div>
+                             <div class="threevalue">{{ item.ChforType ===8 ? item.ChforUs :SensorOptions[item.ChforType].label}}</div>
                            </div>
                      </div>
                    </div>
               </div>
-            </el-col>
              <el-col :span="24">
                    <div class="myPagination"><!-- 组件翻页 -->
                         <el-pagination
@@ -137,7 +138,7 @@
   </el-row>
 </template>
 <script>
-	import{GetGroupData,GetInstrumentData}from'@/api/api'
+	import{GetGroupData,GetGraphicPresentation}from'@/api/api'
 export default {
   data(){
       return{
@@ -147,13 +148,13 @@ export default {
           SeachPartation:'',
           groupId:'',//分区ID
           pageIndex:1,//显示第一页
-          pageSize:12,//每页6条
+          pageSize:20,//每页6条
           totalNumber:null,
           ChannewFour:false,
           ChannewThree:false,
           ChannelTwo:false,
           ChannelOne:false,
-         SensorOptions:[
+          SensorOptions:[
                    {
                     value:'0',
                     label:'°C'
@@ -192,23 +193,23 @@ export default {
                    },
                    {
                     value:'9',
-                    label:'VOC(mg/m³)'
+                    label:'mg/m³'
                    },
                    {
                     value:'10',
-                    label:'甲醛(mg/m³)'
+                    label:'mg/m³'
                    },
                    {
                     value:'11',
-                    label:'PM2.5(ug/m³)'
+                    label:'ug/m³'
                    },
                    {
                     value:'12',
-                    label:'PM10(ug/m³)'
+                    label:'ug/m³'
                    },
                    {
                     value:'13',
-                    label:'UV(uw/m²)'
+                    label:'uw/m²'
                    },
                ],
      	  }
@@ -234,40 +235,72 @@ export default {
                   	 pageSize:this.pageSize,
                   }
                this.EquipmentList=[]//调用前清空
-               GetInstrumentData(params).then(res=>{
+               GetGraphicPresentation(params).then(res=>{
+                        console.log("-------------------")
+                        console.log(res)
+
+
+                     this.totalNumber=null;
 	                for(let item of res.Data){
 	                     this.totalNumber=res.TotalNumber;//总条数.
-                       this.EquipmentList.push(item) 
+                       this.EquipmentList.push(
+                            {
+                               LoggerName:item.LoggerName,
+                               LoggerSn:item.LoggerSn,
+                               BatteryStatus:item.BatteryStatus,
+                               ChforHigh:item.ChforHigh,
+                               ChforLow:item.ChforLow,
+                               ChforType:item.ChforType,
+                               ChforUs:item.ChforUs,
+                               ChoneHigh:item.ChoneHigh,
+                               ChoneLow:item.ChoneLow,
+                               ChoneType:item.ChoneType,
+                               ChoneUs:item.ChoneUs,
+                               ChthrHigh:item.ChthrHigh,
+                               ChthrLow:item.ChthrLow,
+                               ChthrType:item.ChthrType,
+                               ChthrUs:item.ChthrUs,
+                               ChtwoHigh:item.ChtwoHigh,
+                               ChtwoLow:item.ChtwoLow,
+                               ChtwoType:item.ChtwoType,
+                               ChtwoUs:item.ChtwoUs,
+                               LoggerChnum:item.LoggerChnum,
+                               LoggerSn:item.LoggerSn,
+                               LogsTime:item.LogsTime.slice(5,16),
+                               LogsChone:item.LogsChone,
+                               LogsChtwo:item.LogsChtwo,
+                               LogsChthree:item.LogsChthree,
+                               LogsChfour:item.LogsChfour,
+                          }
+                       ) 
 	                 } 
-
                 }) 
-             },          
+             },
+        Realtimesearch(){//点击图标的时候查询
+          this.GetEquipmentList()
+        },
          pageIndexChange(pageIndex){//翻页监控当前页面发生变化没有! 重新获取列表的页面!~
 	             this.pageIndex = pageIndex;//传当前页面   
 	              this.GetEquipmentList()// 列表刷新.
 	           },
-
      	 },
    mounted(){
             this.PartitionRequest()//分区请求,
             this.GetEquipmentList()//展示数据.
+            let _this = this;
+            setInterval(() => {
+              if('/GraphPresentation' === _this.$route.path){
+                 _this.GetEquipmentList()//展示数据.一分钟刷新一次
+              }
+             
+             },60000)  
      	 },
-
 }
 </script>
 <style lang="scss" scoped>
     .GraphPresentation{
-    	
-		   height: calc(100% - 20px);
-		         background: #fefefe;
-		    .CurrentPosition{
-		    		height: 40px;
-		    		background:#f7f7f7; 
-		    		.NowPositon{
-		              line-height: 40px;
-		              margin-left: 15px;
-		    		}
-		    	}  
+		   height:calc(100% - 20px);
+		         background: #fefefe; 
             .GraphPresentationCoent{
             	  height:calc(100% - 20px);
                 padding: 20px;
@@ -276,27 +309,36 @@ export default {
 				    height: calc(100% - 20px);
 				    overflow-y: scroll;
 				    .AreaSearch{
-				    	padding: 20px;
+				    	    background: #fff;
+                  display: inline-block;
+                  text-align: center;
+                  width: 240px;
+                  border: 1px solid #d7d7d7;
+                  margin: 20px 0px 20px 0px;
+                  border-radius: 20px;
+                  .el-input__inner{
+                    border:none;
+                  }
 				    }
 				    .PartitionList{
-				    	margin-left: 11%;
 				    	padding: 10px;
               border-bottom: 1px solid #d7d7d7;
 				    }
 				  }
 				  .InstrumentsDisplay{
-				    height: calc(100% - 10px); 
 				    padding-left: 20px;
             background: #fff;
-            overflow: hidden;
+            min-height:100%;
 				          }
                }
            .myPagination{
 				  	text-align: center;
+             margin-top: 60px;
 				  }
           .FlipFixed{
              height: calc(100% - 50px); 
              width: 100%;
+             border:1px solid red;
           }
             .Apparatus{
             	display: inline-block;
@@ -315,9 +357,9 @@ export default {
 	           }
 	          .EquipmentIcon{
 	          	display: inline-block;
-	          	height: 40px;
-	          	width: 40px;
-	          	background: url(../assets/img/icon.png) no-repeat -20px -320px ;
+	          	height: 45px;
+	          	width: 48px;
+	          	background: url(../assets/img/icon.png) no-repeat -16px -320px ;
 	          }
 	         .Equipmentmodel{
 	          	display: inline-block;
@@ -326,45 +368,59 @@ export default {
 	            vertical-align: top;
 	         }
 	         .EquipmentName {
-	         	height: 24px;
-	         	text-align: center;
-	         	font-size: 14px;
+	         	height: 30px;
+	         	text-align: left;
+	         	font-size: 16px;
 	         	 font-family:"微软雅黑";
 	         	 font-weight:bold;
+             line-height: 31px;
+              width: 90px;
+              overflow: hidden;
 	         }
 	         .EquipmentNumber{
-	         	text-align: center;
+	         	text-align: left;
+            font-size: 6px !important; 
+            font-family: "Microsoft YaHei";
+            color: #999999;
+            width: 90px;
 	         }
 	         .EquipmentState{
 	         	display: inline-block;
-	            height: 100%;
-	            width: 103px;
+	            width:96px;
+              height: 47px;
 	            vertical-align: top;
 	         }
 	         .EquipmentElectric{
-             
-	           	height: 100%;
+                height: 28px;
+                display: inline-block;
+                width: 94px;
+	              text-align: right;
 	         }
-	         .Updatatime{
+	         .Updatatimes{
 	         	display: inline-block;
-	         	height: 20px;
+	         	height: 22px;
             font-size: 10px;
             color: #999999;
-            width: 102px;
-
+            width: 94px;
+            text-align: right;
+            line-height: 22px;
+            padding-right: 5px;
 	         }
 	         .battry{
              display: inline-block;
-              width: 60px;
-              height: 22px;
+              width: 31px;
+              height: 18px;
+              vertical-align: -webkit-baseline-middle;
 	         }
 	        .ExternalElectric{
 	        	display: inline-block;
-	        	width: 36px;
+	        	width: 26px;
 	        	height: 22px;
+         
+           
 	        }
 	        .hr{
-			    height:1px;
+			      height:1px;
 		      	border:none;
 		      	border-top:1px solid #f4f4f4;
 		      	margin-top: 2px;
@@ -379,7 +435,7 @@ export default {
           .Oneleft{
              width: 150px;
              font-family: "Microsoft YaHei" !important;
-             font-size: 30px;
+             font-size: 38px;
              height: 100%;
              display: inline-block;
              line-height: 96px;
@@ -394,10 +450,11 @@ export default {
           }
          .onechum{
             display: inline-block;
-            height: 32px;
+            height: 30px;
             width: 85px;
-            line-height: 32px;
+            line-height: 30px;
             text-align: center;
+            font-size: 16px;
           }
           .onechummiddle{
             border-bottom: 1px solid  #d7d7d7;
@@ -413,9 +470,8 @@ export default {
           height: 100%;
           text-align: center;
           line-height: 48px;
-          font-size: 20px;
+          font-size: 26px;
           font-family: "Microsoft YaHei" !important;
-
         }
           .Twotopchum{
             border-bottom: 1px solid  #d7d7d7;
@@ -430,9 +486,11 @@ export default {
           .twochumvue{
              display: inline-block;
              width: 85px;
-             height: 16px;
-             line-height: 16px;
+             height: 13px;
+             line-height: 13px;
              text-align: center;
+             font-size: 12px;
+             font-family: "Microsoft YaHei"
           }
           .twochumvuemiddle{
                 border-bottom: 1px solid #d7d7d7;
@@ -455,7 +513,7 @@ export default {
           float: left;
           line-height: 64px;
           text-align: center;
-          font-size: 20px;
+          font-size: 35px;
         }
        .threebottomchumvue{
         display: inline-block;
@@ -502,30 +560,26 @@ export default {
          .fourchumthreeline{
               border-left: 1px solid #d7d7d7;
          }
-
-
-
-
- 
-
- 
-
         .Nopower{
-
-        	background: url(../assets/img/icon.png) no-repeat  -237px -52px ;
+        	background: url(../assets/img/icon.png) no-repeat  -267px -53px ;
         }
        .Batteryone{
-            background: url(../assets/img/icon.png) no-repeat  -236px -33px ;
+            background: url(../assets/img/icon.png) no-repeat  -268px -34px ;
        } 
        .Batterytwo{
-           background: url(../assets/img/icon.png) no-repeat  -235px -15px ;
+           background: url(../assets/img/icon.png) no-repeat  -267px -18px ;
        }
       .Batterythree{
-               background: url(../assets/img/icon.png) no-repeat 20px -361px ;
+               background: url(../assets/img/icon.png) no-repeat -12px -364px ;
        }
-       .plugIn{
-            background: url(../assets/img/icon.png) no-repeat  -13px -380px  ;
+       .noplugIn{
+            background: url(../assets/img/icon.png) no-repeat  -268px -71px ;
+          
        }
+      .plugIn{
+           background: url(../assets/img/icon.png) no-repeat -12px -381px ;
+      }
+
      .hr{
         height:1px;
         border:none;
@@ -539,12 +593,40 @@ export default {
       .buttomfourlineLight{
             border-left: 1px solid #999999;
       }
-             
+       .actualtime{
+          .actualtime{
+             border:none;
+             width: 190px !important;
+          }
+       }  
+     .SystemManaSearch{
+          display: inline-block;
+          width: 30px;
+          height: 30px;
+          border-left: 1px solid #d7d7d7;
+          background: url(../assets/img/icon.png) no-repeat -16px -445px;
+          vertical-align: middle;
+          cursor: pointer;
+      }
+
     }
 </style>
 <style type="text/css">
         .el-input--suffix  .el-input__inner{
           border-radius: 20px;  
+        }
+        .actualtime{
+          border:none;
+          width: 180px;
+        }
+         .actualtime .el-input__inner{
+           border:none;
+         }
+        .actualtime .actualtime{
+          width: 190px;
+        }
+        .AreaSearchshow  .el-input{
+            width: 180px;
         }
 </style>
 

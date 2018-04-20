@@ -2,8 +2,13 @@
   <el-row class='loginConteiner'>
             <el-row>
                <div class="huatologin">
+                  <el-col :span=18>
                    <i class="huatologo"></i>
-                   <span class="huatoPPCLoud">华图云平台</span>
+                   <span class="huatoPPCLoud">{{$t('m.Cloud')}}</span>
+                  </el-col>
+                   <el-col :span='6'>
+                    <el-button size='mini' @click="changeLangEvent()"  style='border: 1px solid  #008ce5'> {{$t('m.language')}}</el-button>
+                  </el-col>
                </div>
             </el-row>
         <el-row class="loginConteinerminddle">
@@ -12,16 +17,18 @@
                 </el-col>
                   <el-col :span="12"  style="height: 100%;" class="loginConteinerminddleright">
                       <div class="loginform">
-                        <div style="height: 80px; line-height: 80px; font-size:26px; color:#008ce5; text-align: center;font-weight: bold;">用户登录</div>
+                        <div style="height: 80px; line-height: 80px; font-size:26px; color:#008ce5; text-align: center;font-weight: bold;">{{$t('m.Userlogin')}}</div>
                          <el-form label-width="100px" :model='userLogin' :rules='loginRules' ref='loginForm'>
-                            <el-form-item label='用户名:' prop='userName' :error='showError' >
-                                <el-input v-model='userLogin.userName' @change='showError = null'></el-input>
+                            <el-form-item  prop='userName' :error='showError' >
+                               <div class="uesricon"></div>
+                                <el-input v-model='userLogin.userName' @change='showError = null'  class="placeholderpadding"  :placeholder="$t('m.InputUsername')"></el-input>
                             </el-form-item>
-                            <el-form-item label='密码:'  prop='userPass' :error='showError'>
-                                <el-input type="password"  v-model='userLogin.userPass' @change='showError = null' @keyup.enter.native="submitForm()" ></el-input>
+                            <el-form-item   prop='userPass' :error='showError'>
+                                 <div class="passwordicon"></div>
+                                <el-input type="password"  v-model='userLogin.userPass' @change='showError = null' @keyup.enter.native="submitForm()"  class="placeholderpadding" :placeholder="$t('m.Enterpassword')"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button @click='submitForm' type="primary" class="Register">登录</el-button>
+                                <el-button @click='submitForm' type="primary" class="Register">{{$t('m.Login')}}</el-button>
                             </el-form-item>
                          </el-form>
                        </div>
@@ -41,21 +48,30 @@ import {getIp} from '@/assets/js/getIp';
 export default {
   data () {
       return {
+          lang :'zh-CN',
+          languagejudgment:'zh-CN',
           userLogin: {
               userName: '',
               userPass: '',
               loginIp: ''
           },
-        loginRules: {
+          showError: null,    
+      }
+  },
+ 
+  computed: {
+      loginRules () {
+          return {
               userName: [
-                { required: true, message: '请输入用户名', trigger: 'blur'}
+                { required: true, message: this.$t('m.InputUsername') , trigger: 'blur'}
               ],
               userPass: [
-                { required: true, message: '请输入密码', trigger: 'blur' }
+                { required: true, message: this.$t('m.Enterpassword'), trigger: 'blur' }
               ]
-           },
-            showError: null
-      }
+              
+          }
+      },
+      
   },
   methods: {
       submitForm () {
@@ -63,15 +79,12 @@ export default {
          this.showError = null;
          let user = { name: this.userLogin.userName }
          this.$refs['loginForm'].validate((valid) =>{
-                        console.log("打印IP")
-                       console.log(this.userLogin)
+
                  if(valid){
                       userLogin(qs.stringify(this.userLogin)).then(res=>{
-                     
-
                          if(res.State==1){
-                           sessionStorage.setItem('user', JSON.stringify(user));
-                            this.$router.push('/Homepage')
+                              sessionStorage.setItem('user', JSON.stringify(user));
+                              this.$router.push('/Homepage')
                           }else{
                               this.showError = '用户名或密码错误';
                               this.$refs['loginForm'].validateField('userName')  
@@ -80,14 +93,22 @@ export default {
                   }
             })      
 
-        }
-  },
+        },
+         changeLangEvent() {
+            if ( this.lang === 'zh-CN' ) {
+                  this.lang = 'en-US';
+                  this.$i18n.locale = this.lang;
+                }else {
+                  this.lang = 'zh-CN';
+                  this.$i18n.locale = this.lang;
+                }             
+             sessionStorage.setItem('languagejudgment', this.lang);
+            },
+      },
       mounted() {
-   
       // 获取真实ip
+      sessionStorage.setItem('languagejudgment', this.lang);
       getIp((ip) => {
-         console.log("ip地址")
-         console.log(ip);
          this.userLogin.loginIp = ip;
         })
 
@@ -96,6 +117,7 @@ export default {
 </script>
 <style lang="scss" scoped>
         .loginConteiner{
+          min-width: 1140px;
           height: 100%;
           .huatologin{
              height: 100px;
@@ -111,7 +133,7 @@ export default {
               .huatoPPCLoud{
                 display: inline-block;
                  border-left:4px solid #e8e8e8;
-                 width: 200px;
+                 width:342px;
                  height: 35px;
                  line-height:35px;
                  color:#008ce5;
@@ -161,6 +183,29 @@ export default {
                  color: #999999;
                  font-family: "Microsoft Yahei" !important;
             }
+            
+           .uesricon{
+            width: 45px;
+            height: 40px;
+            border-bottom: 0px;
+            border-top:0px;
+            border-right: 1px solid #d8dce5;
+           /* border:1px solid red;*/
+            position: absolute;
+            z-index: 9;
+            background: url(../../assets/img/icon.png) no-repeat -7px  -1283px ;
+            }
+           .passwordicon{
+             width: 45px;
+            height: 40px;
+            border-bottom: 0px;
+            border-top:0px;
+            border-right: 1px solid #d8dce5;
+           /* border:1px solid red;*/
+            position: absolute;
+            z-index: 9;
+            background: url(../../assets/img/icon.png) no-repeat -58px  -1283px ;
+           }
 
         }
 </style>
@@ -168,6 +213,8 @@ export default {
       .loginform .el-input__inner{
         width: 320px;
       }
-
+     .placeholderpadding  .el-input__inner{
+          padding-left: 58px;
+        }   
  </style>
 

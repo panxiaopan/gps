@@ -10,7 +10,7 @@ import AlarmRecord from '@/pages/AlarmRecord'
 import MapTrajectory from '@/pages/MapTrajectory'
 import PersonalCenter from '@/pages/PersonalCenter'
 import SystemManagement from '@/pages/SystemManagement'
-
+import Logaudit from '@/pages/Logaudit'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -18,6 +18,11 @@ export default new Router({
       path: '/Login',
       name: 'Login',
       component: Login
+    },
+    {
+      path:'/',
+      redirect:'/Login',//访问时候,使用重定向redirect,默认跳转到首页,
+      component:Login
     },
     {
       path: '/',
@@ -32,6 +37,7 @@ export default new Router({
         { path: 'MapTrajectory', name: 'MapTrajectory', component: MapTrajectory },//地图轨迹
         { path: 'SystemManagement', name: 'SystemManagement', component: SystemManagement },//系统管理
         { path: 'PersonalCenter', name: 'PersonalCenter', component: PersonalCenter },//个人中心
+        { path: 'Logaudit', name: 'Logaudit', component: Logaudit },//登录日志
       ] 
     },
 

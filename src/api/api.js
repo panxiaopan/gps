@@ -108,6 +108,15 @@ export const userLogin = (params) => {
            .get("/SystemManage/GetInstrumentData",{params:params})
            .then(res => res.data);
        };
+  //实时数据图形展示
+   export const GetGraphicPresentation = (params) => {
+        return axios
+           .get("/RealTimeMonitoringManage/GetGraphicPresentation",{params:params})
+           .then(res => res.data);
+       };
+
+
+
   //删除仪器
   export const DeleteLoggerInfo= (params) => { 
     return axios
@@ -134,6 +143,9 @@ export const userLogin = (params) => {
     };
 
 
+
+
+
    //新增仪器接口
     export const InsertLoggerInfo= (params) => { 
     return axios
@@ -158,6 +170,12 @@ export const userLogin = (params) => {
         .get('/RealTimeMonitoringManage/GetMapShowsGroupLoggerInfoData',{params:params})
         .then(res => res.data)
     };
+//地图轨迹设备下拉,
+   export const GetMapShowsGroupLoggerInfoDatass= (params) => { 
+    return axios
+        .get('/DataCentreManage/GetMapShowsGroupLoggerInfoDatass',{params:params})
+        .then(res => res.data)
+    };
     //地图展示右侧数据请求接口
    export const GetMapShowsLoggerInfoData= (params) => { 
     return axios
@@ -170,6 +188,15 @@ export const userLogin = (params) => {
            .get("/SystemManage/GetGroupAndLogger")
            .then(res => res.data);
        };
+//报警分区联动加了一个全部
+     export const GetGroupAndLoggerAlarm = () => {
+        return axios
+           .get("/SystemManage/GetGroupAndLoggerAlarm")
+           .then(res => res.data);
+       };
+
+
+
 
     //报警历史记录查询接口
    export const GetAlarmRecordData= (params) => { 
@@ -190,6 +217,14 @@ export const userLogin = (params) => {
         .post('/DataCentreManage/ExportAlarmRecordDataPdf',params)
         .then(res => res.data)
     }; 
+////报警记录数据导出Execl
+      export const ExportAlarmRecordDataExecl= (params) => { 
+      return axios
+        .post('/DataCentreManage/ExportAlarmRecordDataExecl',params)
+        .then(res => res.data)
+    }; 
+  
+
 
 
  //地图轨迹数据导出
@@ -202,7 +237,7 @@ export const userLogin = (params) => {
     //地图轨迹数据接口
   export const GetMapTrackData= (params) => { 
     return axios
-        .get('/DataCentreManage/GetMapTrackData',{params:params})
+        .post('/DataCentreManage/GetMapTrackData',params)
         .then(res => res.data)
     };
    
@@ -218,7 +253,12 @@ export const userLogin = (params) => {
         .post('/DataCentreManage/ExportHistoryDataPdf',params)
         .then(res => res.data)
     };
-
+   //历史导出Exec.文件
+  export const ExeclHistoryData= (params) => { 
+    return axios
+        .post('/DataCentreManage/ExeclHistoryData',params)
+        .then(res => res.data)
+    };
 
   //首页分区统计图
        export const GetGroupStatisticsData = () => {
@@ -232,3 +272,9 @@ export const userLogin = (params) => {
            .get("/HomePage/GetloggerInfoTypeStatisticsData")
            .then(res => res.data);
        };
+  //登录日志查询接口
+   export const GetUserNameOplogData= (params) => { 
+       return axios
+        .get('/SystemManage/GetUserNameOplogData',{params:params})
+        .then(res => res.data)
+    }

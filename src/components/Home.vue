@@ -8,70 +8,73 @@
             <span class="loginusername">
                 <i class="smallbell"></i>
                 <span class="userName">{{userName}}</span>
-                <el-button type="primary" size="mini"  style="font-size: 16px" @click='userLayout'>退出</el-button>
-                <el-button type="primary" size="mini" style="border:1px solid #fff;border-radius: 4px;font-size: 16px;">En</el-button>
+                <el-button type="primary" size="mini"  style="font-size: 16px" @click='userLayout'>{{$t('m.Exit')}}</el-button>
+                <el-button type="primary" size="mini" style="border:1px solid #fff;border-radius: 4px;font-size: 16px;"  @click="changeLangEvent()">
+                       {{$t('m.language')}}
+               </el-button>
            </span>
-               
-
         </el-header>
         <el-container>
          <div style="height: 37px; position: absolute; width: 198px; border-right: 1px solid #d7d7d7">
              <i class="replicate" :class='{"openmenu":this.isCollapse==false,"closemenu":this.isCollapse==true}' @click="Clickfold"></i>
              </div> 
             <el-aside :width="Collapsing" >
-                
                 <el-menu
                     :collapse="isCollapse"
                     background-color='#f7f7f7'
                     text-color="#666666"
                     active-text-color="#fff"
-                    :default-active='activeIndex'
+                    :default-active='$route.path'
                     :unique-opened="true"
-                    router>
+                     router>
                  <el-menu-item index='/Homepage'>
                    <i class="icon-el iconhome"></i>
-                        <span>首页</span>
-                    </el-menu-item>
-                    <el-submenu index='1'>
+                        <span>{{$t('m.Homepage')}}</span>
+                  </el-menu-item>
+                   <el-submenu index='1'>
                         <template slot='title'>
                              <i class="icon-el  RealTime"></i>
-                            <span>实时监测</span>
+                            <span>{{$t('m.RealTimeMonitoring')}}</span>
                         </template>
                         <el-menu-item index='/GraphPresentation' >
-                           <span class="fontpadding"> 图形展示</span>
+                           <span class="fontpadding">{{$t('m.GraphResentation')}}</span>
                         </el-menu-item>
                         <el-menu-item index='/MapShow'>
-                          <span class="fontpadding"> 地图展示</span> 
+                          <span class="fontpadding"> {{$t('m.MapShow')}} </span> 
                         </el-menu-item>
                     </el-submenu>
                     <el-submenu index='2'>
                         <template slot='title'>
                             <i class="icon-el  recordscenter"></i>
-                            <span>数据中心</span>
+                            <span>{{$t('m.DataCentre')}}</span>
                         </template>
                         <el-menu-item index='/HistoricalData'>
-                           <span class="fontpadding"> 历史记录</span>
+                           <span class="fontpadding"> {{$t('m.HistoryMemory')}}</span>
                         </el-menu-item>
                         <el-menu-item index='/AlarmRecord'>
-                           <span class="fontpadding"> 报警记录</span>
+                           <span class="fontpadding">{{$t('m.AlarmRecord')}}</span>
                         </el-menu-item>
                        <el-menu-item index='/MapTrajectory' >
-                           <span class="fontpadding">地图轨迹</span>
+                           <span class="fontpadding">{{$t('m.LocusFree')}}</span>
                         </el-menu-item>
                     </el-submenu>
                    <el-menu-item index='/SystemManagement'>
                        <i class="icon-el systemmanagement"></i>
-                        <span>系统管理</span>
+                        <span>{{$t('m.SystemManagement')}}</span>
                     </el-menu-item>
                      <el-menu-item index='/PersonalCenter'>
                         <i class="icon-el personalcenter"></i>
-                        <span>个人中心</span>
+                        <span>{{$t('m.PersonalCenter')}}</span>
                     </el-menu-item>
+                       <el-menu-item index='/Logaudit'>
+                        <i class="icon-el ConLog"></i>
+                        <span>{{$t('m.LOG')}}</span>
+                      </el-menu-item> 
                 </el-menu>
             </el-aside>
             
             <el-main>
-                <router-view></router-view>
+                <router-view :changeLang='lang' ></router-view>
             </el-main>
             
         </el-container>
@@ -82,21 +85,24 @@
 export default {
     data () {
         return {
-             isCollapse:false,
-             activeIndex:'0',
+              lang:'',
+              isCollapse:false,
+              activeIndex:'0',
               userName:'',//登录时候显示的用户名称
-              Collapsing: '200px', 
+              Collapsing: '200px',
            }
        },
     methods:{
-              userLayout() {     // 退出登录
-                  this.$confirm('确定退出吗？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
+              userLayout() { 
+                  // 退出登录
+                  this.$confirm( this.$t('m.Determinea') ,this.$t('m.Determineb') , {
+                    confirmButtonText: this.$t('m.YES') ,
+                    cancelButtonText: this.$t('m.NO'),
                     type: 'warning'
                   }).then(() => {
                     sessionStorage.removeItem('user');
                     this.$router.push('/Login');
+                    location.reload()
                   }).catch(() => {
                     return false;
                    }) 
@@ -104,21 +110,32 @@ export default {
               Clickfold(){
                     if(this.isCollapse){
                       this.isCollapse = false;
-                       console.log("dakai")
-                       console.log(this.isCollapse)
                        this.Collapsing=200+'px';
                        
                     }else{
-                        console.log("guanbi")
                         this.isCollapse = true
                         this.Collapsing=60+'px';
-                      
                     }
               },
+             /**
+            * 切换语言 */ 
+            changeLangEvent() {
+             if ( this.lang === 'zh-CN' ) {
+                  this.lang = 'en-US';
+                  this.$i18n.locale = this.lang;
+                }else {
+                  this.lang = 'zh-CN';
+                  this.$i18n.locale = this.lang;
+                }
+            },
+          //刚进页面时候判断
     },
     mounted(){
-          let user = JSON.parse(sessionStorage.getItem('user'));
-          this.userName = user.name;
+            let user = JSON.parse(sessionStorage.getItem('user'));
+            this.userName = user.name;
+            let  languagejudgment = String(sessionStorage.getItem('languagejudgment'));
+            this.lang=languagejudgment
+            this.$i18n.locale = this.lang;       
     } 
 }
 </script>
@@ -205,9 +222,13 @@ export default {
     .personalcenter{
         background: url(../assets/img/icon.png) no-repeat -5px -237px ;
     }
+    .ConLog{
+      background: url(../assets/img/record.png)  no-repeat 15px 3px;
+    }
      .is-active{
           background-color: #549cec  ! important;
        }
+ 
   .el-menu{
     .el-menu{
          .el-menu-item{

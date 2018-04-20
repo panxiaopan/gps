@@ -6,9 +6,9 @@
 			      <el-col :span='24' class="CurrentPosition">
 			        <div class="NowPositon">
 			        	<i class="el-icon-location"></i>
-			        	<span>当前位置:</span>
-			        	<i class="el-icon-arrow-right">实时监控</i>
-			        	<i class="el-icon-arrow-right"> <span class="currentcolor">报警记录</span></i>
+			        	<span>{{$t('m.Location')}}</span>
+			        	<i class="el-icon-arrow-right">{{$t('m.DataCentre')}}</i>
+			        	<i class="el-icon-arrow-right"> <span class="currentcolor">{{$t('m.AlarmRecord')}}</span></i>
 			        </div> 
 			      </el-col>
 			   </el-row>
@@ -17,9 +17,9 @@
        <el-row>
        	  <el-col :span='24'>
        	    <div class="Search">
-             <el-form :inline="true"  class="demo-form-inline" size="small">
-						  <el-form-item label="分区:">
-						    <el-select v-model="AllZoneName" placeholder="选择分区" @change="SelectedPartition">
+             <el-form :inline="true"  class="demo-form-inline" size="small" label-width="100px" >
+						  <el-form-item :label="$t('m.SiteName')">
+						    <el-select v-model="AllZoneName"  :placeholder="$t('m.Selectarea')" @change="SelectedPartition">
                      <el-option
                       v-for="item in AllZone"
                       :key="item.value"
@@ -29,8 +29,8 @@
                      </el-option>
 						    </el-select> 
 						  </el-form-item>
-						  <el-form-item label="设备:">
-						    <el-select v-model="AllEquipmentName" placeholder="选择设备"> 
+						  <el-form-item :label="$t('m.Device')">
+						    <el-select v-model="AllEquipmentName" :placeholder="$t('m.SelectDevice')"> 
                     <el-option
                       v-for="item in AllEquipment"
                       :key="item.value"
@@ -40,31 +40,37 @@
                      </el-option>
 						    </el-select>
 						  </el-form-item>
-						  <el-form-item label="报警方式:">
-						    <el-select v-model="alarmType" placeholder="选择报警方式">
-                      <el-option label="微信" value="1"></el-option>
-     								  <el-option label="邮箱" value="2"></el-option>
+						  <el-form-item :label="$t('m.alarmmeans')">
+						    <el-select v-model="alarmType" :placeholder="$t('m.alarmmeans')">
+                      <el-option :label="$t('m.ALL')" value=""></el-option>
+                      <el-option :label="$t('m.WeChat')" value="1"></el-option>
+     								  <el-option :label="$t('m.Emaial')" value="2"></el-option>
+
 						    </el-select>
 						  </el-form-item>
-                  <el-form-item label="时间段:">
+                  <el-form-item :label="$t('m.TimePeriod')">
                      <div class="Alarmblock">
     								    <el-date-picker
-    								          value-format="yyyy-MM-dd HH:hh:mm"
-    								          @change="AlarmInquireval"
+    								         value-format="yyyy-MM-dd HH:mm:ss"
     									        type="datetimerange"
-    									        v-model="valuetime"
+                               @change='changeHistoryDate'
+    									         v-model="valueTime"
     									        range-separator="至"
-    									        start-placeholder="开始日期"
-    									        end-placeholder="结束日期">
+                              :picker-options="pickerOptions2"
+    									        :start-placeholder="$t('m.StartTime')"
+    									        :end-placeholder="$t('m.EndTime')">
     								    </el-date-picker>
     								</div>
                   </el-form-item>
 						  <el-form-item>
-						    <el-button type="primary" size="small" @click="queryData" >查询</el-button>
+						    <el-button type="primary" size="small" @click="queryData" >{{$t('m.Search')}}</el-button>
     					</el-form-item>
               <el-form-item>
-    						    <el-button type="primary" size="small" class="ExportData" @click="ExportDataAlarm">导出数据</el-button>
+    						    <el-button type="primary" size="small" class="ExportData" @click="ExportDataAlarm">{{$t('m.ExportPDF')}}</el-button>
     					</el-form-item>
+                <el-form-item>
+                    <el-button type="primary" size="small" class="ExportData" @click="ExportExecl">{{$t('m.ExportExcel')}}</el-button>
+              </el-form-item>
     					</el-form>
        	    	</div>
        	    </el-col>
@@ -75,51 +81,61 @@
                      <el-table
         					     :data="AlarmtableData"
         					      border
-        					    style="width: 100%">
+                        v-loading="loading"
+                        element-loading-text="Loading"
+                        element-loading-spinner="el-icon-loading"
+        					      style="width: 100%">
                       <el-table-column
-                        label="序号"
+                        :label="$t('m.Number')"
         					      type="index"
         					      width="50">
         					    </el-table-column>
         					    <el-table-column
         					      prop="LoggerName"
-        					      label="仪器名称"
-        					      width="280">
+        					      :label="$t('m.DeviceName')"
+        					       width="180">
         					    </el-table-column>
                       <el-table-column
                         prop="GroupName"
-                        label="分区名称"
+                        width='180'
+                        :label="$t('m.SiteName')"
+                       >
+                      </el-table-column>
+                    <el-table-column
+                        prop="AlarmUser"
+                        width='180'
+                        :label="$t('m.AlarmUser')"
                        >
                       </el-table-column>
         					    <el-table-column
         					      prop="AlarmDescrIption"
-        					      label="预警内容"
+        					      :label="$t('m.AlarmText')"
         					     >
         					    </el-table-column>
         					    <el-table-column
-        					      width="200"
-        					      label="状态">
+        					      width="80"
+        					      :label="$t('m.Status')">
                        <template  slot-scope="scope">
-                         <span class="untreated" v-if='AlarmtableData[scope.$index].AlarmState == 1'>未处理</span>
-                         <span class="processed" v-else-if='AlarmtableData[scope.$index].AlarmState == 2'>已处理</span>
+                         <span class="untreated" v-if='AlarmtableData[scope.$index].AlarmState == 1'>{{$t('m.untreated')}}</span>
+                         <span class="processed" v-else-if='AlarmtableData[scope.$index].AlarmState == 2'>{{$t('m.processed')}}</span>
                        </template>
         					    </el-table-column>
         					    <el-table-column
         					      prop="AlarmAction"
-        					      label="处理措施">
+        					      :label="$t('m.TakeAction')">
         					    </el-table-column>
                       <el-table-column
-        					      width="200"
-        					      label="操作" >
+        					      width="100"
+        					      :label="$t('m.Operate')" >
                       <template slot-scope="scope">
-                       <el-button type="primary" size="small" @click="Handle(scope.$index)">处理</el-button>
+                       <el-button type="primary" size="mini" @click="Handle(scope.$index)">{{$t('m.Dispose')}}</el-button>
                       </template>
         					    </el-table-column>
         				  </el-table>
                  </el-col>   
               </el-row>
              <el-col :span="24">
-                  <div class="myPagination">
+                  <div class="myPagination" style="margin-top: 30px;">
                       <el-pagination
                         background
                         layout="prev, pager, next,  total"
@@ -134,13 +150,13 @@
   <el-row>
      <el-col :span='24' class="ProcessedDialog">
          <el-dialog
-            title="处理"
+            :title="$t('m.Dispose')"
             :visible.sync="ProcessedDialogVisible"
             width="30%"
             center>
              <el-form :model="DisposeValidateForm"  ref="DisposeValidateForm" label-width="100px" class="demo-ruleForm">
                   <el-form-item
-                     label='处理措施'
+                     :label="$t('m.TakeAction')"
                      prop='Method'
                      :rules="[
                         {required: true, message: '处理方法不能为空'}
@@ -151,8 +167,8 @@
              </el-form>
 
             <span slot="footer" class="dialog-footer">
-              <el-button @click="ProcessedDialogVisible = false" size="small">取 消</el-button>
-              <el-button type="primary" size="small" @click="SubmitForm('DisposeValidateForm')">确 定</el-button>
+              <el-button @click="ProcessedDialogVisible = false" size="small">{{$t('m.NO')}}</el-button>
+              <el-button type="primary" size="small" @click="SubmitForm('DisposeValidateForm')">{{$t('m.YES')}}</el-button>
             </span>
           </el-dialog>
      </el-col>
@@ -160,20 +176,20 @@
   </el-row>
 </template>
 <script>
-     import{GetGroupAndLogger,GetAlarmRecordData,UpdateAlarmState,ExportAlarmRecordDataPdf}from'@/api/api'
+     import{GetGroupAndLogger,GetAlarmRecordData,UpdateAlarmState,ExportAlarmRecordDataPdf,ExportAlarmRecordDataExecl,GetGroupAndLoggerAlarm}from'@/api/api'
+     import{SevenDay,timeFormatter}from'@/assets/js/common'
      import qs from 'qs';
 export default {
         data(){
         	return{
+             loading:false,//正在加载的修饰
              DisposeValidateForm:{//验证方法
                   Method:''
                },
+             AllEquipmentName:'',
 			       AllZoneName:'',
 			       AllZone:[],//所有分区显示
 			       AllEquipment:[],//所有设备显示
-			       AllEquipmentName:'',
-			       AlarmTime:[],
-			       valuetime:'',
 			       AlarmtableData:[],//报警数据
              pageIndex:1,//当前页码
              pageSize:10,// 每页显示的条数
@@ -181,14 +197,67 @@ export default {
              ProcessedDialogVisible:false,
              alarmAction:'',//处理方法
              alarmCode:'',//处理报警的编码
-             alarmType:'',
+             alarmType:"",
+             valueTime: [ timeFormatter(new Date(SevenDay(new Date()))), timeFormatter(new Date())],
         	}
         },
+     computed:{      
+       pickerOptions2() {
+          return{
+              shortcuts: [{
+                text: this.$t('m.LastWeek'),
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                  picker.$emit('pick', [start, end]);
+                }
+              }, {
+                text:this.$t('m.LateMonth'),
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                  picker.$emit('pick', [start, end]);
+                }
+              }, {
+                text: this.$t('m.LastThreemonths'),
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                  picker.$emit('pick', [start, end]);
+                }
+              }],
+             disabledDate(time) {
+              return time.getTime() > Date.now();//到当前时间
+               }
+              }
+
+            },
+
+      },
+
         methods:{
-              
+        changeHistoryDate (date) {  // 选择时间当天时间的59:59秒
+            if (date == null) {
+                  return false
+              }
+              let newDate = new Date();
+              let chooseDate = new Date(date[1])
+              let stopEndDate = new Date(date[1])
+              stopEndDate.setHours(23)
+              stopEndDate.setMinutes(59)
+              stopEndDate.setSeconds(59)
+              if(chooseDate.setHours(0,0,0,0) == newDate.setHours(0,0,0,0)) {
+                            this.valueTime[1] =  timeFormatter(new Date())
+                        } else {
+                            this.valueTime[1] = timeFormatter(stopEndDate)
+                        }
+               }, 
            PartitionDisplay(){
-                  GetGroupAndLogger().then(res=>{
-                        for(let i=0;i<res.length;i++){
+                  GetGroupAndLoggerAlarm().then(res=>{
+                      for(let i=0;i<res.length;i++){
 			                      	 this.AllZone.push({
 			                      	 	 label:res[i].GroupName,
 			                      	 	 value:res[i].Id,
@@ -200,6 +269,10 @@ export default {
                                  	   value:res[i].ListLoggerInfo[k].LoggerSn
                                    })   
                       	      }
+                          }
+
+                       if(this.AllEquipment !==0){
+                               this.AllEquipmentName= this.$route.params.id|| this.AllEquipment[0].value
                           }
                      }) 
             },
@@ -217,7 +290,23 @@ export default {
                         } 
                  }
             },
+           //导出ExportExecl数据
+            ExportExecl(){
+                         var params={
+                                 groupId:this.AllZoneName,
+                                 loggerInfoSn:this.AllEquipmentName,
+                                 alarmType:this.alarmType,
+                                 staDate:this.valueTime == null ? undefined : this.valueTime[0],
+                                 endDate:this.valueTime == null ? undefined : this.valueTime[1],
+                          }
+                    console.log( params)
+
+                    window.location.href=" DataCentreManage/ExportAlarmRecordDataExecl?loggerInfoSn="+this.AllEquipmentName+"&staDate="
+                                          +params.staDate+"&endDate="+params.endDate+"&groupId="+this.AllZoneName+"&alarmType="+this.alarmType+" ";
+                      
+            },
             GetAlarmRecordDataList(){
+               this.loading = true;
               this.AlarmtableData=[];
                   var params={
                          pageIndex:this.pageIndex,
@@ -225,14 +314,20 @@ export default {
                          groupId:this.AllZoneName,
             						 loggerInfoSn:this.AllEquipmentName,
             						 alarmType:this.alarmType,
-            						 staDate:this.AlarmTime[0],
-            						 endDate:this.AlarmTime[1],    
+            						 staDate:this.valueTime == null ? undefined : this.valueTime[0],
+            						 endDate:this.valueTime == null ? undefined : this.valueTime[1],    
                   }
                GetAlarmRecordData(params).then(res=>{
                      this.totalNumber=res.TotalNumber
-                    for(let item of res.Data ){
-                         this.AlarmtableData.push(item) 
-                       }
+                    if(res.Data.length == 0||res.Data == []){
+                            this.loading=false;  
+                     }else{
+                      for(let item of res.Data ){
+                             this.AlarmtableData.push(item) 
+                              this.loading=false; 
+                           }
+                     }
+
                 })
              },
            queryData(){//点击查询
@@ -271,61 +366,42 @@ export default {
                this.pageIndex = pageIndex;//传当前页面   
                this.GetAlarmRecordDataList()//刷新列表
              },
-
-
-           AlarmInquireval(val){//登录时候查询的
-               console.log(val)
-          	 if (val==null) {
-                  this.AlarmTime[0]=undefined;
-                  this.AlarmTime[1]=undefined;
-          	 }else{
-               this.AlarmTime=val;
-               }
-          },
           ExportDataAlarm(){//导出报警数据
                var params={
-                     staDate:this.AlarmTime[0],
-                     endDate:this.AlarmTime[1],
+                      groupId:this.AllZoneName,
+                     staDate:this.valueTime == null ? undefined : this.valueTime[0],
+                     endDate:this.valueTime == null ? undefined : this.valueTime[1],
                      loggerInfoSn:this.AllEquipmentName
                }
+             ExportAlarmRecordDataPdf(qs.stringify(params)).then(res => {
+                        console.log(params)
+                        console.log(res)
 
-             ExportAlarmRecordDataPdf(params).then(res => {
                       if(res.State==1){
-                         console.log(res)
-                        /* window.open(res.State)*/
-                      }else{
+                         window.open(res.Url)
+                      }else if(res.State == 0)  {
                          this.$message({
                              type:'error',
-                             message:'导出数据失败'
+                             message:'该仪器无有效数据'
                          })
                       }
                          
               })
-
           },
-
-
-
         },
         mounted(){
-              this.PartitionDisplay()//分区联动请求显示,
-              this.GetAlarmRecordDataList()//列表显示
-        },
+            /*  this.PartitionDisplay()//分区联动请求显示,*/
+            /* this.GetAlarmRecordDataList()//列表显示*/
+                this.PartitionDisplay()
 
+        },
 }
 </script>
 <style lang="scss" scoped>
        .AlarmRecord{
             height: calc(100% - 10px);
             background: #eaedf1;
-         .CurrentPosition{
-		    		height: 40px;
-		    		background:#f7f7f7; 
-		    .NowPositon{
-		              line-height: 40px;
-		              margin-left: 15px;
-		    		}
-		     } 
+            min-width: 1700px;
        .Pagination{
           height: calc(100% - 40px);
               background: #fff;
@@ -344,7 +420,7 @@ export default {
             background: red ! important;
         }
         .FwAlarmTable{
-        	  height: calc(100% - 124px);
+        	    min-height: calc(100% - 124px);
               padding: 20px;
               margin: 20px;
               background: #fff;
