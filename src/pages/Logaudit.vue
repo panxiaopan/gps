@@ -120,9 +120,7 @@ export default{
           }
      },
      methods:{
-
-    
-     SelectTable(){
+           SelectTable(){
           	   GetUserManageComboBoxData().then(res=>{
                 /* this.AllEquipmentName=res.Data[0].UserName*/
                       let options=[]
@@ -150,9 +148,6 @@ export default{
                              endDate:this.valueTime == null ? undefined : this.valueTime[1]
                       }
                 GetUserNameOplogData(parms).then(res=>{
-                    /* this.LogtableData.push(res.Data)*/
-                    console.log("------")
-                    console.log(res)
                     this.totalNumber=res.TotalNumber//总条数
                     for(let item of res.Data){
                        this.LogtableData.push(item)
@@ -166,7 +161,6 @@ export default{
                this.pageIndex = pageIndex;//传当前页面   
                this.getLogaudit()
              },
-
      },
      mounted(){
             this.SelectTable()//下拉选中
@@ -175,8 +169,8 @@ export default{
 </script>
 <style lang="scss" scoped>
       .Logaudit{
-        height: 100%;
-        background: #eaedf1;
+          height: 100%;
+          background: #eaedf1;
          .MapTrajectorySecrch{
              margin: 20px;
          }
@@ -189,8 +183,7 @@ export default{
        }
 </style>
 <style type="text/css">
-  
-           .Logaudit .cell{
+       .Logaudit .cell{
           text-align: center;
         }
 </style>

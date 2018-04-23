@@ -46,9 +46,6 @@
 						  <el-form-item>
 						    <el-button type="primary" size="small" @click="Demand">{{$t('m.Search')}}</el-button>
 						  </el-form-item>
-<!--                <el-form-item>
-                <el-button type="primary" size="small" class="DataExport" @click="reset">播放行程</el-button>
-              </el-form-item> -->
 						   <el-form-item>
 						    <el-button type="primary" size="small" class="DataExport" @click="DerivedData">{{$t('m.ExportPDF')}}</el-button>
 						  </el-form-item>

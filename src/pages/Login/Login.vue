@@ -79,7 +79,7 @@ export default {
          this.showError = null;
          let user = { name: this.userLogin.userName }
          this.$refs['loginForm'].validate((valid) =>{
-
+             
                  if(valid){
                       userLogin(qs.stringify(this.userLogin)).then(res=>{
                          if(res.State==1){

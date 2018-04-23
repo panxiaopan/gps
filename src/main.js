@@ -31,14 +31,7 @@ const i18n = new VueI18n({
       'en-US': require('./components/lang/en')    // 英文语言包
     }
 })
-/*import VueI18n from 'vue-i18n'
-import enLocale from 'element-ui/lib/locale/lang/en'
-import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
-Vue.use(VueI18n)
-Vue.config.lang = 'zh-cn'
-Vue.locale('zh-cn', zhLocale)
-Vue.locale('en', enLocale)
-*/
+
 router.beforeEach((to, from, next ) => {
   if(to.path == '/Login') {
      sessionStorage.removeItem('user')

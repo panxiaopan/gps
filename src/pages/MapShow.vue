@@ -10,7 +10,6 @@
                   <i class="el-icon-arrow-right">
                    <span class="currentcolor">{{$t('m.MapShow')}}</span>
                  </i>
-
                 </div> 
 				    </el-col>
              </el-col>
@@ -39,7 +38,7 @@
                     </span>
                           <span class="DevicesName" @click="InstrumentFind(index,item.LoggerInfoSn)">
                             <el-tooltip :content="item.LoggerInfoName" placement="right">
-                          	 <div class="Name namefont">{{item.LoggerInfoName}}</div>
+                          	  <div class="Name namefont">{{item.LoggerInfoName}}</div>
                              </el-tooltip>
                           	 <div class="Name typefont">{{item.LoggerInfoSn}}</div>
                           </span>
@@ -251,21 +250,12 @@ export default {
         BmlMarkerClusterer
       },
       methods:{
-/*               handler ({BMap, map}) {
-                  console.log(BMap, map)
-                  this.center.lng = 116.404
-                  this.center.lat = 39.915
-                  this.zoom = 15
-                },*/
             GetEquipmentList(){//设备列表请求
              	  this.EquipmentList=[]//调用前清空
                   var params={
                   	 condition:this.SeachEquipment,
                   }
                GetMapShowsGroupLoggerInfoData(params).then(res=>{
-                           console.log("zuo")
-                           console.log(res)
-
 	                for(let item of res.Data){
                           this.EquipmentList.push(item)
 	                     }     
@@ -318,11 +308,8 @@ export default {
                               icons:item.icons,
                               CarPosition: null,
                               show:false,
-
                          })
                         } 
-                        console.log("---==========---")
-                        console.log(this.MapPoints)
                     })
             },
            callback(params){
@@ -339,14 +326,7 @@ export default {
             }
             return iconIndex;
            },
-/*           infoWindowClose () {//点击关闭地图显示
-            this.show = false
-          },*/
          infoWindowOpenMarker (e, p) {//点击打开地图下显示
-            console.log("jieshou")
-            console.log(p)
-            console.log(this.Equipmentcenter)
-            console.log(e)
             let _this = this
             $.ajax({//经纬度转换显示位置,
                  type:'get',
@@ -354,17 +334,12 @@ export default {
                  dataType:'jsonp',
                  success:function(res){
                    _this.CarPosition=res.result.formatted_address
-                 
                  }  
              })
           },
           infoWindowOpen(e){
                this.MapPoints[e].show = true;
           },
-
-/*         infoWindowOpen(){
-             this.show = true;
-         },*/
          infoWindowClose (e) {
                this.MapPoints[e].show = false;
             },
@@ -434,7 +409,6 @@ export default {
          exactsearch(gameName){//如果点击的时候的名字相等,就背景变色
                 this.activeName = gameName
          },
-
       },
       mounted(){
             var _this =this;
@@ -442,7 +416,6 @@ export default {
              this.GetMapShows()//地图请求
             
        $(window).keyup(function(ev){
-        // console.log(ev);
          if(ev.keyCode == 13){
              _this.GetMapShows();
           }
@@ -575,7 +548,6 @@ export default {
            display: inline-block;
            line-height: 130px;
            text-align: center;
-
         }
         .Oneright{
             display: inline-block;

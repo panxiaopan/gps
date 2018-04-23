@@ -141,11 +141,6 @@ export const userLogin = (params) => {
         .get('/SystemManage/UpdateLoggerInfoState',{params:params})
         .then(res => res.data)
     };
-
-
-
-
-
    //新增仪器接口
     export const InsertLoggerInfo= (params) => { 
     return axios
@@ -194,10 +189,6 @@ export const userLogin = (params) => {
            .get("/SystemManage/GetGroupAndLoggerAlarm")
            .then(res => res.data);
        };
-
-
-
-
     //报警历史记录查询接口
    export const GetAlarmRecordData= (params) => { 
     return axios
@@ -278,3 +269,4 @@ export const userLogin = (params) => {
         .get('/SystemManage/GetUserNameOplogData',{params:params})
         .then(res => res.data)
     }
+ 

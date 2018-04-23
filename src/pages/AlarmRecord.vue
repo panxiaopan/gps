@@ -299,11 +299,8 @@ export default {
                                  staDate:this.valueTime == null ? undefined : this.valueTime[0],
                                  endDate:this.valueTime == null ? undefined : this.valueTime[1],
                           }
-                    console.log( params)
-
                     window.location.href=" DataCentreManage/ExportAlarmRecordDataExecl?loggerInfoSn="+this.AllEquipmentName+"&staDate="
-                                          +params.staDate+"&endDate="+params.endDate+"&groupId="+this.AllZoneName+"&alarmType="+this.alarmType+" ";
-                      
+                                          +params.staDate+"&endDate="+params.endDate+"&groupId="+this.AllZoneName+"&alarmType="+this.alarmType+" ";      
             },
             GetAlarmRecordDataList(){
                this.loading = true;
@@ -374,9 +371,6 @@ export default {
                      loggerInfoSn:this.AllEquipmentName
                }
              ExportAlarmRecordDataPdf(qs.stringify(params)).then(res => {
-                        console.log(params)
-                        console.log(res)
-
                       if(res.State==1){
                          window.open(res.Url)
                       }else if(res.State == 0)  {
@@ -384,16 +378,12 @@ export default {
                              type:'error',
                              message:'该仪器无有效数据'
                          })
-                      }
-                         
+                      }        
               })
           },
         },
         mounted(){
-            /*  this.PartitionDisplay()//分区联动请求显示,*/
-            /* this.GetAlarmRecordDataList()//列表显示*/
                 this.PartitionDisplay()
-
         },
 }
 </script>

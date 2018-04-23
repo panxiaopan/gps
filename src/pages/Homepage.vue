@@ -371,17 +371,17 @@ export default {
              	 	}
              	 }
                  .NetworkEquipment{
-                 	display: inline-block;
-                 	text-align: center;
-                 	 height:450px;
-                 	 width: 390px;
-                 	 margin-left: 10px;
-                 	 border: 1px solid  #e8e8e8; 
-                   vertical-align: top;
+                      display: inline-block;
+                      text-align: center;
+                      height:450px;
+                      width: 390px;
+                      margin-left: 10px;
+                      border: 1px solid  #e8e8e8; 
+                      vertical-align: top;
                  	 .NetworkEquipmentIcon{
-                 	 	display: inline-block;
-                 	 	width: 390px;
-                 	 	height: 330px;	
+                      display: inline-block;
+                      width: 390px;
+                      height: 330px;	
                  	 }
                      .Cloudconfiguration{
                      	font-size: 16px;
@@ -523,11 +523,11 @@ export default {
             border-bottom: 1px solid  #d7d7d7;
            }
          .Partitiontable{
-               width: 678px;
-               text-align: center;
-               margin: 20px;
-               display: inline-block;
-               vertical-align: top;
+            width: 678px;
+            text-align: center;
+            margin: 20px;
+            display: inline-block;
+            vertical-align: top;
            }
           .histogramchart{
                width: 500px;

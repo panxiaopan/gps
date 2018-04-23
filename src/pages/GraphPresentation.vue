@@ -18,15 +18,14 @@
     						    :placeholder="$t('m.DeviceNumber')"
     						    v-model='SeachPartation'
                     @keyup.enter.native='GetEquipmentList()'
-
 						     >
-						  </el-input> 
+						    </el-input> 
             <i class="SystemManaSearch" @click="Realtimesearch"></i>
 					  </div>　
                 <div class="PartitionList" v-for='item in PositionList' :key='item.Id' size="small" >
                        <el-radio-group v-model="SelectDelete">
-                         <el-radio :label="item.Id"  @change="DeletePartition"> 	
-                           {{item.GroupName}}
+                          <el-radio :label="item.Id"  @change="DeletePartition"> 	
+                             {{item.GroupName}}
                           </el-radio>
                         </el-radio-group>   
                 </div> 
@@ -37,35 +36,35 @@
               	<div class="Apparatustop">
               		<span class="EquipmentIcon"></span>
               		 <div class="Equipmentmodel">
-                    <el-tooltip :content="item.LoggerName" placement="top" >
-              		 	<div class="EquipmentName">{{item.LoggerName}}</div>
-                    </el-tooltip>
-              		 	<div class="EquipmentNumber">({{item.LoggerSn}})</div>
+                        <el-tooltip :content="item.LoggerName" placement="top" >
+              	    	       	<div class="EquipmentName">{{item.LoggerName}}</div>
+                        </el-tooltip>
+              		    	<div class="EquipmentNumber">({{item.LoggerSn}})</div>
               		 </div>
               		<div class="EquipmentState">
-              			<div class="EquipmentElectric">
-              				<span  class="battry" :class='{
-                                  "Batterythree":item.BatteryStatus==3||item.BatteryStatus==17||item.BatteryStatus==11||item.BatteryStatus==7||item.BatteryStatus==1,
-                                  "Nopower":item.BatteryStatus==8||item.BatteryStatus==4,
-                                   "Batteryone":item.BatteryStatus==5||item.BatteryStatus==9,
-                                   "Batterytwo":item.BatteryStatus==6||item.BatteryStatus==10,
-                                    }'></span>
-              				<span class="battry noplugIn" :class='{
-                      "plugIn":item.BatteryStatus==3||item.BatteryStatus==2||item.BatteryStatus==8||item.BatteryStatus==9||item.BatteryStatus==10||item.BatteryStatus==11
-                    }'></span>
-                    </div>
+                      <div class="EquipmentElectric">
+                        <span  class="battry" :class='{
+                                    "Batterythree":item.BatteryStatus==3||item.BatteryStatus==17||item.BatteryStatus==11||item.BatteryStatus==7||item.BatteryStatus==1,
+                                    "Nopower":item.BatteryStatus==8||item.BatteryStatus==4,
+                                    "Batteryone":item.BatteryStatus==5||item.BatteryStatus==9,
+                                    "Batterytwo":item.BatteryStatus==6||item.BatteryStatus==10,
+                                      }'></span>
+                        <span class="battry noplugIn" :class='{
+                          "plugIn":item.BatteryStatus==3||item.BatteryStatus==2||item.BatteryStatus==8||item.BatteryStatus==9||item.BatteryStatus==10||item.BatteryStatus==11
+                           }'>
+                         </span>
+                      </div>
               				<div class="Updatatimes">{{item.LogsTime}}</div>
-              			
               		</div> 
               	</div>
               <div class="Oneaisle" v-if='item.LoggerChnum==1' >
-                     <div class="Oneleft" :class='{"Overheat":item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)}'>{{item.LogsChone}}</div>
-                       <div class="Oneright">
+                        <div class="Oneleft" :class='{"Overheat":item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)}'>{{item.LogsChone}}</div>
+                        <div class="Oneright">
                           <span class="onechum">{{item.ChoneType ===8 ? item.ChoneUs : SensorOptions[item.ChoneType].label}}</span>
                           <span class="onechum onechummiddle">{{item.ChoneHigh}}</span>
                           <span class="onechum">{{item.ChoneLow}}</span>
-                       </div>
-                </div> 
+                        </div>
+              </div> 
               <div class="Twoaisle"  v-if='item.LoggerChnum==2'>
                      <div class="Twochum  Twotopchum ">
                         <div  class="Twotopleftchum" :class='{"Overheat":item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)}'>{{item.LogsChone}}</div>
@@ -91,19 +90,19 @@
                       </div> 
                       <div class="threebottomchum">
                           <div class="threebottomchumvue" :class='{"Overheat":item.LogsChtwo>Number(item.ChtwoHigh)||item.LogsChtwo<Number(item.ChtwoLow)}'>
-                               <div class="threevalue" >{{item.LogsChtwo}}</div>
-                               <div class="threevalue">{{item.ChtwoType ===8 ? item.ChtwoUs : SensorOptions[item.ChtwoType].label}}</div>
+                                  <div class="threevalue" >{{item.LogsChtwo}}</div>
+                                  <div class="threevalue">{{item.ChtwoType ===8 ? item.ChtwoUs : SensorOptions[item.ChtwoType].label}}</div>
                           </div> 
-                        <div class="threebottomchumvue threebottomchumline" :class='{"Overheat":item.LogsChthree>Number(item.ChthrHigh)||item.LogsChthree<Number(item.ChthrLow)}'>
-                               <div class="threevalue" >{{item.LogsChthree}}</div>
-                               <div class="threevalue">{{item.ChthrType ===8 ? item.ChthrUs : SensorOptions[item.ChthrType].label}}</div>
-                          </div>  
+                          <div class="threebottomchumvue threebottomchumline" :class='{"Overheat":item.LogsChthree>Number(item.ChthrHigh)||item.LogsChthree<Number(item.ChthrLow)}'>
+                                <div class="threevalue" >{{item.LogsChthree}}</div>
+                                <div class="threevalue">{{item.ChthrType ===8 ? item.ChthrUs : SensorOptions[item.ChthrType].label}}</div>
+                        </div>  
                       </div>
                  </div>  
                 <div class="fouraisle"  v-if='item.LoggerChnum==4'>
                      <div class="fourchum" :class='{"Overheat":item.LogsChone>Number(item.ChoneHigh)||item.LogsChone<Number(item.ChoneLow)}'>
-                        <div class="fourchumone" >{{item.LogsChone}}</div>
-                        <div class="fourchumone ">{{item.ChoneType ===8 ? item.ChoneUs : SensorOptions[item.ChoneType].label}}</div>
+                          <div class="fourchumone" >{{item.LogsChone}}</div>
+                          <div class="fourchumone ">{{item.ChoneType ===8 ? item.ChoneUs : SensorOptions[item.ChoneType].label}}</div>
                      </div>
                      <div class="fourchum fourchummiddle" :class='{"Overheat":item.LogsChtwo>Number(item.ChtwoHigh)||item.LogsChtwo<Number(item.ChtwoLow)}'>
                            <div class="fourchumone" >{{item.LogsChtwo}}</div>
@@ -115,9 +114,9 @@
                                <div class="threevalue">{{item.ChthrType ===8 ? item.ChthrUs : SensorOptions[item.ChthrType].label}}</div>
                            </div>
                            <div class="fourchumthree fourchumthreeline" :class='{"Overheat":item.LogsChfour>Number(item.ChforHigh)||item.LogsChfour<Number(item.ChforLow)}'>
-                             <div class="threevalue" >{{item.LogsChfour}}</div>
-                             <div class="threevalue">{{ item.ChforType ===8 ? item.ChforUs :SensorOptions[item.ChforType].label}}</div>
-                           </div>
+                               <div class="threevalue" >{{item.LogsChfour}}</div>
+                               <div class="threevalue">{{ item.ChforType ===8 ? item.ChforUs :SensorOptions[item.ChforType].label}}</div>
+                          </div>
                      </div>
                    </div>
               </div>
@@ -134,7 +133,6 @@
              </el-col>
           </el-col>
 	</el-row>  
-
   </el-row>
 </template>
 <script>
@@ -236,10 +234,6 @@ export default {
                   }
                this.EquipmentList=[]//调用前清空
                GetGraphicPresentation(params).then(res=>{
-                        console.log("-------------------")
-                        console.log(res)
-
-
                      this.totalNumber=null;
 	                for(let item of res.Data){
 	                     this.totalNumber=res.TotalNumber;//总条数.
@@ -289,10 +283,9 @@ export default {
             this.GetEquipmentList()//展示数据.
             let _this = this;
             setInterval(() => {
-              if('/GraphPresentation' === _this.$route.path){
-                 _this.GetEquipmentList()//展示数据.一分钟刷新一次
-              }
-             
+                if('/GraphPresentation' === _this.$route.path){
+                  _this.GetEquipmentList()//展示数据.一分钟刷新一次
+                }
              },60000)  
      	 },
 }
@@ -497,37 +490,37 @@ export default {
                 border-top: 1px solid #d7d7d7;
           } 
          .threeaisle{
-          height:144px;
+            height:144px;
         }
         .threechum{
-          height: 64px;
-          border-bottom: 1px solid #d7d7d7; 
+            height: 64px;
+            border-bottom: 1px solid #d7d7d7; 
         }
         .threebottomchum{
-          height: 32px;
+            height: 32px;
         }
         .threechumvue{
-          display: inline-block;
-          width: 115px;
-          height: 64px;
-          float: left;
-          line-height: 64px;
-          text-align: center;
-          font-size: 35px;
+            display: inline-block;
+            width: 115px;
+            height: 64px;
+            float: left;
+            line-height: 64px;
+            text-align: center;
+            font-size: 35px;
         }
        .threebottomchumvue{
-        display: inline-block;
-        width: 117px;
-        height: 32px;
-        float: left;
+          display: inline-block;
+          width: 117px;
+          height: 32px;
+          float: left;
        } 
        .threevalue{
-         display: inline-block;
-         width: 57px;
-         float: left;
-         height: 32px;
-         text-align: center;
-         line-height: 32px;
+          display: inline-block;
+          width: 57px;
+          float: left;
+          height: 32px;
+          text-align: center;
+          line-height: 32px;
        }
        .threebottomchumline{
            border-left: 1px solid #d7d7d7;

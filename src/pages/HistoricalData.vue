@@ -2,83 +2,83 @@
    <el-row class="HistoricalData">
    	    <el-row>
    	    	<el-col :span='24'>
-   	    	 <el-row>
-			      <el-col :span='24' class="CurrentPosition">
-			        <div class="NowPositon">
-                  <i class="el-icon-location"></i>
-                  <span>{{$t('m.Location')}}:</span>
-                  <i class="el-icon-arrow-right">{{$t('m.DataCentre')}}</i>
-                  <i class="el-icon-arrow-right">
-                    <span class="currentcolor">{{$t('m.HistoryMemory')}}</span>
-                  </i>
-              </div> 
-			      </el-col>
-			   </el-row>
+                <el-row>
+                      <el-col :span='24' class="CurrentPosition">
+                          <div class="NowPositon">
+                                <i class="el-icon-location"></i>
+                                <span>{{$t('m.Location')}}:</span>
+                                <i class="el-icon-arrow-right">{{$t('m.DataCentre')}}</i>
+                                <i class="el-icon-arrow-right">
+                                     <span class="currentcolor">{{$t('m.HistoryMemory')}}</span>
+                                </i>
+                          </div> 
+                      </el-col>
+              </el-row>
    	    	</el-col>
    	    </el-row>
 	        <el-row>
-	        <el-col :span='24'>
-	     		   <div class="HistoricalSecrch">
-	     		        <el-form :inline="true"  class="demo-form-inline" size="small">
-                        	  <el-form-item :label="$t('m.Site')">
-							           <el-select v-model="AllZoneName"  :placeholder="$t('m.Selectarea')"  @change="SelectedPartition">
-								            <el-option
-						                      v-for="item in AllZone"
-						                      :key="item.value"
-						                      :label="item.label"
-						                      :value="item.value"
-						                      >
-						                 </el-option>					           	
-									    </el-select>
-							  </el-form-item>
-							  <el-form-item :label="$t('m.Device')">
-							         <el-select  v-model="AllEquipmentName" :placeholder="$t('m.SelectDevice')" >
-					                    <el-option
-					                       v-for="item in AllEquipment"
-					                       :key="item.value"
-					                       :label="item.label"
-					                       :value="item.value"
-					                       >
-					                     </el-option>
-									   </el-select>
-							  </el-form-item>
-							  <el-form-item :label="$t('m.TimePeriod')">
-	                   <div class="block">
-									    <el-date-picker
-									          value-format="yyyy-MM-dd HH:mm:ss"
-      										      v-model="valueTime"
-                                 @change='changeHistoryDate'
-      										      type="datetimerange"
-                                :picker-options="pickerOptions2"
-      										      range-separator="--"
-      										      :start-placeholder="$t('m.StartTime')"
-      										      :end-placeholder="$t('m.EndTime')">
-									    </el-date-picker>
-									</div>
-							  </el-form-item>
-							  <el-form-item>
-							   <el-button type="primary" size="small" @click="SeachHistroyMemory">{{$t('m.Search')}}</el-button>
-							  </el-form-item>
-							   <el-form-item>
-							    <el-button type="primary" size="small" class="DataExport" @click="Exportimage">{{$t('m.ExportPicture')}}</el-button>
-							  </el-form-item>
-							   <el-form-item>
-							    <el-button type="primary" size="small" class="DataExport" @click="Exporthistorydata">{{$t('m.ExportPDF')}}</el-button>
-							  </el-form-item>
-              <el-form-item>
-              <el-button type="primary" size="small" class="DataExport" @click="DeriveExecl">{{$t('m.ExportExcel')}}</el-button>
-              </el-form-item>
-                <div class="historydatashow">
-                <el-form-item>
-                  <el-button  size="small" @click="Curveshow" >{{$t('m.CurveGraphDisplay')}}</el-button>
-                </el-form-item>
-                 <el-form-item>
-                  <el-button  size="small" @click="historydatashow" >{{$t('m.DisplayInDigit')}}</el-button>
-                </el-form-item>
+              <el-col :span='24'>
+                <div class="HistoricalSecrch">
+                            <el-form :inline="true"  class="demo-form-inline" size="small">
+                                      <el-form-item :label="$t('m.Site')">
+                                  <el-select v-model="AllZoneName"  :placeholder="$t('m.Selectarea')"  @change="SelectedPartition">
+                                      <el-option
+                                            v-for="item in AllZone"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                            >
+                                      </el-option>					           	
+                                </el-select>
+                          </el-form-item>
+                          <el-form-item :label="$t('m.Device')">
+                                <el-select  v-model="AllEquipmentName" :placeholder="$t('m.SelectDevice')" >
+                                        <el-option
+                                          v-for="item in AllEquipment"
+                                          :key="item.value"
+                                          :label="item.label"
+                                          :value="item.value"
+                                          >
+                                        </el-option>
+                              </el-select>
+                          </el-form-item>
+                              <el-form-item :label="$t('m.TimePeriod')">
+                                    <div class="block">
+                                        <el-date-picker
+                                              value-format="yyyy-MM-dd HH:mm:ss"
+                                                  v-model="valueTime"
+                                                  @change='changeHistoryDate'
+                                                  type="datetimerange"
+                                                  :picker-options="pickerOptions2"
+                                                  range-separator="--"
+                                                  :start-placeholder="$t('m.StartTime')"
+                                                  :end-placeholder="$t('m.EndTime')">
+                                        </el-date-picker>
+                                    </div>
+                              </el-form-item>
+                              <el-form-item>
+                                  <el-button type="primary" size="small" @click="SeachHistroyMemory">{{$t('m.Search')}}</el-button>
+                              </el-form-item>
+                              <el-form-item>
+                                   <el-button type="primary" size="small" class="DataExport" @click="Exportimage">{{$t('m.ExportPicture')}}</el-button>
+                              </el-form-item>
+                              <el-form-item>
+                                    <el-button type="primary" size="small" class="DataExport" @click="Exporthistorydata">{{$t('m.ExportPDF')}}</el-button>
+                              </el-form-item>
+                              <el-form-item>
+                                     <el-button type="primary" size="small" class="DataExport" @click="DeriveExecl">{{$t('m.ExportExcel')}}</el-button>
+                              </el-form-item>
+                            <div class="historydatashow">
+                                <el-form-item>
+                                    <el-button  size="small" @click="Curveshow" >{{$t('m.CurveGraphDisplay')}}</el-button>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button  size="small" @click="historydatashow" >{{$t('m.DisplayInDigit')}}</el-button>
+                                </el-form-item>
+                            </div>
+                      </el-form> 
                 </div>
-						</el-form> 
-	     		   </div>
-	     	</el-col>
+            </el-col>
         </el-row>
        <el-row class="chart" id='ExportImage' v-show="Exportshow" >
           <div class="cahrtbackground">{{LoggerNamechecked}}</div>
@@ -154,8 +154,8 @@
               </table>
      	 </el-col>
       </el-row>
-         <el-row :span='24'  ></el-row>
-         <el-row v-show="TexNull" style="text-align:center;color:#999;line-height:290px;"  v-loading="loadingData" element-loading-text="loading"  element-loading-spinner="el-icon-loading">{{$t('m.TemporarilyUnavailable')}}
+         <el-row :span='24' ></el-row>
+          <el-row v-show="TexNull" style="text-align:center;color:#999;line-height:290px;"  v-loading="loadingData" element-loading-text="loading"  element-loading-spinner="el-icon-loading">{{$t('m.TemporarilyUnavailable')}}
           </el-row>
    </el-row>
 </template>
